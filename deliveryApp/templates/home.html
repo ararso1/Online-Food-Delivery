@@ -1,0 +1,279 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Food Delivery App</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'style.css' %}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  
+
+  
+
+</head>
+
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="logo">Food Delivery</div>
+    <div class="nav-links">
+      <a href="#">Home</a>
+      <a href="#">Restaurant</a>
+      <a href="{% url 'product'%}">Food</a>
+      <a href="{% url 'Services'%}">Services</a>
+      <a href="#">Contact Us</a>
+      <div class="search-box">
+        <input type="text" placeholder="Search products"/>
+      </div>
+    </div>
+    <div class="cart-login">
+      <span>🛒<sup>0</sup></span>
+      <button class="login-btn">Login</button>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-text">
+      <h1>Most Fastest Food Delivery Services</h1>
+      <h2>Get the best quality food in Addis Ababa</h2>
+      <div class="hero-buttons">
+        <button class="shop-now">Shop Now</button>
+        <button class="explore-btn">Explore Deals →</button>
+      </div>
+    </div>
+
+    <!-- <div class="hero-img">
+      <img src="{% static 'images/banner.jpg' %}" alt="Delicious Food"> 
+    </div> -->
+
+  </section>
+
+
+
+
+<!-- Popular Restaurants Section -->
+<section class="restaurants">
+  <h2>Popular Restaurants in Addis Ababa</h2>
+
+
+  <div class="restaurant-grid">
+
+    <div class="restaurant-card">
+      <img src="{% static 'images/banner.png' %}" alt="Kategna Restaurant">
+      <h4>🍽️Kategna Restaurant</h4>
+
+      </div>
+    <div class="restaurant-card">
+        <img src="{% static 'images/effio.jpg' %}" alt="Effoi Pizza">
+      <h4>🍕 Effoi Pizza</h4>
+    </div>
+    <div class="restaurant-card">
+        <img src="{% static 'images/meat.jpg' %}" alt="Yod Abyssinia">
+      <h4>🥩 Yod Abyssinia</h4>
+        
+        </div>
+    <div class="restaurant-card">
+         <img src="{% static 'images/romian.jpg' %}" alt="Romina Restaurant">
+      <h4>🍛 Romina Restaurant</h4>
+        
+        </div>
+    <div class="restaurant-card">
+        <img src="{% static 'images/sushi.jpg' %}" alt="Sishu Restaurant">
+      <h4>🍗Sishu Restaurant</h4>
+        
+        
+        </div>
+    <div class="restaurant-card">
+        <img src="{% static 'images/hebesha.jpg' %}" alt="2000 Habesha Cultural">
+      <h4>🍲2000 Habesha Cultural</h4>
+        
+        </div>
+    <div class="restaurant-card">
+        
+        <img src="{% static 'images/noddles.jpg' %}" alt="Five Loaves">
+      <h4>🍜 chanole noodles</h4>
+        
+    
+    </div>
+  </div>
+</section>
+
+
+
+<!-- Best Sellers Section -->
+<section class="best-sellers">
+  <h2>Most Order Foods </h2>
+
+  <div class="product-grid">
+    <div class="product-card">
+      <img src="{% static 'images/products/bread.jpg' %}" alt="Brown Bread">
+      <small>Pizza </small>
+      <h2>so yummmmmmmmmmmmmy</h2>
+      <div class="product-rating">★★★★☆ <span>(4)</span></div>
+      <div class="price-row">
+        <span class="new-price">$35</span>
+        <span class="old-price">$40</span>
+      </div>
+      <button class="add-to-cart"><i class="fa fa-shopping-cart"></i> Add</button>
+    </div>
+
+    <div class="product-card">
+      <img src="{% static 'images/products/quinoa.jpg' %}" alt="Organic Quinoa">
+      <small>Grains</small>
+      <h4>Organic Quinoa 500g</h4>
+      <div class="product-rating">★★★★☆ <span>(4)</span></div>
+      <div class="price-row">
+        <span class="new-price">$420</span>
+        <span class="old-price">$450</span>
+      </div>
+      <button class="add-to-cart"><i class="fa fa-shopping-cart"></i> Add</button>
+    </div>
+
+    <div class="product-card">
+      <img src="{% static 'images/products/carrots.jpg' %}" alt="Carrot">
+      <small>Vegetables</small>
+      <h4>Carrot 500g</h4>
+      <div class="product-rating">★★★★☆ <span>(4)</span></div>
+      <div class="price-row">
+        <span class="new-price">$44</span>
+        <span class="old-price">$50</span>
+      </div>
+      <button class="add-to-cart"><i class="fa fa-shopping-cart"></i> Add</button>
+    </div>
+
+    <div class="product-card">
+      <img src="{% static 'images/products/apple.jpg' %}" alt="Apple">
+      <small>Fruits</small>
+      <h4>Apple 1kg</h4>
+      <div class="product-rating">★★★★★ <span>(4)</span></div>
+      <div class="price-row">
+        <span class="new-price">$90</span>
+        <span class="old-price">$100</span>
+      </div>
+      <button class="add-to-cart"><i class="fa fa-shopping-cart"></i> Add</button>
+    </div>
+
+    <div class="product-card">
+      <img src="{% static 'images/products/cheese.jpg' %}" alt="Cheese">
+      <small>Dairy</small>
+      <h4>Cheese 200g</h4>
+      <div class="product-rating">★★★★☆ <span>(4)</span></div>
+      <div class="price-row">
+        <span class="new-price">$130</span>
+        <span class="old-price">$140</span>
+      </div>
+      <button class="add-to-cart"><i class="fa fa-shopping-cart"></i> Add</button>
+    </div>
+  </div>
+</section>
+
+
+
+
+
+
+
+
+  <!-- Why We Are the Best Section -->
+<section class="why-best">
+  <h2>Why We Are the Best</h2>
+  <div class="best-features">
+    <div class="feature-box">
+      <h3>🚀 Fastest Delivery</h3>
+      <p>Foods delivered in under 30 minutes.</p>
+    </div>
+    <div class="feature-box">
+      <h3>🥬 Freshness Guaranteed</h3>
+      <p>Fresh produce straight from your prefered Restaurant.</p>
+    </div>
+    <div class="feature-box">
+      <h3>💰 Affordable Prices</h3>
+      <p>We deliver at unbeatable prices.</p>
+    </div>
+    <div class="feature-box">
+      <h3>👍 Trusted by Thousands</h3>
+      <p>Significant customer satisfaction.</p>
+    </div>
+  </div>
+</section>
+
+
+  
+ <!-- Newsletter Section -->
+<section class="newsletter-section">
+  <div class="newsletter-content">
+    <h3>"Never Miss a Deal!"</h3>
+    <p>Subscribe to get the latest offers, new arrivals, and exclusive discounts.</p>
+    <form class="newsletter-form">
+      <input type="email" placeholder="Enter your email" required />
+      <button type="submit">Subscribe</button>
+    </form>
+  </div>
+</section>
+
+<!-- Footer Starts Below -->
+
+
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="footer-container">
+
+    <div class="footer-column company">
+      <h3>Food Delivery</h3>
+      <p class="tagline">"We deliver fresh Foods straight to your door."</p>
+      <p class="desc">Trusted by thousands to make delivery easy and affordable.</p>
+    </div>
+
+    <div class="footer-column links">
+      <h4>Quick Links</h4>
+      <ul>
+        <li><a href="#">Home</a></li>
+         <li><a href="#">Food</a></li>
+        <li><a href="#">Restourant</a></li>
+        <li><a href="#">Contact Us</a></li>
+       
+        <li><a href="#"></a></li>
+      </ul>
+    </div>
+
+    <div class="footer-column help">
+      <h4>Need Help?</h4>
+      <ul>
+        <li><a href="#">Delivery Information</a></li>
+        <li><a href="#">Return & Refund Policy</a></li>
+        <li><a href="#">Payment Methods</a></li>
+        <li><a href="#">Track your Order</a></li>
+        <li><a href="#">Contact Us</a></li>
+      </ul>
+    </div>
+
+   <div class="social-links">
+  <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+  <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+  <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+  <a href="#" class="social-icon"><i class="fab fa-whatsapp"></i></a>
+  <a href="#" class="social-icon"><i class="fab fa-youtube"></i></a>
+</div>
+
+
+
+  </div>
+
+  <div class="footer-bottom">
+    <p> &copy; 2025 Food Delivery. All rights reserved.</p>
+  </div>
+</footer>
+
+
+   
+ 
+
+</body>
+</html>

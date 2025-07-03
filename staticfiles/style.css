@@ -1,0 +1,131 @@
+ *{
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #fff;
+      color: #1a1a1a;
+    }
+
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: cent
+      er;
+      padding: 20px 60px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .logo {
+      font-size: 26px;
+      font-weight: 700;
+      color: #27ae60;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 30px;
+      align-items: center;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: #333;
+      font-weight: 500;
+    }
+
+    .search-box input {
+      padding: 8px 14px;
+      border-radius: 20px;
+      border: 1px solid #ccc;
+      outline: none;
+    }
+
+    .cart-login {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+    }
+
+    .login-btn {
+      background-color: #27ae60;
+      color: #fff;
+      border: none;
+      padding: 8px 20px;
+      border-radius: 20px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .hero {
+      background-image: url('banner.jpg');
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 60px;
+      background-color: #e0f7e9;
+      border-radius: 12px;
+      margin: 20px 60px;
+    }
+
+    .hero-text {
+      max-width: 50%;
+    }
+
+    .hero-text h1 {
+      font-size: 38px;
+      font-weight: 700;
+      margin-bottom: 20px;
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 20px;
+    }
+
+    .shop-now {
+      background-color: #27ae60;
+      color: #fff;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .explore-btn {
+      background: none;
+      border: none;
+      color: #333;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .hero-img {
+      max-width: 45%;
+    }
+
+    .hero-img img {
+      width: 100%;
+      border-radius: 12px;
+    }
+
+    @media (max-width: 768px) {
+      .navbar, .hero {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 20px;
+      }
+
+      .hero-text, .hero-img {
+        max-width: 100%;
+      }
+
+      .hero {
+        gap: 30px;
+      }
+    }
