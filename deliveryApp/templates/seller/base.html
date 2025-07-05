@@ -1,0 +1,55 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}GreenCart{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'seller.css' %}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <div class="container">
+        <aside class="sidebar">
+            <div class="logo">
+                <img src="{% static 'img/placeholder_logo.png' %}" alt="GreenCart Logo">
+                <h1>GreenCart</h1>
+            </div>
+            <nav class="navigation">
+                <ul>
+                    <li>
+                        <a href="{% url 'add_product' %}" id="add-product-link">
+                            <img src="{% static 'img/add_product_icon.png' %}" alt="Add Product Icon">
+                            Add Product
+                        </a>
+                    </li>
+                    <li class="{% if request.resolver_match.url_name == 'product_list' %}active{% endif %}">
+                        <a href="{% url 'product_list' %}" id="product-list-link">
+                            <img src="{% static 'img/product_list_icon.png' %}" alt="Product List Icon">
+                            Product List
+                        </a>
+                    </li>
+                    <li class="{% if request.resolver_match.url_name == 'orders' %}active{% endif %}">
+                        <a href="{% url 'orders' %}" id="orders-link">
+                            <img src="{% static 'img/orders_icon.png' %}" alt="Orders Icon">
+                            Orders
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <header class="top-bar">
+                <p>Hi! Admin</p>
+                <button class="logout-btn">Logout</button>
+            </header>
+
+            <section class="main-section">
+                {% block content %}
+                {% endblock %}
+            </section>
+        </main>
+    </div>
+</body>
+</html>

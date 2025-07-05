@@ -1,0 +1,104 @@
+{% extends './base.html' %}
+{% load static %}
+
+{% block title %}Food-delivery - Product List{% endblock %}
+
+{% block content %}
+<div class="product-list-container">
+    <h2>All Product</h2>
+    <div class="product-table-wrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Category</th>
+                    <th>Selling Price</th>
+                    <th>In Stock</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <div class="product-item">
+                            <img src="{% static 'img/potato_500g.png' %}" alt="Potato" class="product-thumbnail">
+                            Potato 500g
+                        </div>
+                    </td>
+                    <td>Vegetables</td>
+                    <td>$35</td>
+                    <td>
+                        <label class="switch">
+                            <input type="checkbox" checked>
+                            <span class="slider round"></span>
+                        </label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="product-item">
+                            <img src="{% static 'img/tomato_1kg.png' %}" alt="Tomato" class="product-thumbnail">
+                            Tomato 1kg
+                        </div>
+                    </td>
+                    <td>Vegetables</td>
+                    <td>$28</td>
+                    <td>
+                        <label class="switch">
+                            <input type="checkbox" checked>
+                            <span class="slider round"></span>
+                        </label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="product-item">
+                            <img src="{% static 'img/carrot_500g.png' %}" alt="Carrot" class="product-thumbnail">
+                            Carrot 500g
+                        </div>
+                    </td>
+                    <td>Vegetables</td>
+                    <td>$44</td>
+                    <td>
+                        <label class="switch">
+                            <input type="checkbox" checked>
+                            <span class="slider round"></span>
+                        </label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="product-item">
+                            <img src="{% static 'img/spinach_500g.png' %}" alt="Spinach" class="product-thumbnail">
+                            Spinach 500g
+                        </div>
+                    </td>
+                    <td>Vegetables</td>
+                    <td>$15</td>
+                    <td>
+                        <label class="switch">
+                            <input type="checkbox" checked>
+                            <span class="slider round"></span>
+                        </label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="product-item">
+                            <img src="{% static 'img/onion_500g.png' %}" alt="Onion" class="product-thumbnail">
+                            Onion 500g
+                        </div>
+                    </td>
+                    <td>Vegetables</td>
+                    <td>$45</td>
+                    <td>
+                        <label class="switch">
+                            <input type="checkbox" checked>
+                            <span class="slider round"></span>
+                        </label>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

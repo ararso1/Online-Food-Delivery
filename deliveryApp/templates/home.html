@@ -33,7 +33,8 @@
     </div>
     <div class="cart-login">
       <span>🛒<sup>0</sup></span>
-      <button class="login-btn">Login</button>
+      <a href= "{% url 'login_signup' %}"class="login-btn">Login</a>
+     
     </div>
   </nav>
 
@@ -62,30 +63,28 @@
   <h2>Popular Restaurants in Addis Ababa</h2>
 
 
-  <div class="restaurant-grid">
+  <div class="restaurant-grid"/>
 
     <div class="restaurant-card">
-      <img src="{% static 'images/banner.png' %}" alt="Kategna Restaurant">
-      <h4>🍽️Kategna Restaurant</h4>
+      <img src="{% static 'images/pizza hut.jpg' %}" alt="Kategna Restaurant">
+      <h4>🍕 pizza hut</h4>
 
       </div>
     <div class="restaurant-card">
         <img src="{% static 'images/effio.jpg' %}" alt="Effoi Pizza">
       <h4>🍕 Effoi Pizza</h4>
     </div>
-    <div class="restaurant-card">
-        <img src="{% static 'images/meat.jpg' %}" alt="Yod Abyssinia">
-      <h4>🥩 Yod Abyssinia</h4>
+  
         
-        </div>
+    
     <div class="restaurant-card">
-         <img src="{% static 'images/romian.jpg' %}" alt="Romina Restaurant">
-      <h4>🍛 Romina Restaurant</h4>
+         <img src="{% static 'images/burger.jpg' %}" alt=" burger Restaurant">
+      <h4>🍔 Smash burger Restaurant</h4>
         
         </div>
     <div class="restaurant-card">
         <img src="{% static 'images/sushi.jpg' %}" alt="Sishu Restaurant">
-      <h4>🍗Sishu Restaurant</h4>
+      <h4> 🍥Sishu Restaurant</h4>
         
         
         </div>
@@ -112,61 +111,61 @@
 
   <div class="product-grid">
     <div class="product-card">
-      <img src="{% static 'images/products/bread.jpg' %}" alt="Brown Bread">
-      <small>Pizza </small>
-      <h2>so yummmmmmmmmmmmmy</h2>
+      <img src="{% static 'images/pizzaa.jpg' %}" alt="pizza">
+      <small> Pizza </small>
+      <h6>medium pizza</h6>
       <div class="product-rating">★★★★☆ <span>(4)</span></div>
       <div class="price-row">
-        <span class="new-price">$35</span>
-        <span class="old-price">$40</span>
+        <span class="new-price">550 birr</span>
+        <span class="old-price">600 birr</span>
       </div>
       <button class="add-to-cart"><i class="fa fa-shopping-cart"></i> Add</button>
     </div>
 
     <div class="product-card">
-      <img src="{% static 'images/products/quinoa.jpg' %}" alt="Organic Quinoa">
-      <small>Grains</small>
-      <h4>Organic Quinoa 500g</h4>
+      <img src="{% static 'images/shkla tibs.jpg' %}" alt="tibs">
+      <small>Shekla tibs</small>
+      <h6>Spicy Ethiopian beef served hot in a clay pot</h6>
       <div class="product-rating">★★★★☆ <span>(4)</span></div>
       <div class="price-row">
-        <span class="new-price">$420</span>
-        <span class="old-price">$450</span>
+        <span class="new-price">420 birr</span>
+        <span class="old-price">450 birr</span>
       </div>
       <button class="add-to-cart"><i class="fa fa-shopping-cart"></i> Add</button>
     </div>
 
     <div class="product-card">
-      <img src="{% static 'images/products/carrots.jpg' %}" alt="Carrot">
-      <small>Vegetables</small>
-      <h4>Carrot 500g</h4>
+      <img src="{% static 'images/Spicy Chicken Noodles.jpg' %}" alt="noodles">
+      <small>spicy chicken veggie noodles</small>
+      <h6>Hot noodles with spicy chicken & veggies</h6>
       <div class="product-rating">★★★★☆ <span>(4)</span></div>
       <div class="price-row">
-        <span class="new-price">$44</span>
-        <span class="old-price">$50</span>
+        <span class="new-price">600 birr</span>
+        <span class="old-price">750 birr</span>
       </div>
       <button class="add-to-cart"><i class="fa fa-shopping-cart"></i> Add</button>
     </div>
 
     <div class="product-card">
-      <img src="{% static 'images/products/apple.jpg' %}" alt="Apple">
-      <small>Fruits</small>
-      <h4>Apple 1kg</h4>
+      <img src="{% static 'images/double chicken.jpg' %}" alt="burger">
+      <small>Double Chicken Burger</small>
+      <h6>Double chicken layers with crunchy veggies and creamy sauce</h6>
       <div class="product-rating">★★★★★ <span>(4)</span></div>
       <div class="price-row">
-        <span class="new-price">$90</span>
-        <span class="old-price">$100</span>
+        <span class="new-price">700 birr</span>
+        <span class="old-price">850 birr</span>
       </div>
       <button class="add-to-cart"><i class="fa fa-shopping-cart"></i> Add</button>
     </div>
 
     <div class="product-card">
-      <img src="{% static 'images/products/cheese.jpg' %}" alt="Cheese">
-      <small>Dairy</small>
-      <h4>Cheese 200g</h4>
+      <img src="{% static 'images/Kappa_Maki.png' %}" alt="Sushi">
+      <small> kappa maki Sushi</small>
+      <h6>Classic cucumber roll — fresh, light, and vegan-friendly</h6>
       <div class="product-rating">★★★★☆ <span>(4)</span></div>
       <div class="price-row">
-        <span class="new-price">$130</span>
-        <span class="old-price">$140</span>
+        <span class="new-price">620 birr</span>
+        <span class="old-price">700 birr</span>
       </div>
       <button class="add-to-cart"><i class="fa fa-shopping-cart"></i> Add</button>
     </div>
