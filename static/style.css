@@ -16,6 +16,7 @@
       align-items: center;
       padding: 20px 60px;
       border-bottom: 1px solid #eee;
+      
     }
 
     .logo {
@@ -28,15 +29,37 @@
       display: flex;
       gap: 30px;
       align-items: center;
+      color: #28a745;
     }
 
-    .nav-links a {
+    .nav-links a,
+    .nav-links .nav-button {
       text-decoration: none;
       color: #333;
       font-weight: 500;
+      transition: color 0.3s, background 0.3s;
+      padding: 8px 16px;
+      border-radius: 6px;
     }
 
-    .search-box input {
+    .nav-links a:hover, .nav-links a:focus,
+    .nav-links .nav-button:hover, .nav-links .nav-button:focus {
+      color: #fff;
+      background: #28a745;
+      font-weight: 700;
+      box-shadow: 0 2px 8px rgba(40, 167, 69, 0.08);
+    } 
+
+  .nav-button {
+  border: 1px solid #ccc;
+  background-color: #f9f9f9;
+  padding: 8px 12px;
+  border-radius: 10px;
+   }
+
+
+
+   .search-box input {
       padding: 8px 14px;
       border-radius: 20px;
       border: 1px solid #ccc;
@@ -113,13 +136,25 @@
     }
 
     .hero-img {
-      max-width: 45%;
+      width: 320px;
+      height: 120px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
-    .hero-img img {
-      width: 100%;
-      border-radius: 12px;
-    }
+.hero-img img {
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  border-radius: 20px;
+  object-fit: cover;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+  border: 6px solid #d4f5e4;  /* Softer border */
+  background-color: #fff;     /* In case image has transparent parts */
+}
+
 
     @media (max-width: 768px) {
       .navbar,
@@ -553,7 +588,9 @@ body{
   padding: 50px;
 }
 
-.content-holder h2
+.content-holder h2 {
+  font-size: 34px;
+  margin: 20px auto;
 }
 
 .content-holder p

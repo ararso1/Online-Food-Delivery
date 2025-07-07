@@ -22,6 +22,7 @@
   <nav class="navbar">
     <div class="logo">Food Delivery</div>
     <div class="nav-links">
+      <a href="{% url 'add_product'%}" class="nav-button">Seller Dashboard</a>
       <a href="#">Home</a>
       <a href="#">Restaurant</a>
       <a href="{% url 'product'%}">Food</a>
@@ -29,8 +30,8 @@
       <a href="#">Contact Us</a>
       <div class="search-box">
         <input type="text" placeholder="Search products"/>
-      </div>
     </div>
+    
     <div class="cart-login">
       <span>🛒<sup>0</sup></span>
       <a href= "{% url 'login_signup' %}"class="login-btn">Login</a>
@@ -48,11 +49,9 @@
         <button class="explore-btn">Explore Deals →</button>
       </div>
     </div>
-
-    <!-- <div class="hero-img">
-      <img src="{% static 'images/banner.jpg' %}" alt="Delicious Food"> 
-    </div> -->
-
+    <div class="hero-img">
+      <img src="{% static 'images/poste.png' %}" alt="Delicious Food"> 
+    </div> 
   </section>
 
 

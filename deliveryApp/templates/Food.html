@@ -9,6 +9,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{% static 'style.css' %}">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="{% static 'Food.css' %}">
 </head>
 
 <body>
@@ -19,7 +20,7 @@
     <div class="nav-links">
       <a href="{% url 'home' %}">Home</a>
       <a href="#">Restaurant</a>
-      <a href="#">Food</a>
+      <a href="{%url 'product'%}">Food</a>
       <a href="#">Services</a>
       <a href="#">Contact Us</a>
       <div class="search-box">
@@ -31,6 +32,53 @@
       <button class="login-btn">Login</button>
     </div>
   </nav>
+
+
+
+
+
+
+<div class="product-grid">
+  {% for product in products %}
+  <div class="product-card">
+    <img src="{% static product.image %}" alt="{{ product.name }}">
+    <p class="category">{{ product.category }}</p>
+    <h3>{{ product.name }}</h3>
+    <p class="rating">
+      {% if product.rating >= 4.5 %}★★★★★
+      {% elif product.rating >= 4.0 %}★★★★☆
+      {% else %}★★★☆☆
+      {% endif %}
+      <span>({{ product.rating }})</span>
+    </p>
+    <p class="price">
+      <span class="current">${{ product.price }}</span>
+      <span class="old">${{ product.old_price }}</span>
+    </p>
+    <button class="add-btn">🛒 Add</button>
+  </div>
+  {% endfor %}
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 <!-- Footer -->
