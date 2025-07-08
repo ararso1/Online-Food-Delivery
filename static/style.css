@@ -27,9 +27,8 @@
 
     .nav-links {
       display: flex;
-      gap: 30px;
+      gap: 20px;
       align-items: center;
-      color: #28a745;
     }
 
     .nav-links a,
@@ -45,14 +44,15 @@
     .nav-links a:hover, .nav-links a:focus,
     .nav-links .nav-button:hover, .nav-links .nav-button:focus {
       color: #fff;
-      background: #28a745;
-      font-weight: 700;
-      box-shadow: 0 2px 8px rgba(40, 167, 69, 0.08);
+      background: rgb(46, 45, 45);
+      font-weight: 500;
+    
     } 
 
   .nav-button {
-  border: 1px solid #ccc;
+ 
   background-color: #f9f9f9;
+
   padding: 8px 12px;
   border-radius: 10px;
    }
@@ -81,6 +81,7 @@
       font-weight: bold;
       cursor: pointer;
     }
+
 
     .hero {
       display: flex;
@@ -136,8 +137,6 @@
     }
 
     .hero-img {
-      width: 320px;
-      height: 120px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -156,7 +155,7 @@
 }
 
 
-    @media (max-width: 768px) {
+ @media (max-width: 768px) {
       .navbar,
       .hero {
         flex-direction: column;
@@ -173,29 +172,6 @@
         gap: 30px;
       }
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 .why-best {
@@ -671,7 +647,7 @@ body{
   left: 50%;
   transform: translate(-50%,-60%);
   text-align: center;
-  display: none;
+  display: block;
 }
 
 

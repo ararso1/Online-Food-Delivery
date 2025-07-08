@@ -5,10 +5,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Food Delivery App</title>
+  <title>Food Delivery</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{% static 'style.css' %}">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
 </head>
 
 <body>
@@ -21,7 +22,6 @@
       <a href="#">Home</a>
       <a href="#">Restaurant</a>
       <a href="{% url 'product'%}">Food</a>
-      <a href="{% url 'Services'%}">Services</a>
       <a href="#">Contact Us</a>
     </div>
     <div class="search-box">
@@ -30,14 +30,12 @@
     
     <div class="cart-login">
       <span>🛒<sup>0</sup></span>
-      <a href= "{% url 'login_signup' %}"class="login-btn">Login</a>
+      <a href= "{% url 'login' %}"class="login-btn">Login</a>
      
     </div>
   </nav>
-
-
-
-
+</body>
+</html>
 
 
 

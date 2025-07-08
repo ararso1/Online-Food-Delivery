@@ -5,27 +5,29 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Food Delivery App</title>
+  <title>Food Delivery</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{% static 'style.css' %}">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <link rel="stylesheet" href="{% static 'Food.css' %}">
+  <link rel="stylesheet" href="{% static 'popularResturants.css' %}">
 </head>
 
 <body>
 
   <!-- Navbar -->
-   <nav class="navbar">
+  <nav class="navbar">
     <div class="logo">Food Delivery</div>
     <div class="nav-links">
-      <a href="{%url 'home'%}">Home</a>
+      <a href="{% url 'add_product'%}" class="nav-button">Seller Dashboard</a>
+      <a href="#">Home</a>
       <a href="#">Restaurant</a>
       <a href="{% url 'product'%}">Food</a>
       <a href="#">Contact Us</a>
-      <div class="search-box">
-        <input type="text" placeholder="Search products"/>
-      </div>
     </div>
+    <div class="search-box">
+        <input type="text" placeholder="Search products"/>
+    </div>
+    
     <div class="cart-login">
       <span>🛒<sup>0</sup></span>
       <a href= "{% url 'login' %}"class="login-btn">Login</a>
@@ -35,30 +37,62 @@
 
 
 
+  <!-- chanole  Section -->
+  
+
+
+  <section class="organic-section">
+    <h2 class="section-title">2000 Hebesha</h2>
+    <div class="product-grid">
+      <div class="product-card">
+        <img src="{% static 'images/Foods/tibs.jpg'%}" alt="tibs">
+        <p class="category">spicy tibs with injera</p>
+        <h3 class="name">Tibs</h3>
+        <p class="rating">★★★★★ (4)</p>
+        <p class="price"><span class="current">35</span> <span class="old">40</span></p>
+        <button class="add-btn">Add</button>
+      </div>
+
+      <div class="product-card">
+        <img src="images/Foods/firfir.jpg" alt="firfir">
+        <p class="category">  </p>
+        <h3 class="name">Tomato 1 kg</h3>
+        <p class="rating">★★★★★ (4)</p>
+        <p class="price"><span class="current">$28</span> <span class="old">$30</span></p>
+        <button class="add-btn">Add</button>
+      </div>
+
+      <div class="product-card">
+        <img src="images/carrot.png" alt="Carrot">
+        <p class="category">Vegetables</p>
+        <h3 class="name">Carrot 500g</h3>
+        <p class="rating">★★★★★ (4)</p>
+        <p class="price"><span class="current">$44</span> <span class="old">$50</span></p>
+        <button class="add-btn">Add</button>
+      </div>
+
+      <div class="product-card">
+        <img src="images/spinach.png" alt="Spinach">
+        <p class="category">Vegetables</p>
+        <h3 class="name">Spinach 500g</h3>
+        <p class="rating">★★★★★ (4)</p>
+        <p class="price"><span class="current">$15</span> <span class="old">$18</span></p>
+        <button class="add-btn">Add</button>
+      </div>
+
+      <div class="product-card">
+        <img src="images/onion.png" alt="Onion">
+        <p class="category">Vegetables</p>
+        <h3 class="name">Onion 500g</h3>
+        <p class="rating">★★★★★ (4)</p>
+        <p class="price"><span class="current">$45</span> <span class="old">$50</span></p>
+        <button class="add-btn">Add</button>
+      </div>
+    </div>
+  </section>
 
 
 
-<div class="product-grid">
-  {% for product in products %}
-  <div class="product-card">
-    <img src="{% static product.image %}" alt="{{ product.name }}">
-    <p class="category">{{ product.category }}</p>
-    <h3>{{ product.name }}</h3>
-    <p class="rating">
-      {% if product.rating >= 4.5 %}★★★★★
-      {% elif product.rating >= 4.0 %}★★★★☆
-      {% else %}★★★☆☆
-      {% endif %}
-      <span>({{ product.rating }})</span>
-    </p>
-    <p class="price">
-      <span class="current">${{ product.price }}</span>
-      <span class="old">${{ product.old_price }}</span>
-    </p>
-    <button class="add-btn">🛒 Add</button>
-  </div>
-  {% endfor %}
-</div>
 
 
 
@@ -73,14 +107,7 @@
 
 
 
-
-
-
-
-
-
-
-
+  
 <!-- Footer -->
 <footer class="footer">
   <div class="footer-container">
@@ -94,7 +121,7 @@
     <div class="footer-column links">
       <h4>Quick Links</h4>
       <ul>
-        <li><a href="{% url 'home' %}">Home</a></li>
+        <li><a href="#">Home</a></li>
          <li><a href="#">Food</a></li>
         <li><a href="#">Restourant</a></li>
         <li><a href="#">Contact Us</a></li>
@@ -130,6 +157,22 @@
     <p> &copy; 2025 Food Delivery. All rights reserved.</p>
   </div>
 </footer>
-
 </body>
+
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  

@@ -10,11 +10,18 @@
   <link rel="stylesheet" href="{% static 'style.css' %}">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-
+ 
+  <link rel="stylesheet" href="{% static 'register.css' %}">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+  </style>
 </head>
 
 <body>
 
+  
   <!-- Navbar -->
   <nav class="navbar">
     <div class="logo">Food Delivery</div>
@@ -22,7 +29,6 @@
       <a href= "{% url 'home' %}">Home</a>
       <a href="#">Restaurant</a>
       <a href="{% url 'product'%}">Food</a>
-      <a href="{% url 'Services'%}">Services</a>
       <a href="#">Contact Us</a>
       <div class="search-box">
         <input type="text" placeholder="Search products"/>
@@ -30,9 +36,7 @@
     </div>
     <div class="cart-login">
       <span>🛒<sup>0</sup></span>
-      <a href= "{% url 'login_signup' %}"class="login-btn">Login</a>
-      
-      
+      <a href= "{% url 'login' %}"class="login-btn">Login</a>
      
     </div>
   </nav>
@@ -45,12 +49,9 @@
           <div class="content-holder">
               <h2>Hello!</h2>
              
-              <button class="button-1" onclick="signup()">Sign up</button>
-              <button class="button-2" onclick="login()">Login</button>
-          </div>
+              <button class="button" onclick="signup()"><a href="{% url 'register' %}">Register</a></button> 
+          </div>  
       </div>
-
-      
       <!--Forms-->
       <div class="box-2">
         {% if messages %}
@@ -61,17 +62,7 @@
             </ul>
         {% endif %}
         <!-- LOGIN FORM -->
-        <form class="login-form-container" method="POST">
-            {% csrf_token %}
-            <h1>Login Form</h1>
-            <input type="hidden" name="action" value="login">
-            <input type="text" name="username" placeholder="Username" class="input-field" required><br><br>
-            <input type="password" name="password" placeholder="Password" class="input-field" required><br><br>
-            <button class="login-button" type="submit" style="cursor: pointer;">Login</button>
-        </form>
-
-        <!-- SIGNUP FORM -->
-        <form class="signup-form-container" method="POST" style="display: none;">
+       <form class="signup-form-container" method="POST">
             {% csrf_token %}
             <h1>Sign Up Form</h1>
             <input type="hidden" name="action" value="signup">
@@ -80,36 +71,10 @@
             <input type="password" name="new_password" placeholder="Password" class="input-field" required><br><br>
             <button class="signup-button" style="cursor: pointer;" type="submit">Sign Up</button>
         </form>
+
       </div>
 
     </div>
       
 </body>
-
-<script>
-
-
-
-
-function signup()
-{
-    document.querySelector(".login-form-container").style.cssText = "display: none;";
-    document.querySelector(".signup-form-container").style.cssText = "display: block;";
-    document.querySelector(".container").style.cssText = "background: linear-gradient(to bottom, rgb(56, 189, 149),  rgb(28, 139, 106));";
-    document.querySelector(".button-1").style.cssText = "display: none";
-    document.querySelector(".button-2").style.cssText = "display: block";
-
-};
-
-function login()
-{
-    document.querySelector(".signup-form-container").style.cssText = "display: none;";
-    document.querySelector(".login-form-container").style.cssText = "display: block;";
-    document.querySelector(".container").style.cssText = "background: linear-gradient(to bottom, rgb(6, 108, 224),  rgb(14, 48, 122));";
-    document.querySelector(".button-2").style.cssText = "display: none";
-    document.querySelector(".button-1").style.cssText = "display: block";
-
-}
-
-</script>
 </html>
