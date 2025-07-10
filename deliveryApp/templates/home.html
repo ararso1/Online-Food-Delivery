@@ -1,41 +1,7 @@
+{% extends "base.html" %}
+
+{% block content %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title> Food Delivery </title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="{% static 'style.css' %}">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-</head>
-
-<body>
-
-  <!-- Navbar -->
-  <nav class="navbar">
-    <div class="logo">Food Delivery</div>
-    <div class="nav-links">
-      <a href="{% url 'add_product'%}" class="nav-button">Seller_Dashboard</a>
-      <a href="#">Home</a>
-      <a href="#">Restaurant</a>
-      <a href="{% url 'product'%}">Food</a>
-     
-      <a href="#">Contact Us</a>
-    </div>
-    <div class="search-box">
-        <input type="text" placeholder="Search products"/>
-    </div>
-    
-    <div class="cart-login">
-      <span>🛒<sup>0</sup></span>
-      <a href= "{% url 'login' %}"class="login-btn">Login</a>
-     
-    </div>
-  </nav>
-
-
   <!-- Hero Section -->
   <section class="hero">
     <div class="hero-text">
@@ -51,48 +17,43 @@
     </div> 
   </section>
 
-
-
-
 <!-- Popular Restaurants Section -->
 <section class="restaurants">
-  <h2>Popular Restaurants in Addis Ababa</h2>
-
-
-  <div class="restaurant-grid"/>
-
-    <div class="restaurant-card">
-      <img src="{% static 'images/pizza hut.jpg' %}" alt="Kategna Restaurant">
-      <h4>🍕 pizza hut</h4>
-
-      </div>
-    <div class="restaurant-card">
-        <img src="{% static 'images/effio.jpg' %}" alt="Effoi Pizza">
-      <h4>🍕 Effoi Pizza</h4>
-    </div>
+  <h2>Popular Category</h2>
+  <div class="restaurant-grid">
   
+    <a class="ln" href="#">
+        <div class="restaurant-card">
+            <img src="{% static 'images/effio.jpg' %}" alt="Pizza Hut">
+            <h4>🍕 Pizza Hut mmmmm</h4>
+        </div>
+    </a>
+
+    <a class="ln" href="#">
+      <div class="restaurant-card">
+          <img src="{% static 'images/effio.jpg' %}" alt="Effoi Pizza">
+          <h4>🍕 Effoi Pizza</h4>
+      </div>
+    </a>
+
     <div class="restaurant-card">
          <img src="{% static 'images/burger.jpg' %}" alt=" burger Restaurant">
-      <h4>🍔 Smash burger Restaurant</h4>
-        
-        </div>
+         <a class="ln" href="#"><h4>🍔 Smash burger Restaurant</h4> </a> 
+    </div>
+
     <div class="restaurant-card">
         <img src="{% static 'images/sushi.jpg' %}" alt="Sishu Restaurant">
-      <h4> 🍥Sishu Restaurant</h4>
-        
-        
-        </div>
+        <a class="ln" href="#"><h4> 🍥Sishu Restaurant</h4>  </a>
+    </div>
+
     <div class="restaurant-card">
         <img src="{% static 'images/hebesha.jpg' %}" alt="2000 Habesha Cultural">
-      <h4>🍲2000 Habesha Cultural</h4>
-        
-        </div>
+        <a class="ln" href="#"><h4>🍲2000 Habesha Cultural</h4> </a>
+    </div>
+
     <div class="restaurant-card">
-        
         <img src="{% static 'images/noddles.jpg' %}" alt="Five Loaves">
-      <h4>🍜 chanole noodles</h4>
-        
-    
+        <a class="ln" href="#"><h4>🍜 chanole noodles</h4> </a>  
     </div>
   </div>
 </section>
@@ -101,7 +62,7 @@
 
 <!-- Best Sellers Section -->
 <section class="best-sellers">
-  <h2>Most Order Foods </h2>
+  <h2>Most Ordered Foods </h2>
 
   <div class="product-grid">
     <div class="product-card">
@@ -166,11 +127,68 @@
   </div>
 </section>
 
+<section class="best-sellers">
+  <h2>Most Featured Restaurants</h2>
 
+  <div class="product-grid">
 
+    <div class="product-card">
+      <img src="{% static 'images/restaurant1.jpg' %}" alt="Yod Abyssinia Restaurant">
+      <small>Traditional Ethiopian Cuisine</small>
+      <h6>Yod Abyssinia</h6>
+      <div class="product-rating">★★★★★ <span>(4.9)</span></div>
+      <div class="price-row">
+        <span class="new-price">Open: 10:00 AM - 11:00 PM</span>
+      </div>
+      <button class="add-to-cart"><i class="fa fa-map-marker-alt"></i> <a href="{% url 'rest_details' %}">View</a></button>
+    </div>
 
+    <div class="product-card">
+      <img src="{% static 'images/restaurant2.jpg' %}" alt="Five Loaves Bistro">
+      <small>Continental and Vegan Options</small>
+      <h6>Five Loaves Bistro</h6>
+      <div class="product-rating">★★★★☆ <span>(4.6)</span></div>
+      <div class="price-row">
+        <span class="new-price">Open: 9:00 AM - 10:00 PM</span>
+      </div>
+      <button class="add-to-cart"><i class="fa fa-map-marker-alt"></i> View</button>
+    </div>
 
+    <div class="product-card">
+      <img src="{% static 'images/restaurant3.jpg' %}" alt="Kategna Restaurant">
+      <small>Modern Ethiopian Fusion</small>
+      <h6>Kategna Restaurant</h6>
+      <div class="product-rating">★★★★☆ <span>(4.7)</span></div>
+      <div class="price-row">
+        <span class="new-price">Open: 8:00 AM - 9:00 PM</span>
+      </div>
+      <button class="add-to-cart"><i class="fa fa-map-marker-alt"></i> View</button>
+    </div>
 
+    <div class="product-card">
+      <img src="{% static 'images/restaurant4.jpg' %}" alt="Sushi Corner">
+      <small>Japanese Cuisine</small>
+      <h6>Sushi Corner</h6>
+      <div class="product-rating">★★★★☆ <span>(4.5)</span></div>
+      <div class="price-row">
+        <span class="new-price">Open: 11:00 AM - 11:30 PM</span>
+      </div>
+      <button class="add-to-cart"><i class="fa fa-map-marker-alt"></i> View</button>
+    </div>
+
+    <div class="product-card">
+      <img src="{% static 'images/restaurant5.jpg' %}" alt="Burger Palace">
+      <small>Fast Food & Grills</small>
+      <h6>Burger Palace</h6>
+      <div class="product-rating">★★★★☆ <span>(4.3)</span></div>
+      <div class="price-row">
+        <span class="new-price">Open: 24 Hours</span>
+      </div>
+      <button class="add-to-cart"><i class="fa fa-map-marker-alt"></i> View</button>
+    </div>
+
+  </div>
+</section>
 
 
   <!-- Why We Are the Best Section -->
@@ -212,61 +230,4 @@
 
 <!-- Footer Starts Below -->
 
-
-
-<!-- Footer -->
-<footer class="footer">
-  <div class="footer-container">
-
-    <div class="footer-column company">
-      <h3>Food Delivery</h3>
-      <p class="tagline">"We deliver fresh Foods straight to your door."</p>
-      <p class="desc">Trusted by thousands to make delivery easy and affordable.</p>
-    </div>
-
-    <div class="footer-column links">
-      <h4>Quick Links</h4>
-      <ul>
-        <li><a href="#">Home</a></li>
-         <li><a href="#">Food</a></li>
-        <li><a href="#">Restourant</a></li>
-        <li><a href="#">Contact Us</a></li>
-       
-        <li><a href="#"></a></li>
-      </ul>
-    </div>
-
-    <div class="footer-column help">
-      <h4>Need Help?</h4>
-      <ul>
-        <li><a href="#">Delivery Information</a></li>
-        <li><a href="#">Return & Refund Policy</a></li>
-        <li><a href="#">Payment Methods</a></li>
-        <li><a href="#">Track your Order</a></li>
-        <li><a href="#">Contact Us</a></li>
-      </ul>
-    </div>
-
-   <div class="social-links">
-  <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
-  <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
-  <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
-  <a href="#" class="social-icon"><i class="fab fa-whatsapp"></i></a>
-  <a href="#" class="social-icon"><i class="fab fa-youtube"></i></a>
-</div>
-
-
-
-  </div>
-
-  <div class="footer-bottom">
-    <p> &copy; 2025 Food Delivery. All rights reserved.</p>
-  </div>
-</footer>
-
-
-   
- 
-
-</body>
-</html>
+{% endblock %}

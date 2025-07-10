@@ -1,0 +1,83 @@
+
+{% extends "base.html" %}
+
+{% block content %}
+{% load static %}
+
+<section class="restaurant-detail">
+
+  <!-- Restaurant Header -->
+  <div class="restaurant-header">
+    <img src="{% static 'images/Banner.png' %}" alt="Yod Abyssinia" class="restaurant-banner">
+
+    <div class="restaurant-info">
+      <h2>Yod Abyssinia</h2>
+      <p>Yod Abyssinia is a top-rated traditional Ethiopian restaurant known for its live music, cultural dance, and delicious authentic cuisine.</p>
+      <div class="restaurant-meta">
+        <span>⭐ 4.9 (120 reviews)</span>
+        <span>📍 Bole, Addis Ababa</span>
+        <span>🕒 Open: 10:00 AM - 11:00 PM</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Menu Header -->
+  <h3 class="restaurant-menu-title">Available Dishes</h3>
+
+  <!-- Dish List -->
+  <div class="product-grid">
+
+    <div class="product-card">
+      <img src="{% static 'images/doro_wat.jpg' %}" alt="Doro Wat">
+      <small>Traditional Dish</small>
+      <h6>Doro Wat</h6>
+      <p>Spicy chicken stew served with hard-boiled egg and injera.</p>
+      <div class="product-rating">★★★★★ <span>(4.8)</span></div>
+      <div class="price-row">
+        <span class="new-price">250 birr</span>
+      </div>
+      <button class="add-to-cart"><i class="fa fa-shopping-cart"></i> Add</button>
+    </div>
+
+    <div class="product-card">
+      <img src="{% static 'images/kitfo.jpg' %}" alt="Kitfo">
+      <small>Beef</small>
+      <h6>Kitfo</h6>
+      <p>Minced raw beef mixed with Ethiopian spices and butter.</p>
+      <div class="product-rating">★★★★☆ <span>(4.6)</span></div>
+      <div class="price-row">
+        <span class="new-price">320 birr</span>
+        <span class="old-price">350 birr</span>
+      </div>
+      <button class="add-to-cart"><i class="fa fa-shopping-cart"></i> Add</button>
+    </div>
+
+    <div class="product-card">
+      <img src="{% static 'images/beyaynetu.jpg' %}" alt="Beyaynetu">
+      <small>Vegetarian</small>
+      <h6>Beyaynetu</h6>
+      <p>A variety of lentils, vegetables, and sauces served on injera.</p>
+      <div class="product-rating">★★★★☆ <span>(4.7)</span></div>
+      <div class="price-row">
+        <span class="new-price">200 birr</span>
+      </div>
+      <button class="add-to-cart"><i class="fa fa-shopping-cart"></i> Add</button>
+    </div>
+    <div class="product-card">
+      <img src="{% static 'images/beyaynetu.jpg' %}" alt="Beyaynetu">
+      <small>Vegetarian</small>
+      <h6>Beyaynetu</h6>
+      <p>A variety of lentils, vegetables, and sauces served on injera.</p>
+      <div class="product-rating">★★★★☆ <span>(4.7)</span></div>
+      <div class="price-row">
+        <span class="new-price">200 birr</span>
+      </div>
+      <button class="add-to-cart"><i class="fa fa-shopping-cart"></i> Add</button>
+    </div>
+
+  </div>
+
+</section>
+
+
+{% endblock %}

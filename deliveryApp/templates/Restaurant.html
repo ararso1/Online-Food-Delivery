@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% load static %}
+<section class="restaurant-list">
+  <h2>Top Rated Restaurants</h2>
+
+  <div class="product-grid">
+
+    <!-- Restaurant Card 1 -->
+    <div class="product-card">
+      <img src="{% static 'images/restaurant1.jpg' %}" alt="Yod Abyssinia">
+      <small>Traditional Ethiopian</small>
+      <h6>Yod Abyssinia</h6>
+      <div class="product-rating">★★★★★ <span>(4.9)</span></div>
+      <div class="price-row">
+        <span class="new-price">Open: 10:00 AM - 11:00 PM</span>
+      </div>
+      <a href="{% url 'rest_details' %}">
+        <button class="add-to-cart"><i class="fa fa-map-marker-alt"></i> View</button>
+      </a>
+    </div>
+
+    <!-- Restaurant Card 2 -->
+    <div class="product-card">
+      <img src="{% static 'images/restaurant2.jpg' %}" alt="Five Loaves Bistro">
+      <small>Continental & Vegan</small>
+      <h6>Five Loaves Bistro</h6>
+      <div class="product-rating">★★★★☆ <span>(4.6)</span></div>
+      <div class="price-row">
+        <span class="new-price">Open: 9:00 AM - 10:00 PM</span>
+    </div>
+      <a href="{% url 'rest_details' %}">
+        <button class="add-to-cart"><i class="fa fa-map-marker-alt"></i> View</button>
+      </a>
+    </div>
+
+    <!-- Restaurant Card 3 -->
+    <div class="product-card">
+      <img src="{% static 'images/restaurant3.jpg' %}" alt="Kategna Restaurant">
+      <small>Modern Ethiopian</small>
+      <h6>Kategna</h6>
+      <div class="product-rating">★★★★☆ <span>(4.7)</span></div>
+      <div class="price-row">
+        <span class="new-price">Open: 8:00 AM - 9:00 PM</span>
+      </div>
+      <a href="{% url 'rest_details' %}">
+        <button class="add-to-cart"><i class="fa fa-map-marker-alt"></i> View</button>
+      </a>
+    </div>
+
+    <!-- Add more restaurant cards similarly... -->
+
+  </div>
+</section>
+
+
+{% endblock %}

@@ -1,0 +1,89 @@
+
+{% extends "base.html" %}
+
+{% block content %}
+{% load static %}
+
+
+
+<!-- Main Product Section -->
+<div class="product-flex">
+  <!-- Left: Gallery -->
+  <div class="product-gallery">
+    <div class="thumbnail-column">
+      <img src="{% static 'images/burger.jpg' %}" class="thumb" alt="Thumb 1">
+      <img src="{% static 'images/burger.jpg' %}" class="thumb" alt="Thumb 2">
+      <img src="{% static 'images/burger.jpg' %}" class="thumb" alt="Thumb 3">
+    </div>
+    <div class="main-img-wrapper">
+      <img src="{% static 'images/burger.jpg' %}" alt="Product Image" class="main-img">
+    </div>
+  </div>
+
+  <!-- Right: Product details -->
+  <div class="product-details">
+    <h1>Potato 500g</h1>
+    <div class="rating">★★★★☆ <span>(4.5)</span></div>
+    <p class="price"><del>$40</del> <strong>$35</strong></p>
+    <ul class="features">
+      <li>Fresh and organic</li>
+      <li>Rich in carbohydrates</li>
+      <li>Ideal for curries and fries</li>
+    </ul>
+    <div class="actions">
+      <button class="add-cart">Add to Cart</button>
+      <button class="buy-now">Buy Now</button>
+    </div>
+  </div>
+</div>
+
+<!-- Related Products Section -->
+<div class="related-products">
+  <h2>Related Products</h2>
+  <div class="product-grid">
+    <div class="card">
+      <img src="{% static 'images/burger.jpg' %}" alt="Potato">
+      <p>Potato 500g</p>
+      <p>$35 <del>$40</del></p>
+      <button>Add</button>
+    </div>
+    <div class="card">
+      <img src="{% static 'images/burger.jpg' %}" alt="Tomato">
+      <p>Tomato 1kg</p>
+      <p>$28 <del>$30</del></p>
+      <button>Add</button>
+    </div>
+    <div class="card">
+      <img src="{% static 'images/burger.jpg' %}" alt="Carrot">
+      <p>Carrot 500g</p>
+      <p>$44 <del>$50</del></p>
+      <button>Add</button>
+    </div>
+    <div class="card">
+      <img src="{% static 'images/burger.jpg' %}" alt="Spinach">
+      <p>Spinach 500g</p>
+      <p>$15 <del>$18</del></p>
+      <button>Add</button>
+    </div>
+  </div>
+  <div class="see-more">
+    <button>See more</button>
+  </div>
+</div>
+
+<!-- Thumbnail click functionality -->
+<script>
+  const thumbs = document.querySelectorAll('.thumb');
+  const mainImg = document.querySelector('.main-img');
+
+  thumbs.forEach(thumb => {
+    thumb.addEventListener('click', () => {
+      mainImg.src = thumb.src;
+    });
+  });
+</script>
+
+</body>
+</html>
+
+{% endblock %}

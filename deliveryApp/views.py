@@ -68,7 +68,7 @@ def signup_view(request):
 
 # food deliveryApp/views.py
 
-def Food_usage(request):
+def food(request):
     products = [
         {
             'name': 'Smash Burgers',
@@ -182,11 +182,10 @@ def Food_usage(request):
             'old_price': 550,
             'rating': 4.0,
         },
-        
-        
+    
         # Add up to 22 total entries as you wish...
     ]
-    return render(request, 'Food.html', {'products': products})
+    return render(request, 'food.html', {'products': products})
 
 
 
@@ -196,8 +195,7 @@ def Food_usage(request):
 
 def home(request):
     return render(request,"home.html")
-def Food(request):
-    return render(request, 'Food.html')
+
 def Restaurant(request):
     return render(request, 'Restaurant.html')
 def Navbar(request):
@@ -211,15 +209,13 @@ def orders(request):
 def logout_view(request):
     logout(request)
     return redirect('home')
-def chanole(request):
-    return render(request, 'popularResturants/chanole.html')
-def hebesha(request):
-    return render(request, 'popularResturants/hebesha.html')
-def pizzahut(request):
-    return render(request, 'popularResturants/pizzahut.html')
-def sishu(request):
-    return render(request, 'popularResturants/sishu.html')
-def smashburger(request):
-    return render(request, 'popularResturants/smashburger.html')
+def rest_details(request):
+    return render(request, 'rest_details.html')
+def restaurant(request):
+    return render(request, 'restaurant.html')
+def singlepage(request):
+    return render(request, 'singlepage.html')
+def cart(request):
+    return render(request, 'cart.html')
 
 
