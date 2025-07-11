@@ -27,8 +27,12 @@
     <div class="search-box">
       <input type="text" placeholder="Search products"/>
     </div>
+
     <div class="cart-login">
-      <span>🛒<sup>0</sup></span>
+      
+      <div>
+      <a href="{%url 'cart'%}"><span>🛒<sup>0</sup></span> </a>
+      </div>
       <a href="{% url 'login' %}" class="login-btn">Login</a>
     </div>
   </nav>

@@ -8,8 +8,8 @@
       <h1>Most Fastest Food Delivery Services</h1>
       <h2>Get the best quality food in Addis Ababa</h2>
       <div class="hero-buttons">
-        <button class="shop-now">Shop Now</button>
-        <button class="explore-btn">Explore Deals →</button>
+        <button class="shop-now">Order Now</button>
+        <button class="explore-btn">Explore Details →</button>
       </div>
     </div>
     <div class="hero-img">
@@ -24,37 +24,45 @@
   
     <a class="ln" href="#">
         <div class="restaurant-card">
-            <img src="{% static 'images/effio.jpg' %}" alt="Pizza Hut">
-            <h4>🍕 Pizza Hut mmmmm</h4>
+            <img src="{% static 'images/pizza hut.jpg' %}" alt="Pizza Hut">
+            <h4> Pizza Hut </h4>
         </div>
     </a>
 
     <a class="ln" href="#">
       <div class="restaurant-card">
           <img src="{% static 'images/effio.jpg' %}" alt="Effoi Pizza">
-          <h4>🍕 Effoi Pizza</h4>
+          <h4> Effoi Pizza</h4>
       </div>
     </a>
 
+    <a class="ln" href="#">
     <div class="restaurant-card">
          <img src="{% static 'images/burger.jpg' %}" alt=" burger Restaurant">
-         <a class="ln" href="#"><h4>🍔 Smash burger Restaurant</h4> </a> 
+         <h4>  Smash burger </h4> 
     </div>
+    </a>
 
-    <div class="restaurant-card">
-        <img src="{% static 'images/sushi.jpg' %}" alt="Sishu Restaurant">
-        <a class="ln" href="#"><h4> 🍥Sishu Restaurant</h4>  </a>
-    </div>
+    <a class="ln" href="#">
+      <div class="restaurant-card">
+          <img src="{% static 'images/sushi.jpg' %}" alt="Sishu Restaurant">
+          <h4>  Sishu </h4>  
+      </div>
+    </a>
 
-    <div class="restaurant-card">
-        <img src="{% static 'images/hebesha.jpg' %}" alt="2000 Habesha Cultural">
-        <a class="ln" href="#"><h4>🍲2000 Habesha Cultural</h4> </a>
-    </div>
+    <a class="ln" href="#">
+      <div class="restaurant-card">
+          <img src="{% static 'images/hebesha.jpg' %}" alt="2000 Habesha Cultural">
+        <h4> 2000 Habesha Cultural</h4>
+      </div>
+   </a>
 
-    <div class="restaurant-card">
-        <img src="{% static 'images/noddles.jpg' %}" alt="Five Loaves">
-        <a class="ln" href="#"><h4>🍜 chanole noodles</h4> </a>  
-    </div>
+    <a class="ln" href="#">
+      <div class="restaurant-card">
+          <img src="{% static 'images/noddles.jpg' %}" alt="Five Loaves">
+          <h4> chanole noodles</h4>  
+      </div>
+    </a>
   </div>
 </section>
 
@@ -65,65 +73,74 @@
   <h2>Most Ordered Foods </h2>
 
   <div class="product-grid">
-    <div class="product-card">
-      <img src="{% static 'images/pizzaa.jpg' %}" alt="pizza">
-      <small> Pizza </small>
-      <h6>medium pizza</h6>
-      <div class="product-rating">★★★★☆ <span>(4)</span></div>
-      <div class="price-row">
-        <span class="new-price">550 birr</span>
-        <span class="old-price">600 birr</span>
-      </div>
-      <button class="add-to-cart"><i class="fa fa-shopping-cart"></i> Add</button>
-    </div>
 
-    <div class="product-card">
-      <img src="{% static 'images/shkla tibs.jpg' %}" alt="tibs">
-      <small>Shekla tibs</small>
-      <h6>Spicy Ethiopian beef served hot in a clay pot</h6>
-      <div class="product-rating">★★★★☆ <span>(4)</span></div>
-      <div class="price-row">
-        <span class="new-price">420 birr</span>
-        <span class="old-price">450 birr</span>
+    <a class="ln" href="{% url 'singlepage' %}">
+      <div class="product-card">
+        <img src="{% static 'images/pizzaa.jpg' %}" alt="pizza">
+        <small> Pizza </small>
+        <h6>medium pizza</h6>
+        <div class="product-rating">★★★★☆ <span>(4)</span></div>
+        <div class="price-row">
+          <span class="new-price">550 birr</span>
+          <span class="old-price">600 birr</span>
+        </div>
+        <button class="add-to-cart"><i class="fa fa-shopping-cart"></i> Add</button>
       </div>
-      <button class="add-to-cart"><i class="fa fa-shopping-cart"></i> Add</button>
-    </div>
+    </a>
+ 
+    <a class="ln" href="{% url 'singlepage' %}">
+        <div class="product-card">
+          <img src="{% static 'images/shkla tibs.jpg' %}" alt="tibs">
+          <small>Shekla tibs</small>
+          <h6>Spicy Ethiopian beef served hot in a clay pot</h6>
+          <div class="product-rating">★★★★☆ <span>(4)</span></div>
+          <div class="price-row">
+            <span class="new-price">420 birr</span>
+            <span class="old-price">450 birr</span>
+          </div>
+          <button class="add-to-cart"><i class="fa fa-shopping-cart"></i> Add</button>
+        </div>
+    </a>
+    <a class="ln" href="{% url 'singlepage' %}">
+      <div class="product-card">
+        <img src="{% static 'images/Spicy Chicken Noodles.jpg' %}" alt="noodles">
+        <small>spicy chicken veggie noodles</small>
+        <h6>Hot noodles with spicy chicken & veggies</h6>
+        <div class="product-rating">★★★★☆ <span>(4)</span></div>
+        <div class="price-row">
+          <span class="new-price">600 birr</span>
+          <span class="old-price">750 birr</span>
+        </div>
+        <button class="add-to-cart"><i class="fa fa-shopping-cart"></i> Add</button>
+      </div>
+    </a>
+      <a class="ln" href="{% url 'singlepage' %}">
+        <div class="product-card">
+          <img src="{% static 'images/double chicken.jpg' %}" alt="burger">
+          <small>Double Chicken Burger</small>
+          <h6>Double chicken layers with crunchy veggies and creamy sauce</h6>
+          <div class="product-rating">★★★★★ <span>(4)</span></div>
+          <div class="price-row">
+            <span class="new-price">700 birr</span>
+            <span class="old-price">850 birr</span>
+          </div>
+          <button class="add-to-cart"><i class="fa fa-shopping-cart"></i> Add</button>
+        </div>
+     </a>
 
-    <div class="product-card">
-      <img src="{% static 'images/Spicy Chicken Noodles.jpg' %}" alt="noodles">
-      <small>spicy chicken veggie noodles</small>
-      <h6>Hot noodles with spicy chicken & veggies</h6>
-      <div class="product-rating">★★★★☆ <span>(4)</span></div>
-      <div class="price-row">
-        <span class="new-price">600 birr</span>
-        <span class="old-price">750 birr</span>
+    <a class="ln" href="{% url 'singlepage' %}">
+      <div class="product-card">
+        <img src="{% static 'images/Kappa_Maki.png' %}" alt="Sushi">
+        <small> kappa maki Sushi</small>
+        <h6>Classic cucumber roll — fresh, light, and vegan-friendly</h6>
+        <div class="product-rating">★★★★☆ <span>(4)</span></div>
+        <div class="price-row">
+          <span class="new-price">620 birr</span>
+          <span class="old-price">700 birr</span>
+        </div>
+        <button class="add-to-cart"><i class="fa fa-shopping-cart"></i> Add</button>
       </div>
-      <button class="add-to-cart"><i class="fa fa-shopping-cart"></i> Add</button>
-    </div>
-
-    <div class="product-card">
-      <img src="{% static 'images/double chicken.jpg' %}" alt="burger">
-      <small>Double Chicken Burger</small>
-      <h6>Double chicken layers with crunchy veggies and creamy sauce</h6>
-      <div class="product-rating">★★★★★ <span>(4)</span></div>
-      <div class="price-row">
-        <span class="new-price">700 birr</span>
-        <span class="old-price">850 birr</span>
-      </div>
-      <button class="add-to-cart"><i class="fa fa-shopping-cart"></i> Add</button>
-    </div>
-
-    <div class="product-card">
-      <img src="{% static 'images/Kappa_Maki.png' %}" alt="Sushi">
-      <small> kappa maki Sushi</small>
-      <h6>Classic cucumber roll — fresh, light, and vegan-friendly</h6>
-      <div class="product-rating">★★★★☆ <span>(4)</span></div>
-      <div class="price-row">
-        <span class="new-price">620 birr</span>
-        <span class="old-price">700 birr</span>
-      </div>
-      <button class="add-to-cart"><i class="fa fa-shopping-cart"></i> Add</button>
-    </div>
+   </a>
   </div>
 </section>
 
@@ -151,7 +168,7 @@
       <div class="price-row">
         <span class="new-price">Open: 9:00 AM - 10:00 PM</span>
       </div>
-      <button class="add-to-cart"><i class="fa fa-map-marker-alt"></i> View</button>
+      <button class="add-to-cart"><i class="fa fa-map-marker-alt"></i><a href="{% url 'rest_details' %}">View</a></button>
     </div>
 
     <div class="product-card">
@@ -162,7 +179,7 @@
       <div class="price-row">
         <span class="new-price">Open: 8:00 AM - 9:00 PM</span>
       </div>
-      <button class="add-to-cart"><i class="fa fa-map-marker-alt"></i> View</button>
+      <button class="add-to-cart"><i class="fa fa-map-marker-alt"></i> <a href="{% url 'rest_details' %}">View</a></button>
     </div>
 
     <div class="product-card">
@@ -173,7 +190,7 @@
       <div class="price-row">
         <span class="new-price">Open: 11:00 AM - 11:30 PM</span>
       </div>
-      <button class="add-to-cart"><i class="fa fa-map-marker-alt"></i> View</button>
+      <button class="add-to-cart"><i class="fa fa-map-marker-alt"></i> <a href="{% url 'rest_details' %}">View</a></button>
     </div>
 
     <div class="product-card">
@@ -184,7 +201,7 @@
       <div class="price-row">
         <span class="new-price">Open: 24 Hours</span>
       </div>
-      <button class="add-to-cart"><i class="fa fa-map-marker-alt"></i> View</button>
+      <button class="add-to-cart"><i class="fa fa-map-marker-alt"></i> <a href="{% url 'rest_details' %}">View</a></button>
     </div>
 
   </div>

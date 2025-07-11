@@ -1,10 +1,51 @@
-
 {% extends 'base.html' %}
 
 {% block content %}
 
 {% load static %}
 
+<div class="cart-container">
+  <div class="cart-left">
+    <h1>Shopping Cart <span>0 Items</span></h1>
+    <p class="product-details-label">Product Details</p>
 
+    <div class="cart-table">
+      <div class="table-header">
+        <div>Product Details</div>
+        <div>Subtotal</div>
+        <div>Action</div>
+      </div>
+      <!-- Empty cart, so no products listed -->
+
+      <a href="{%url 'food'%}" class="continue-shopping">← Continue Shopping</a>
+    </div>
+  </div>
+
+  <div class="cart-right">
+    <h2>Order Summary</h2>
+    <div class="order-section">
+      <p><strong>DELIVERY ADDRESS</strong></p>
+      <p>No address found <a href="#">Change</a></p>
+    </div>
+
+    <div class="order-section">
+      <p><strong>PAYMENT METHOD</strong></p>
+      <select>
+        <option>Cash On Delivery</option>
+        <option>Transfer</option>
+        <option>dept card</option>
+      </select>
+    </div>
+
+    <div class="price-summary">
+      <p>Price <span>$0</span></p>
+      <p>Shipping Fee <span class="green-text">Free</span></p>
+      <p>Tax (2%) <span>$0</span></p>
+      <p><strong>Total Amount: <span>$0</span></strong></p>
+    </div>
+
+    <button class="place-order-btn">Place Order</button>
+  </div>
+</div>
 
 {% endblock %}
