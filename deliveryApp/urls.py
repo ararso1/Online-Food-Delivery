@@ -18,7 +18,7 @@ urlpatterns = [
     path('restaurant/', restaurant, name='restaurant'),
     path('singlepage/', singlepage, name='singlepage'),  
     path('cart/', cart, name='cart'),  
-    
+    path('update_in_stock/', update_in_stock, name='update_in_stock'),
     
 ]
 

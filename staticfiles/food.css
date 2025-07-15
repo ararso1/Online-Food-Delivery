@@ -1,0 +1,89 @@
+/* ======= Product Grid Layout ======= */
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 30px;
+  padding: 40px 60px;
+  background-color: #fff;
+}
+
+/* ======= Product Card Style ======= */
+.product-card {
+  border: 1px solid #eee;
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+  transition: all 0.3s ease;
+  background-color: #fff;
+}
+
+.product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+}
+
+.product-card img {
+  width: 100px;
+  height: 100px;
+  object-fit: contain;
+  margin-bottom: 10px;
+}
+
+.product-card .category {
+  color: #999;
+  font-size: 14px;
+  margin-bottom: 5px;
+}
+
+.product-card h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #222;
+  margin-bottom: 5px;
+}
+
+.product-card .rating {
+  font-size: 16px;
+  color: #f39c12;
+  margin-bottom: 10px;
+}
+
+.product-card .rating span {
+  color: #777;
+  font-size: 14px;
+}
+
+/* ======= Price Section ======= */
+.product-card .price {
+  margin-bottom: 12px;
+}
+
+.product-card .price .current {
+  color: #27ae60;
+  font-weight: 600;
+  font-size: 18px;
+  margin-right: 5px;
+}
+
+.product-card .price .old {
+  color: #aaa;
+  text-decoration: line-through;
+  font-size: 15px;
+}
+
+/* ======= Add to Cart Button ======= */
+.add-btn {
+  background-color: #27ae60;
+  color: white;
+  border: none;
+  padding: 8px 18px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s;
+  font-weight: 600;
+}
+
+.add-btn:hover {
+  background-color: #219150;
+}

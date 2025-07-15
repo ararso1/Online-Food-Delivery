@@ -17,88 +17,58 @@
                 </tr>
             </thead>
             <tbody>
+                {% for product in products %}
                 <tr>
                     <td>
                         <div class="product-item">
-                            <img src="{% static 'img/potato_500g.png' %}" alt="Potato" class="product-thumbnail">
-                            Potato 500g
+                            {% if product.image1 %}
+                                <img src="{{ product.image1.url }}" alt="{{ product.name }}" class="product-thumbnail">
+                            {% else %}
+                                <img src="{% static 'img/placeholder_product.png' %}" alt="No Image" class="product-thumbnail">
+                            {% endif %}
+                            {{ product.name }}
                         </div>
                     </td>
-                    <td>Vegetables</td>
-                    <td>$35</td>
+                    <td>{{ product.category.name|default:"N/A" }}</td>
+                    <td>${{ product.product_price }}</td>
                     <td>
                         <label class="switch">
-                            <input type="checkbox" checked>
+                            <input type="checkbox" data-product-id="{{ product.id }}" {% if product.in_stock %}checked{% endif %} onchange="updateInStock(this)">
                             <span class="slider round"></span>
                         </label>
                     </td>
                 </tr>
+                {% empty %}
                 <tr>
-                    <td>
-                        <div class="product-item">
-                            <img src="{% static 'img/tomato_1kg.png' %}" alt="Tomato" class="product-thumbnail">
-                            Tomato 1kg
-                        </div>
-                    </td>
-                    <td>Vegetables</td>
-                    <td>$28</td>
-                    <td>
-                        <label class="switch">
-                            <input type="checkbox" checked>
-                            <span class="slider round"></span>
-                        </label>
-                    </td>
+                    <td colspan="4">No products found.</td>
                 </tr>
-                <tr>
-                    <td>
-                        <div class="product-item">
-                            <img src="{% static 'img/carrot_500g.png' %}" alt="Carrot" class="product-thumbnail">
-                            Carrot 500g
-                        </div>
-                    </td>
-                    <td>Vegetables</td>
-                    <td>$44</td>
-                    <td>
-                        <label class="switch">
-                            <input type="checkbox" checked>
-                            <span class="slider round"></span>
-                        </label>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="product-item">
-                            <img src="{% static 'img/spinach_500g.png' %}" alt="Spinach" class="product-thumbnail">
-                            Spinach 500g
-                        </div>
-                    </td>
-                    <td>Vegetables</td>
-                    <td>$15</td>
-                    <td>
-                        <label class="switch">
-                            <input type="checkbox" checked>
-                            <span class="slider round"></span>
-                        </label>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="product-item">
-                            <img src="{% static 'img/onion_500g.png' %}" alt="Onion" class="product-thumbnail">
-                            Onion 500g
-                        </div>
-                    </td>
-                    <td>Vegetables</td>
-                    <td>$45</td>
-                    <td>
-                        <label class="switch">
-                            <input type="checkbox" checked>
-                            <span class="slider round"></span>
-                        </label>
-                    </td>
-                </tr>
+                {% endfor %}
             </tbody>
         </table>
     </div>
 </div>
+
+<script>
+    function updateInStock(checkbox) {
+        const productId = checkbox.dataset.productId;
+        const inStock = checkbox.checked;
+
+        fetch('/products/update_in_stock/', { // Use the correct URL path
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'X-CSRFToken': '{{ csrf_token }}',  // Include CSRF token
+            },
+            body: `product_id=${productId}&in_stock=${inStock}`
+        })
+        .then(response => {
+            if (!response.ok) {
+                console.error('Error updating in_stock status');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    }
+</script>
 {% endblock %}

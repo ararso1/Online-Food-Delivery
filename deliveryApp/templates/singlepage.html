@@ -10,13 +10,14 @@
 <div class="product-flex">
   <!-- Left: Gallery -->
   <div class="product-gallery">
-    <div class="thumbnail-column">
-      <img src="{% static 'images/burger.jpg' %}" class="thumb" alt="Thumb 1">
-      <img src="{% static 'images/burger.jpg' %}" class="thumb" alt="Thumb 2">
-      <img src="{% static 'images/burger.jpg' %}" class="thumb" alt="Thumb 3">
-    </div>
+    <div class="thumbnail-column"> 
+      <img src="{% static 'images/shkla tibs.jpg' %}" class="thumb" alt="Thumb 1" onclick="changeImage(this)">
+      <img src="{% static 'images/effio.jpg' %}" class="thumb" alt="Thumb 2" onclick="changeImage(this)">
+      <img src="{% static 'images/meat.jpg' %}" class="thumb" alt="Thumb 3" onclick="changeImage(this)">
+       <img src="{% static 'images/Banner.png' %}" class="thumb" alt="Thumb 3" onclick="changeImage(this)">
+   </div>
     <div class="main-img-wrapper">
-      <img src="{% static 'images/burger.jpg' %}" alt="Product Image" class="main-img">
+      <img src="{% static 'images/burger.jpg' %}" alt="Product Image" class="main-img" id="mainImage">
     </div>
   </div>
 
@@ -73,16 +74,13 @@
 </div>
 
 <!-- Thumbnail click functionality -->
-<script>
-  const thumbs = document.querySelectorAll('.thumb');
-  const mainImg = document.querySelector('.main-img');
 
-  thumbs.forEach(thumb => {
-    thumb.addEventListener('click', () => {
-      mainImg.src = thumb.src;
-    });
-  });
-</script>
+ <script>
+    function changeImage(thumbnail) {
+      document.getElementById("mainImage").src = thumbnail.src;
+    }
+ </script>
+
 
 </body>
 </html>

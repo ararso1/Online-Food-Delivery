@@ -6,53 +6,62 @@
 {% block content %}
 <div class="add-product-section">
     <h2>Product Image</h2>
-    <div class="image-upload-area">
-        <div class="upload-box">
-            <img src="{% static 'img/upload_icon.png' %}" alt="Upload Icon">
-            <span>Upload</span>
+    <form method="post" enctype="multipart/form-data"> {% csrf_token %}
+        <div class="image-upload-area">
+            <div class="upload-box">
+                <label for="{{ form.image1.id_for_label }}">
+                    <img src="{% static 'img/upload_icon.png' %}" alt="Upload Icon">
+                    <span>Upload</span>
+                </label>
+                {{ form.image1 }}
+            </div>
+            <div class="upload-box">
+                <label for="{{ form.image2.id_for_label }}">
+                    <img src="{% static 'img/upload_icon.png' %}" alt="Upload Icon">
+                    <span>Upload</span>
+                </label>
+                {{ form.image2 }}
+            </div>
+            <div class="upload-box">
+                <label for="{{ form.image3.id_for_label }}">
+                    <img src="{% static 'img/upload_icon.png' %}" alt="Upload Icon">
+                    <span>Upload</span>
+                </label>
+                {{ form.image3 }}
+            </div>
+            <div class="upload-box">
+                <label for="{{ form.image4.id_for_label }}">
+                    <img src="{% static 'img/upload_icon.png' %}" alt="Upload Icon">
+                    <span>Upload</span>
+                </label>
+                {{ form.image4 }}
+            </div>
         </div>
-        <div class="upload-box">
-            <img src="{% static 'img/upload_icon.png' %}" alt="Upload Icon">
-            <span>Upload</span>
-        </div>
-        <div class="upload-box">
-            <img src="{% static 'img/upload_icon.png' %}" alt="Upload Icon">
-            <span>Upload</span>
-        </div>
-        <div class="upload-box">
-            <img src="{% static 'img/upload_icon.png' %}" alt="Upload Icon">
-            <span>Upload</span>
-        </div>
-    </div>
+        
+        {% for field in form %}
+            {% if field.name != 'image1' and field.name != 'image2' and field.name != 'image3' and field.name != 'image4' and field.name != 'in_stock' %}
+                <div class="form-group {% if field.name == 'product_price' or field.name == 'offer_price' %}price-group-item{% endif %}">
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {{ field }}
+                    {% for error in field.errors %}
+                        <p class="errorlist">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endfor %}
 
-    <div class="form-group">
-        <label for="product-name">Product Name</label>
-        <input type="text" id="product-name" placeholder="Type here">
-    </div>
+{% comment %}         <div class="form-group price-group">
+            <div>
+                <label for="{{ form.product_price.id_for_label }}">Product Price</label>
+                {{ form.product_price }}
+            </div>
+            <div>
+                <label for="{{ form.offer_price.id_for_label }}">Offer Price</label>
+                {{ form.offer_price }}
+            </div>
+        </div> {% endcomment %}
 
-    <div class="form-group">
-        <label for="product-description">Product Description</label>
-        <textarea id="product-description" placeholder="Type here"></textarea>
-    </div>
-
-    <div class="form-group">
-        <label for="category">Category</label>
-        <select id="category">
-            <option value="">Select Category</option>
-            </select>
-    </div>
-
-    <div class="form-group price-group">
-        <div>
-            <label for="product-price">Product Price</label>
-            <input type="number" id="product-price" value="0">
-        </div>
-        <div>
-            <label for="offer-price">Offer Price</label>
-            <input type="number" id="offer-price" value="0">
-        </div>
-    </div>
-
-    <button class="add-btn">ADD</button>
+        <button class="add-btn" type="submit">ADD</button>
+    </form>
 </div>
 {% endblock %}

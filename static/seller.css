@@ -152,7 +152,7 @@ body {
     margin-bottom: 20px;
     color: var(--dark-gray-text);
 }
-
+/* 
 .image-upload-area {
     display: flex;
     gap: 15px;
@@ -185,7 +185,7 @@ body {
 .upload-box span {
     font-size: 14px;
     color: #777;
-}
+} */
 
 .form-group {
     margin-bottom: 20px;
@@ -391,4 +391,54 @@ input:checked + .slider:before {
 
 /* For the active state of sidebar links in base.html */
 /* The existing .sidebar .navigation li.active a and .sidebar .navigation li.active a img styles should handle this.
-   I've added logic to base.html to dynamically apply 'active' class based on the current URL. */
+  I've added logic to base.html to dynamically apply 'active' class based on the current URL. */
+.image-upload-area {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.upload-box {
+    width: 120px;
+    height: 140px;
+    border: 2px dashed var(--medium-gray-border);
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.3s ease;
+    position: relative;
+}
+
+.upload-box:hover {
+    border-color: var(--primary-green);
+}
+
+.upload-box label {
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.upload-box img {
+    width: 40px;
+    height: 40px;
+    margin-bottom: 10px;
+    object-fit: contain;
+}
+
+.upload-box span {
+    font-size: 14px;
+    color: #777;
+}
+
+/* This hides the default file input */
+.upload-box input[type="file"] {
+    display: none;
+}

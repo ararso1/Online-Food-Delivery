@@ -1,146 +1,139 @@
 * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 
-    body {
-      font-family: 'Inter', sans-serif;
-      background-color: #fff;
-      color: #1a1a1a;
-    }
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: #fff;
+  color: #1a1a1a;
+}
+/* nav bar */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 60px;
+  border-bottom: 1px solid #eee;
+  
+}
+.logo {
+  font-size: 26px;
+  font-weight: 700;
+  color: #27ae60;
+}
 
-    .navbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 20px 60px;
-      border-bottom: 1px solid #eee;
-      
-    }
+.nav-links {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
 
-    .logo {
-      font-size: 26px;
-      font-weight: 700;
-      color: #27ae60;
-    }
+.nav-links a,
+.nav-links .nav-button {
+  text-decoration: none;
+  color: #333;
+  font-weight: 500;
+  transition: color 0.3s, background 0.3s;
+  padding: 8px 16px;
+  border-radius: 6px;
+}
 
-    .nav-links {
-      display: flex;
-      gap: 20px;
-      align-items: center;
-    }
+.nav-links a:hover, .nav-links a:focus,
+.nav-links .nav-button:hover, .nav-links .nav-button:focus {
+  color: #fff;
+  background: rgb(46, 45, 45);
+  font-weight: 500;
 
-    .nav-links a,
-    .nav-links .nav-button {
-      text-decoration: none;
-      color: #333;
-      font-weight: 500;
-      transition: color 0.3s, background 0.3s;
-      padding: 8px 16px;
-      border-radius: 6px;
-    }
+} 
 
-    .nav-links a:hover, .nav-links a:focus,
-    .nav-links .nav-button:hover, .nav-links .nav-button:focus {
-      color: #fff;
-      background: rgb(46, 45, 45);
-      font-weight: 500;
-    
-    } 
+.nav-button {
 
-  .nav-button {
- 
-  background-color: #f9f9f9;
+background-color: #f9f9f9;
 
-  padding: 8px 12px;
-  border-radius: 10px;
-   }
+padding: 8px 12px;
+border-radius: 10px;
+}
+.search-box input {
+  padding: 8px 14px;
+  border-radius: 20px;
+  border: 1px solid #ccc;
+  outline: none;
+}
+.cart-login {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+.login-btn {
+  background-color: #27ae60;
+  color: #fff;
+  border: none;
+  padding: 8px 20px;
+  border-radius: 20px;
+  font-weight: bold;
+  cursor: pointer;
+}
 
+/* hero section */
+.hero {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 60px;
+  background-color: #e0f7e9;
+  border-radius: 12px;
+  margin: 20px 60px;
+  gap: 40px;
+  height: 60vh;
+  
+}
+.hero-text {
+  max-width: 50%;
+}
 
+.hero-text h1 {
+  font-size: 38px;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
 
-   .search-box input {
-      padding: 8px 14px;
-      border-radius: 20px;
-      border: 1px solid #ccc;
-      outline: none;
-    }
+.hero-text h2 {
+  font-size: 20px;
+  font-weight: 400;
+  margin-bottom: 30px;
+}
 
-    .cart-login {
-      display: flex;
-      gap: 15px;
-      align-items: center;
-    }
+.hero-buttons {
+  display: flex;
+  gap: 20px;
+}
 
-    .login-btn {
-      background-color: #27ae60;
-      color: #fff;
-      border: none;
-      padding: 8px 20px;
-      border-radius: 20px;
-      font-weight: bold;
-      cursor: pointer;
-    }
+.shop-now {
+  background-color: #27ae60;
+  color: #fff;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+}
 
+.explore-btn {
+  background: none;
+  border: none;
+  color: #333;
+  font-weight: 600;
+  cursor: pointer;
+}
 
-    .hero {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 60px;
-      background-color: #e0f7e9;
-      border-radius: 12px;
-      margin: 20px 60px;
-      gap: 40px;
-      height: 60vh;
-      
-    }
-
-    .hero-text {
-      max-width: 50%;
-    }
-
-    .hero-text h1 {
-      font-size: 38px;
-      font-weight: 700;
-      margin-bottom: 20px;
-    }
-
-    .hero-text h2 {
-      font-size: 20px;
-      font-weight: 400;
-      margin-bottom: 30px;
-    }
-
-    .hero-buttons {
-      display: flex;
-      gap: 20px;
-    }
-
-    .shop-now {
-      background-color: #27ae60;
-      color: #fff;
-      border: none;
-      padding: 12px 24px;
-      border-radius: 8px;
-      font-size: 16px;
-      font-weight: bold;
-      cursor: pointer;
-    }
-
-    .explore-btn {
-      background: none;
-      border: none;
-      color: #333;
-      font-weight: 600;
-      cursor: pointer;
-    }
-
-    .hero-img {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
+.hero-img {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
 .hero-img img {
   width: 100%;
@@ -154,25 +147,25 @@
   background-color: #fff;     /* In case image has transparent parts */
 }
 
- @media (max-width: 768px) {
-      .navbar,
-      .hero {
-        flex-direction: column;
-        align-items: flex-start;
-        padding: 20px;
-      }
+@media (max-width: 768px) {
+  .navbar,
+  .hero {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 20px;
+  }
 
-      .hero-text,
-      .hero-img {
-        max-width: 100%;
-      }
+  .hero-text,
+  .hero-img {
+    max-width: 100%;
+  }
 
-      .hero {
-        gap: 30px;
-      }
-    }
+  .hero {
+    gap: 30px;
+  }
+}
 
-
+/*  Why We Are the Best Section  */
 .why-best {
   padding: 60px 20px 40px;
   text-align: center;
@@ -391,13 +384,13 @@
 }
 
 .footer {
-      text-align: center;
-      padding: 30px;
-      background-color: #f2f2f2;
-      margin-top: 40px;
-      font-size: 14px;
-      color: #555;
-    }
+  text-align: center;
+  padding: 30px;
+  background-color: #f2f2f2;
+  margin-top: 40px;
+  font-size: 14px;
+  color: #555;
+} 
 .footer {
   background-color: #f8f9fa;
   padding: 40px 60px;
@@ -457,10 +450,6 @@
   color: #28a745;
 }
 
-
-
-
-
 /* resturant detial */
 .restaurant-header {
   display: flex;
@@ -500,12 +489,7 @@
   font-weight: bold;
   margin: 20px 0 10px;
 }
-
-
-
-
-
-
+/* newsletter */
 .newsletter-section {
   background-color: #f0fdf4;
   text-align: center;
@@ -514,27 +498,23 @@
   border-radius: 12px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
 }
-
 .newsletter-content h3 {
   font-size: 1.5rem;
   color: #222;
   font-weight: 600;
   margin-bottom: 10px;
 }
-
 .newsletter-content p {
   font-size: 1rem;
   color: #555;
   margin-bottom: 20px;
 }
-
 .newsletter-form {
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
   gap: 10px;
 }
-
 .newsletter-form input[type="email"] {
   padding: 10px 16px;
   width: 280px;
@@ -542,7 +522,6 @@
   border: 1px solid #ccc;
   font-size: 1rem;
 }
-
 .newsletter-form button {
   padding: 10px 24px;
   background-color: #28a745;
@@ -553,7 +532,6 @@
   font-weight: bold;
   transition: background-color 0.3s ease;
 }
-
 .newsletter-form button:hover {
   background-color: #218838;
 }
@@ -578,7 +556,6 @@
   margin: 10% auto;;
   border-radius: 5px;
 }
-
 .content-holder
 {
   text-align: center;
@@ -589,17 +566,14 @@
   margin-top: 15%;
   padding: 50px;
 }
-
 .content-holder h2 {
   font-size: 34px;
   margin: 20px auto;
 }
-
 .content-holder p
 {
   margin: 30px auto;
 }
-
 .content-holder button
 {
   border:none;
@@ -610,28 +584,23 @@
   width: 150px;
   margin: 20px auto;
 }
-
-
 .box-2{
   background-color: white;
 
   margin: 5px;
 }
-
 .login-form-container
 {
   text-align: center;
   margin-top: 10%;
 
 }
-
 .login-form-container h1
 {
   color: black;
   font-size: 24px;
   padding: 20px;
 }
-
 .input-field
 {
   box-sizing: border-box;
@@ -642,7 +611,6 @@
   width: 250px;
   outline: none;
 }
-
 .login-button{
   box-sizing: border-box;
   color: white;
@@ -654,18 +622,10 @@
   outline: none;
   background-color: rgb(56, 102, 189);
 }
-
-
-
 .button-2
 {
   display: none;
 }
-
-
-
-
-
 .signup-form-container
 {
   position: relative;
@@ -675,15 +635,12 @@
   text-align: center;
   display: block;
 }
-
-
 .signup-form-container h1
 {
   color: black;
   font-size: 24px;
   padding: 20px;
 }
-
 .signup-button{
   box-sizing: border-box;
   color: white;
