@@ -19,50 +19,17 @@
 
 <!-- Popular Restaurants Section -->
 <section class="restaurants">
+  
   <h2>Popular Category</h2>
   <div class="restaurant-grid">
-  
-    <a class="ln" href="#">
+    {% for category in categories %}
+    <a class="ln" href="{% url 'food_by_category' category.id %}">
         <div class="restaurant-card">
-            <img src="{% static 'images/pizza hut.jpg' %}" alt="Pizza Hut">
-            <h4> Pizza Hut </h4>
+            <img src="{% static category.image.url %}" alt="{{ category.name }}">
+            <h4> {{category.name}} </h4>
         </div>
     </a>
-
-    <a class="ln" href="#">
-      <div class="restaurant-card">
-          <img src="{% static 'images/effio.jpg' %}" alt="Effoi Pizza">
-          <h4> Effoi Pizza</h4>
-      </div>
-    </a>
-
-    <a class="ln" href="#">
-    <div class="restaurant-card">
-         <img src="{% static 'images/burger.jpg' %}" alt=" burger Restaurant">
-         <h4>  Smash burger </h4> 
-    </div>
-    </a>
-
-    <a class="ln" href="#">
-      <div class="restaurant-card">
-          <img src="{% static 'images/sushi.jpg' %}" alt="Sishu Restaurant">
-          <h4>  Sishu </h4>  
-      </div>
-    </a>
-
-    <a class="ln" href="#">
-      <div class="restaurant-card">
-          <img src="{% static 'images/hebesha.jpg' %}" alt="2000 Habesha Cultural">
-        <h4> 2000 Habesha Cultural</h4>
-      </div>
-   </a>
-
-    <a class="ln" href="#">
-      <div class="restaurant-card">
-          <img src="{% static 'images/noddles.jpg' %}" alt="Five Loaves">
-          <h4> chanole noodles</h4>  
-      </div>
-    </a>
+   {% endfor %}
   </div>
 </section>
 
@@ -73,74 +40,21 @@
   <h2>Most Ordered Foods </h2>
 
   <div class="product-grid">
-
-    <a class="ln" href="{% url 'singlepage' %}">
+    {% for food in foods %}
+    <a class="ln" href="{% url 'singlepage' food.pk %}">
       <div class="card">
-        <img src="{% static 'images/pizzaa.jpg' %}" alt="pizza">
-        <small> Pizza </small>
-        <h6>medium pizza</h6>
+        <img src="{{food.image1.url}}" alt="food">
+        <small> {{food.category}} </small>
+        <h6>{{food.name}} </h6>
         <div class="product-rating">★★★★☆ <span>(4)</span></div>
         <div class="price-row">
-          <span class="new-price">550 birr</span>
-          <span class="old-price">600 birr</span>
+          <span class="new-price">{{ food.offer_price }} birr </span>
+          <span class="old-price"> {{ food.product_price }} birr</span>
         </div>
         <button class="add-to-cart"><i class="fa fa-shopping-cart"></i> Add</button>
       </div>
     </a>
- 
-    <a class="ln" href="{% url 'singlepage' %}">
-        <div class="card">
-          <img src="{% static 'images/shkla tibs.jpg' %}" alt="tibs">
-          <small>Shekla tibs</small>
-          <h6>Spicy Ethiopian beef served hot in a clay pot</h6>
-          <div class="product-rating">★★★★☆ <span>(4)</span></div>
-          <div class="price-row">
-            <span class="new-price">420 birr</span>
-            <span class="old-price">450 birr</span>
-          </div>
-          <button class="add-to-cart"><i class="fa fa-shopping-cart"></i> Add</button>
-        </div>
-    </a>
-    <a class="ln" href="{% url 'singlepage' %}">
-      <div class="card">
-        <img src="{% static 'images/Spicy Chicken Noodles.jpg' %}" alt="noodles">
-        <small>spicy chicken veggie noodles</small>
-        <h6>Hot noodles with spicy chicken & veggies</h6>
-        <div class="product-rating">★★★★☆ <span>(4)</span></div>
-        <div class="price-row">
-          <span class="new-price">600 birr</span>
-          <span class="old-price">750 birr</span>
-        </div>
-        <button class="add-to-cart"><i class="fa fa-shopping-cart"></i> Add</button>
-      </div>
-    </a>
-      <a class="ln" href="{% url 'singlepage' %}">
-        <div class="card">
-          <img src="{% static 'images/double chicken.jpg' %}" alt="burger">
-          <small>Double Chicken Burger</small>
-          <h6>Double chicken layers with crunchy veggies and creamy sauce</h6>
-          <div class="product-rating">★★★★★ <span>(4)</span></div>
-          <div class="price-row">
-            <span class="new-price">700 birr</span>
-            <span class="old-price">850 birr</span>
-          </div>
-          <button class="add-to-cart"><i class="fa fa-shopping-cart"></i> Add</button>
-        </div>
-     </a>
-
-    <a class="ln" href="{% url 'singlepage' %}">
-      <div class= "card">
-        <img src="{% static 'images/Kappa_Maki.png' %}" alt="Sushi">
-        <small> kappa maki Sushi</small>
-        <h6>Classic cucumber roll — fresh, light, and vegan-friendly</h6>
-        <div class="product-rating">★★★★☆ <span>(4)</span></div>
-        <div class="price-row">
-          <span class="new-price">620 birr</span>
-          <span class="old-price">700 birr</span>
-        </div>
-        <button class="add-to-cart"><i class="fa fa-shopping-cart"></i> Add</button>
-      </div>
-   </a>
+    {% endfor %}
   </div>
 </section>
 
@@ -148,62 +62,18 @@
   <h2>Most Featured Restaurants</h2>
 
   <div class="product-grid">
-
+    {% for restaurant in restaurants %}
     <div class="product-card">
-      <img src="{% static 'images/restaurant1.jpg' %}" alt="Yod Abyssinia Restaurant">
-      <small>Traditional Ethiopian Cuisine</small>
-      <h6>Yod Abyssinia</h6>
+      <img src="{{restaurant.image.url}}" alt="Yod Abyssinia Restaurant">
+      <small>{{restaurant.name}}</small>
+      <h6>{{restaurant.address}}</h6>
       <div class="product-rating">★★★★★ <span>(4.9)</span></div>
       <div class="price-row">
-        <span class="new-price">Open: 10:00 AM - 11:00 PM</span>
+          <span class="new-price">Open: {{ restaurant.open_time|time:"g:i A" }} - {{ restaurant.close_time|time:"g:i A" }}</span>
       </div>
-      <button class="add-to-cart"><i class="fa fa-map-marker-alt"></i> <a href="{% url 'rest_details' %}">View</a></button>
+      <button  class="add-to-cart"><i class="fa fa-map-marker-alt"></i> <a href="{% url 'rest_details' restaurant.pk %}">View</a></button>
     </div>
-
-    <div class="product-card">
-      <img src="{% static 'images/restaurant2.jpg' %}" alt="Five Loaves Bistro">
-      <small>Continental and Vegan Options</small>
-      <h6>Five Loaves Bistro</h6>
-      <div class="product-rating">★★★★☆ <span>(4.6)</span></div>
-      <div class="price-row">
-        <span class="new-price">Open: 9:00 AM - 10:00 PM</span>
-      </div>
-      <button class="add-to-cart"><i class="fa fa-map-marker-alt"></i><a href="{% url 'rest_details' %}">View</a></button>
-    </div>
-
-    <div class="product-card">
-      <img src="{% static 'images/restaurant3.jpg' %}" alt="Kategna Restaurant">
-      <small>Modern Ethiopian Fusion</small>
-      <h6>Kategna Restaurant</h6>
-      <div class="product-rating">★★★★☆ <span>(4.7)</span></div>
-      <div class="price-row">
-        <span class="new-price">Open: 8:00 AM - 9:00 PM</span>
-      </div>
-      <button class="add-to-cart"><i class="fa fa-map-marker-alt"></i> <a href="{% url 'rest_details' %}">View</a></button>
-    </div>
-
-    <div class="product-card">
-      <img src="{% static 'images/restaurant4.jpg' %}" alt="Sushi Corner">
-      <small>Japanese Cuisine</small>
-      <h6>Sushi Corner</h6>
-      <div class="product-rating">★★★★☆ <span>(4.5)</span></div>
-      <div class="price-row">
-        <span class="new-price">Open: 11:00 AM - 11:30 PM</span>
-      </div>
-      <button class="add-to-cart"><i class="fa fa-map-marker-alt"></i> <a href="{% url 'rest_details' %}">View</a></button>
-    </div>
-
-    <div class="product-card">
-      <img src="{% static 'images/restaurant5.jpg' %}" alt="Burger Palace">
-      <small>Fast Food & Grills</small>
-      <h6>Burger Palace</h6>
-      <div class="product-rating">★★★★☆ <span>(4.3)</span></div>
-      <div class="price-row">
-        <span class="new-price">Open: 24 Hours</span>
-      </div>
-      <button class="add-to-cart"><i class="fa fa-map-marker-alt"></i> <a href="{% url 'rest_details' %}">View</a></button>
-    </div>
-
+    {% endfor %}
   </div>
 </section>
 
@@ -246,5 +116,7 @@
 </section>
 
 <!-- Footer Starts Below -->
+
+
 
 {% endblock %}

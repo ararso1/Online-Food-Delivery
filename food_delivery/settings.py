@@ -112,7 +112,7 @@ USE_I18N = True
 
 USE_TZ = True
 
-# greencart_project/settings.py
+# Food delivery project/settings.py
 import os
 from pathlib import Path
 STATIC_ROOT = os.path.join(BASE_DIR,'staticfiles')

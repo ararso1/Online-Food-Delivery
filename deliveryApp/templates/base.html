@@ -15,27 +15,29 @@
 <body>
 
   <!-- Navbar -->
-  <nav class="navbar">
-    <div class="logo">Food Delivery</div>
-    <div class="nav-links">
-      <a href="{% url 'add_product' %}" class="nav-button">Seller_Dashboard</a>
-      <a href="{% url 'home' %}">Home</a>
-      <a href="{% url 'restaurant' %}">Restaurant</a>
-      <a href="{% url 'food' %}">Food</a>
-      
-    </div>
-    <div class="search-box">
-      <input type="text" placeholder="Search products"/>
-    </div>
+  <div id="notification" class="notification"></div>
+        <nav class="navbar">
+          <div class="logo">Food Delivery</div>
+          <div class="nav-links">
+            <a href="{% url 'add_product' %}" class="nav-button">Seller_Dashboard</a>
+            <a href="{% url 'home' %}">Home</a>
+            <a href="{% url 'restaurant' %}">Restaurant</a>
+            <a href="{% url 'food' %}">Food</a>
+            
+          </div>
+          <div class="search-box">
+            <input type="text" placeholder="Search products"/>
+          </div>
 
-    <div class="cart-login">
-      
-      <div>
-      <a href="{%url 'cart'%}"><span>🛒<sup>0</sup></span> </a>
-      </div>
-      <a href="{% url 'login' %}" class="login-btn">Login</a>
-    </div>
-  </nav>
+        <div class="cart-login">
+            <div>
+              <a href="{% url 'cart' %}">
+                <span>🛒<sup id="cart-count">0</sup></span>
+              </a>
+            </div>
+            <a href="{% url 'login' %}" class="login-btn">Login</a>
+          </div>
+        </nav>
 
   <!-- Main Content -->
   {% block content %}
@@ -86,6 +88,65 @@
       <p>&copy; 2025 Food Delivery. All rights reserved.</p>
     </div>
   </footer>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const cartCount = document.getElementById('cart-count');
+  const notification = document.getElementById('notification');
+  let cart = JSON.parse(localStorage.getItem('cart')) || {};
+
+  function updateCartCount() {
+    const totalItems = Object.values(cart).reduce((sum, item) => sum + item.quantity, 0);
+    if (cartCount) cartCount.textContent = totalItems;
+  }
+
+  function showNotification(message, color = 'green') {
+    notification.textContent = message;
+    notification.style.backgroundColor = color;
+    notification.style.color = 'white';
+    notification.style.padding = '10px';
+    notification.style.textAlign = 'center';
+    notification.style.position = 'fixed';
+    notification.style.top = '0';
+    notification.style.left = '0';
+    notification.style.width = '100%';
+    notification.style.zIndex = '9999';
+    notification.style.display = 'block';
+    setTimeout(() => {
+      notification.style.display = 'none';
+    }, 2000);
+  }
+
+  // Attach to add-to-cart buttons
+  document.querySelectorAll('.add-to-cart').forEach((btn, index) => {
+    btn.addEventListener('click', function (e) {
+      e.preventDefault();
+      const card = btn.closest('.card');
+      const name = card.querySelector('h6')?.textContent;
+      const priceText = card.querySelector('.new-price')?.textContent || "0";
+      const price = parseFloat(priceText.replace(/[^\d.]/g, ''));
+
+      const productId = name.toLowerCase().replace(/\s+/g, '-') + '-' + index;
+
+      if (cart[productId]) {
+        cart[productId].quantity += 1;
+      } else {
+        cart[productId] = {
+          name,
+          price,
+          quantity: 1,
+        };
+      }
+
+      localStorage.setItem('cart', JSON.stringify(cart));
+      updateCartCount();
+      showNotification('✅ Product added to cart successfully');
+    });
+  });
+
+  updateCartCount(); // Set on initial load
+});
+</script>
 
 </body>
 </html>

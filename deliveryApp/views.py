@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from .forms import ProductForm
-from .models import Product, Category # Import the Product model
+from .models import *
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 
@@ -44,18 +44,16 @@ def signup_view(request):
 # food deliveryApp/views.py
 
 def food(request):
-    products = Product.objects.all()  # Fetch all products
-    # catergory = Category.objects.filter()  # Fetch all categories
-    return render(request, 'food.html', {'products': products})
-
+    foods = Product.objects.all()  # Fetch all products
+    catergory = Category.objects.filter()  # Fetch all categories
+    return render(request, 'food.html', {'foods': foods,'categories': catergory })
 
 def home(request):
-    return render(request,"home.html")
+    restaurants = Restaurant.objects.all()[:4]
+    foods = Product.objects.all()[:4]  # Fetch first 4 products
+    category = Category.objects.all()[:6]  # Fetch all categories if needed
+    return render(request, 'home.html', {'restaurants': restaurants, 'foods': foods , 'categories': category })
 
-def Restaurant(request):
-    return render(request, 'Restaurant.html')
-def Navbar(request):
-    return render(request, 'Navbar.html')
 # products/views.py
 
 @login_required(login_url='/accounts/login/')
@@ -82,15 +80,24 @@ def orders(request):
 def logout_view(request):
     logout(request)
     return redirect('home')
-def rest_details(request):
-    return render(request, 'rest_details.html')
-def restaurant(request):
-    return render(request, 'restaurant.html')
-def singlepage(request):
-    return render(request, 'singlepage.html')
+
+def rest_details(request, pk):
+    restaurant = get_object_or_404(Restaurant, pk=pk)
+    foods = Product.objects.filter(restaurant=restaurant)
+    return render(request, 'rest_details.html', {'restaurant': restaurant, 'foods': foods})
+
+def restaurant_list(request):
+    restaurants = Restaurant.objects.all()
+    return render(request, 'restaurant.html', {'restaurants': restaurants})
+
+def singlepage(request, pk):
+    food = get_object_or_404(Product, pk=pk)
+    category = food.category
+    related_foods = Product.objects.filter(category=category).exclude(pk=pk)[:4]  # Fetch related products
+    return render(request, 'singlepage.html', {'food': food, 'related_foods': related_foods})
+
 def cart(request):
     return render(request, 'cart.html')
-
 
 # products/views.py
 
@@ -102,3 +109,14 @@ def update_in_stock(request):
     product.in_stock = in_stock
     product.save()
     return JsonResponse({'status': 'success'})
+
+
+""" def fetch_restaurant_data(request):
+    restaurant = Restaurant.objects.all()
+    print(restaurant)
+    return render(request, 'restaurant.html', {'restaurant': restaurant}) """
+    
+def food_by_category(request, category_id):
+    category = get_object_or_404(Category, id=category_id)
+    foods = Product.objects.filter(category=category)
+    return render(request, 'food_by_category.html', {'foods': foods, 'category': category})

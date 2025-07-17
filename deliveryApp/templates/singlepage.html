@@ -4,20 +4,18 @@
 {% block content %}
 {% load static %}
 
-
-
 <!-- Main Product Section -->
 <div class="product-flex">
   <!-- Left: Gallery -->
   <div class="product-gallery">
     <div class="thumbnail-column"> 
-      <img src="{% static 'images/shkla tibs.jpg' %}" class="thumb" alt="Thumb 1" onclick="changeImage(this)">
-      <img src="{% static 'images/effio.jpg' %}" class="thumb" alt="Thumb 2" onclick="changeImage(this)">
-      <img src="{% static 'images/meat.jpg' %}" class="thumb" alt="Thumb 3" onclick="changeImage(this)">
-       <img src="{% static 'images/Banner.png' %}" class="thumb" alt="Thumb 3" onclick="changeImage(this)">
+      <img src="{{food.image1.url}}" class="thumb" alt="Thumb 1" onclick="changeImage(this)">
+      <img src="{{food.image2.url}}" class="thumb" alt="Thumb 2" onclick="changeImage(this)">
+      <img src="{{food.image3.url}}" class="thumb" alt="Thumb 3" onclick="changeImage(this)">
+       <img src="{{food.image4.url}}" class="thumb" alt="Thumb 3" onclick="changeImage(this)">
    </div>
     <div class="main-img-wrapper">
-      <img src="{% static 'images/burger.jpg' %}" alt="Product Image" class="main-img" id="mainImage">
+      <img src="{{food.image1.url}}" alt="Product Image" class="main-img" id="mainImage">
     </div>
   </div>
 
@@ -42,30 +40,23 @@
 <div class="related-products">
   <h2>Related Products</h2>
   <div class="product-grid">
-    <div class="card">
-      <img src="{% static 'images/burger.jpg' %}" alt="Potato">
-      <p>Potato 500g</p>
-      <p>$35 <del>$40</del></p>
-      <button>Add</button>
-    </div>
-    <div class="card">
-      <img src="{% static 'images/burger.jpg' %}" alt="Tomato">
-      <p>Tomato 1kg</p>
-      <p>$28 <del>$30</del></p>
-      <button>Add</button>
-    </div>
-    <div class="card">
-      <img src="{% static 'images/burger.jpg' %}" alt="Carrot">
-      <p>Carrot 500g</p>
-      <p>$44 <del>$50</del></p>
-      <button>Add</button>
-    </div>
-    <div class="card">
-      <img src="{% static 'images/burger.jpg' %}" alt="Spinach">
-      <p>Spinach 500g</p>
-      <p>$15 <del>$18</del></p>
-      <button>Add</button>
-    </div>
+    {% for related_food in related_foods %}
+    <a class="ln" href="{% url 'singlepage' related_food.pk %}">
+      <div class="card">
+        <img src="{{related_food.image1.url}}" alt="food">
+        <small> {{related_food.category}} </small>
+        <h6>{{related_food.name}} </h6>
+        <div class="product-rating">★★★★☆ <span>(4)</span></div>
+        <div class="price-row">
+          <span class="new-price">{{ related_food.offer_price }} birr </span>
+          <span class="old-price"> {{ related_food.product_price }} birr</span>
+        </div>
+        <button class="add-to-cart"><i class="fa fa-shopping-cart"></i> Add</button>
+      </div>
+    </a>
+    {% empty %}
+      <p>No related products available.</p>
+    {% endfor %}
   </div>
 
   <div class="see-more">

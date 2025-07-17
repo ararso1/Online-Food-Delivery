@@ -34,30 +34,24 @@
   </nav>
 
 
-
-
-
 <section class="best-sellers">
   <div class="product-grid">
-    {% for product in products %}
-    <div class="product-card">
-        <img src="{% static product.image1.url %}" alt="{{ product.name }}">
-        <p class="category">{{ product.category }}</p>
-        <h3>{{ product.name }}</h3>
-        <p class="rating">
-          {% if product.rating >= 4.5 %}★★★★★
-          {% elif product.rating >= 4.0 %}★★★★☆
-          {% else %}★★★☆☆
-          {% endif %}
-          <span>({{ product.rating }})</span>
-        </p>
-        <p class="price">
-          <span class="current">${{ product.offer_price }}</span>
-          <span class="old">${{ product.product_price }}</span>
-        </p>
-        <button class="add-btn">🛒 Add</button>
-    </div>
+    {% for food in foods %}
+    <a class="ln" href="{% url 'singlepage' food.pk %}">
+      <div class="card">
+        <img src="{{food.image1.url}}" alt="food">
+        <small> {{food.category}} </small>
+        <h6>{{food.name}} </h6>
+        <div class="product-rating">★★★★☆ <span>(4)</span></div>
+        <div class="price-row">
+          <span class="new-price">{{ food.offer_price }} birr </span>
+          <span class="old-price"> {{ food.product_price }} birr</span>
+        </div>
+        <button class="add-to-cart"><i class="fa fa-shopping-cart"></i> Add</button>
+      </div>
+    </a>
     {% endfor %}
+    
   </div>
 </section>
 

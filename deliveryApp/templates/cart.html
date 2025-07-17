@@ -15,6 +15,8 @@
         <div>Subtotal</div>
         <div>Action</div>
       </div>
+
+      <div class="cart-items" id="cart-items"></div>
       <!-- Empty cart, so no products listed -->
 
       <a href="{%url 'food'%}" class="continue-shopping">← Continue Shopping</a>
@@ -38,14 +40,66 @@
     </div>
 
     <div class="price-summary">
-      <p>Price <span>$0</span></p>
-      <p>Shipping Fee <span class="green-text">Free</span></p>
-      <p>Tax (2%) <span>$0</span></p>
-      <p><strong>Total Amount: <span>$0</span></strong></p>
-    </div>
+      <h1>Shopping Cart <span id="item-count">0 Items</span></h1>
+        <p>Shipping Fee <span class="green-text">Free</span></p>
+        <p>Price <span id="price-total">$0</span></p>
+        <p>Tax (2%) <span id="tax-amount">$0</span></p>
+        <p><strong>Total Amount: <span id="total-amount">$0</span></strong></p>
+   </div>
 
     <button class="place-order-btn">Place Order</button>
   </div>
 </div>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const cart = JSON.parse(localStorage.getItem('cart')) || {};
+  const cartItemsContainer = document.getElementById('cart-items');
+  const itemCountDisplay = document.getElementById('item-count');
+  const priceTotal = document.getElementById('price-total');
+  const taxAmount = document.getElementById('tax-amount');
+  const totalAmount = document.getElementById('total-amount');
+
+  let total = 0;
+  let itemCount = 0;
+
+  Object.entries(cart).forEach(([id, item]) => {
+    const itemTotal = item.price * item.quantity;
+    total += itemTotal;
+    itemCount += item.quantity;
+
+    const div = document.createElement('div');
+    div.className = 'cart-item';
+    div.innerHTML = `
+      <div>
+        <h4>${item.name}</h4>
+        <p>${item.price} birr x ${item.quantity}</p>
+      </div>
+      <div>${itemTotal.toFixed(2)} birr</div>
+      <div>
+        <button class="remove-btn" onclick="removeFromCart('${id}')">Remove</button>
+      </div>
+    `;
+    cartItemsContainer.appendChild(div);
+  });
+
+  const tax = total * 0.02;
+  const grandTotal = total + tax;
+
+  itemCountDisplay.textContent = `${itemCount} Items`;
+  priceTotal.textContent = `${total.toFixed(2)} birr`;
+  taxAmount.textContent = `${tax.toFixed(2)} birr`;
+  totalAmount.textContent = `${grandTotal.toFixed(2)} birr`;
+});
+
+function removeFromCart(id) {
+  const cart = JSON.parse(localStorage.getItem('cart')) || {};
+  if (cart[id]) {
+    delete cart[id];
+    localStorage.setItem('cart', JSON.stringify(cart));
+    alert("❌ Item removed from cart");
+    location.reload();
+  }
+}
+</script>
 
 {% endblock %}
