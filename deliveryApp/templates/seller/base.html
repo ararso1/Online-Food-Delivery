@@ -18,21 +18,21 @@
             <nav class="navigation">
                 <ul>
                     <li>
-                        <a href="{% url 'add_product' %}" id="add-product-link">
+                        <a href="{% url 'product_list' %}" id="add-product-link">
                             <img src="{% static 'img/add_product_icon.png' %}" alt="Add Product Icon">
-                            Add Product
-                        </a>
-                    </li>
-                    <li class="{% if request.resolver_match.url_name == 'product_list' %}active{% endif %}">
-                        <a href="{% url 'product_list' %}" id="product-list-link">
-                            <img src="{% static 'img/product_list_icon.png' %}" alt="Product List Icon">
-                            Product List
+                            Products
                         </a>
                     </li>
                     <li class="{% if request.resolver_match.url_name == 'orders' %}active{% endif %}">
                         <a href="{% url 'orders' %}" id="orders-link">
                             <img src="{% static 'img/orders_icon.png' %}" alt="Orders Icon">
                             Orders
+                        </a>
+                    </li>
+                    <li class="{% if request.resolver_match.url_name == 'add_Restaurant' %}active{% endif %}">
+                        <a href="{% url 'seller_restaurants' %}" id="add-restaurant-link">
+                            <img src="{% static 'img/add_restaurant_icon.png' %}" alt="Add Restaurant Icon">
+                            Restaurant
                         </a>
                     </li>
                 </ul>

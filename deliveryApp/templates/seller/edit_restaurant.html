@@ -1,0 +1,46 @@
+
+
+{% extends './base.html' %}
+{% load static %}
+
+{% block title %}Food Delivery - Add New Restaurant{% endblock %}
+{% block content %}
+<h2>Add New Restaurant</h2>
+
+<form action="" method="post" enctype="multipart/form-data" class="restaurant-form">
+  {% csrf_token %}
+  <input type="text" name="name" value="{{ restaurant.name }}" required>
+  <input type="text" name="address" value="{{ restaurant.address }}" required>
+  <textarea name="discription">{{ restaurant.discription }}</textarea>
+  <input type="text" name="phone_number" value="{{ restaurant.phone_number }}">
+  <input type="time" name="open_time" value="{{ restaurant.open_time|time:'H:i' }}">
+  <input type="time" name="close_time" value="{{ restaurant.close_time|time:'H:i' }}">
+  <input type="file" name="image">
+  <button type="submit">Update</button>
+</form>
+
+<style>
+.restaurant-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 500px;
+  padding: 20px;
+  background: #f8f8f8;
+  border-radius: 10px;
+}
+.restaurant-form input,
+.restaurant-form textarea {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+.restaurant-form button {
+  padding: 10px;
+  background: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+}
+</style>
+{% endblock %}

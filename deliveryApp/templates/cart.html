@@ -6,7 +6,7 @@
 
 <div class="cart-container">
   <div class="cart-left">
-    <h1>Shopping Cart <span>0 Items</span></h1>
+    <h1>Shopping Cart <span>{{cartCount.textContent}}</span></h1>
     <p class="product-details-label">Product Details</p>
 
     <div class="cart-table">
@@ -76,7 +76,7 @@ document.addEventListener('DOMContentLoaded', function () {
       </div>
       <div>${itemTotal.toFixed(2)} birr</div>
       <div>
-        <button class="remove-btn" onclick="removeFromCart('${id}')">Remove</button>
+        <button  style = "color: red" class="remove-btn" onclick="removeFromCart('${id}')">Remove</button>
       </div>
     `;
     cartItemsContainer.appendChild(div);

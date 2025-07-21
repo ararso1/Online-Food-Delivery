@@ -9,6 +9,8 @@ from .forms import ProductForm
 from .models import *
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
+from django.core.files.storage import FileSystemStorage
+
 
 def login_view(request):
     if request.method == 'POST':
@@ -44,7 +46,7 @@ def signup_view(request):
 # food deliveryApp/views.py
 
 def food(request):
-    foods = Product.objects.all()  # Fetch all products
+    foods = Product.objects.filter(in_stock=True)  # Fetch all products
     catergory = Category.objects.filter()  # Fetch all categories
     return render(request, 'food.html', {'foods': foods,'categories': catergory })
 
@@ -72,11 +74,37 @@ def add_product(request):
 @login_required(login_url='/accounts/login/')
 def product_list(request):
     products = Product.objects.all()  # Fetch all products
-    print(products[1].image1.url,'jjjjjjjjjjj')
+    print(products[1].image1.url,)
     return render(request, 'seller/product_list.html', {'products': products})
+
+
+def add_Restaurant(request):
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        address = request.POST.get('address')
+        discription = request.POST.get('discription')
+        phone_number = request.POST.get('phone_number')
+        open_time = request.POST.get('open_time')
+        close_time = request.POST.get('close_time')
+        image = request.FILES.get('image')
+
+        Restaurant.objects.create(
+            name=name,
+            address=address,
+            discription=discription,
+            phone_number=phone_number,
+            open_time=open_time,
+            close_time=close_time,
+            image=image
+        )
+        return redirect('restaurant')  # Redirect to list or dashboard after saving
+
+    return render(request, 'seller/add_Restaurant.html')
 
 def orders(request):
     return render(request, 'seller/orders.html') 
+
+
 def logout_view(request):
     logout(request)
     return redirect('home')
@@ -120,3 +148,59 @@ def food_by_category(request, category_id):
     category = get_object_or_404(Category, id=category_id)
     foods = Product.objects.filter(category=category)
     return render(request, 'food_by_category.html', {'foods': foods, 'category': category})
+
+def seller_restaurants(request):
+    restaurants = Restaurant.objects.all()  # Optionally, filter by logged-in user if needed
+    return render(request, 'seller/restaurant_list.html', {'restaurants': restaurants})
+
+def edit_restaurant(request, pk):
+    restaurant = get_object_or_404(Restaurant, pk=pk)
+
+    if request.method == 'POST':
+        restaurant.name = request.POST.get('name')
+        restaurant.address = request.POST.get('address')
+        restaurant.discription = request.POST.get('discription')
+        restaurant.phone_number = request.POST.get('phone_number')
+        restaurant.open_time = request.POST.get('open_time')
+        restaurant.close_time = request.POST.get('close_time')
+        if request.FILES.get('image'):
+            restaurant.image = request.FILES.get('image')
+        restaurant.save()
+        return redirect('seller_restaurants')
+
+    return render(request, 'seller/edit_restaurant.html', {'restaurant': restaurant})
+
+def delete_restaurant(request, pk):
+    restaurant = get_object_or_404(Restaurant, pk=pk)
+    restaurant.delete()
+    return redirect('seller_restaurants')
+
+def edit_product(request, pk):
+    product = get_object_or_404(Product, pk=pk)
+    if request.method == 'POST':
+        product.name = request.POST.get('name')
+        product.product_price = request.POST.get('product_price')
+        product.category_id = request.POST.get('category')
+        if request.FILES.get('image1'):
+            product.image1 = request.FILES.get('image1')
+        product.save()
+        return redirect('product_list')
+    categories = Category.objects.all()
+    return render(request, 'seller/edit_product.html', {'product': product, 'categories': categories})
+
+def delete_product(request, pk):
+    product = get_object_or_404(Product, pk=pk)
+    product.delete()
+    return redirect('product_list')
+
+from django.views.decorators.csrf import csrf_exempt
+@csrf_exempt
+def update_in_stock(request):
+    if request.method == 'POST':
+        product_id = request.POST.get('product_id')
+        in_stock = request.POST.get('in_stock') == 'true'
+        product = get_object_or_404(Product, id=product_id)
+        product.in_stock = in_stock
+        product.save()
+        return JsonResponse({'success': True})
+    return JsonResponse({'success': False}, status=400)

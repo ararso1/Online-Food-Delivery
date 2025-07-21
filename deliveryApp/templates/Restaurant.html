@@ -14,11 +14,12 @@
       <div class="product-rating">★★★★☆ <span>(4.7)</span></div> <!-- Example rating -->
       <div class="price-row">
         <span class="new-price">Open: {{ restaurant.open_time|time:"g:i A" }} - {{ restaurant.close_time|time:"g:i A" }}</span>
+      </div> 
+        <button class="add-to-cart" onclick="location.href='{% url 'rest_details' restaurant.pk %}'">
+          <i class="fa fa-map-marker-alt"></i> View
+        </button>
+
       </div>
-      <a href="{% url 'rest_details' restaurant.pk %}">
-        <button class="add-to-cart"><i class="fa fa-map-marker-alt"></i> View</button>
-      </a>
-    </div>
     {% endfor %}
 
   </div>

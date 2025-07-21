@@ -66,23 +66,24 @@ border-radius: 10px;
   border: 1px solid #ccc;
   outline: none;
 }
+
 .cart-login {
   display: flex;
   gap: 15px;
   align-items: center;
 }
-
+/* 
 #cart-count {
-  background-color: red;
+  background-color: #27ae60;;
   color: white;
   font-size: 12px;
-  font-weight: bold;
-  padding: 2px 6px;
+  padding: 2px 4px;
   border-radius: 50%;
   position: relative;
   top: -10px;
   right: -8px;
-}
+} */
+ 
 .notification {
   position: fixed;
   top: 20px;
@@ -306,11 +307,17 @@ border-radius: 10px;
 }
 
 .product-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); /* Adjusted min-width for better fit */
   gap: 20px;
-  padding-bottom: 10px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* 4 equal-width columns */
+  justify-items: stretch; /* make items align nicely */
+  align-items: start;
+  margin: 20px 0;
 }
+
+
+
 
 .restaurant-grid a {
   text-decoration: none;
@@ -340,6 +347,10 @@ border-radius: 10px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
   transition: transform 0.3s ease;
 } */
+
+.restaurant-list{
+  padding: 30px 20px;
+}
 
 .product-card:hover {
   transform: translateY(-5px);
@@ -497,8 +508,10 @@ border-radius: 10px;
 .restaurant-banner {
   width: 100%;
   max-width: 500px;
+  height: 250px;             /* moved from inline */
   border-radius: 12px;
   object-fit: cover;
+  display: block;  
 }
 
 .restaurant-info {
@@ -802,11 +815,11 @@ border-radius: 10px;
   margin-bottom: 20px;
 }
 
-.product-grid {
+/* .product-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
   gap: 20px;
-}
+} */
 
 .card {
   border: 1px solid #eee;
@@ -921,7 +934,7 @@ border-radius: 10px;
 
 .cart-left h1 span {
   font-weight: normal;
-  color: green;
+  color: #4caf50;
   margin-left: 10px;
   font-size: 18px;
 }

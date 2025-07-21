@@ -8,7 +8,7 @@ urlpatterns = [
     path('food/', food, name='food'),  
     path('login/', login_view, name='login'),
     path('register/', signup_view, name='register'),
-    
+    path('add_Restaurant/',add_Restaurant, name='add_Restaurant'),
     path('add-product/', add_product, name='add_product'),
     path('product-list/', product_list, name='product_list'),
     path('orders/', orders, name='orders'),
@@ -20,6 +20,14 @@ urlpatterns = [
     path('update_in_stock/', update_in_stock, name='update_in_stock'),
     path('food/category/<int:category_id>/', food_by_category, name='food_by_category'),
     
+    path('seller/restaurants/', seller_restaurants, name='seller_restaurants'),
+    path('seller/restaurants/edit/<int:pk>/', edit_restaurant, name='edit_restaurant'),
+    path('seller/restaurants/delete/<int:pk>/', delete_restaurant, name='delete_restaurant'),
+    path('products/edit/<int:pk>/', edit_product, name='edit_product'),
+    path('products/delete/<int:pk>/', delete_product, name='delete_product'),
+    path('products/update_in_stock/', update_in_stock, name='update_in_stock'),
+
+
 ]
 
 

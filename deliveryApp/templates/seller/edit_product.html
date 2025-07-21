@@ -1,0 +1,38 @@
+{% extends './base.html' %}
+{% load static %}
+
+{% block title %}Food Delivery - Add New Restaurant{% endblock %}
+{% block content %}
+<h2>Edit Product</h2>
+<form method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+  <input type="text" name="name" value="{{ product.name }}" required>
+  <input type="number" name="product_price" value="{{ product.product_price }}" step="0.01" required>
+  <select name="category">
+    {% for category in categories %}
+    <option value="{{ category.id }}" {% if product.category.id == category.id %}selected{% endif %}>{{ category.name }}</option>
+    {% endfor %}
+  </select>
+  <input type="file" name="image1">
+  <button type="submit">Update</button>
+</form>
+
+
+<style>
+.edit-btn {
+  background: #4CAF50;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  text-decoration: none;
+}
+.delete-btn {
+  background: #f44336;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  text-decoration: none;
+}
+</style>
+
+{% endblock %}

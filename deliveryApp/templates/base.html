@@ -89,6 +89,9 @@
     </div>
   </footer>
 
+ 
+ 
+
 <script>
 document.addEventListener('DOMContentLoaded', function () {
   const cartCount = document.getElementById('cart-count');
@@ -115,7 +118,7 @@ document.addEventListener('DOMContentLoaded', function () {
     setTimeout(() => {
       notification.style.display = 'none';
     }, 2000);
-  }
+ }
 
   // Attach to add-to-cart buttons
   document.querySelectorAll('.add-to-cart').forEach((btn, index) => {
@@ -144,9 +147,11 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   });
 
-  updateCartCount(); // Set on initial load
+  updateCartCount(); 
 });
 </script>
+
+ 
 
 </body>
 </html>
