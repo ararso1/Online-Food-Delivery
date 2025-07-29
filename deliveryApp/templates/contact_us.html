@@ -1,0 +1,287 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+  body {
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  /* Main container */
+  .contact-page-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem; /* p-4 */
+    background-color: white; /* bg-white */
+  }
+
+  /* Inner card container */
+  .contact-card {
+    background-color: white; /* bg-white */
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); /* shadow-xl */
+    border-radius: 0.5rem; /* rounded-lg */
+    overflow: hidden;
+    width: 100%;
+    max-width: 48rem; /* max-w-4xl */
+    display: flex;
+    flex-direction: column; /* flex-col */
+  }
+
+  /* Responsive styling for larger screens */
+  @media (min-width: 1024px) { /* lg */
+    .contact-card {
+      flex-direction: row; /* lg:flex-row */
+    }
+    .contact-info-section {
+      width: 50%; /* lg:w-1/2 */
+    }
+    .contact-form-section {
+      width: 50%; /* lg:w-1/2 */
+    }
+  }
+
+  /* Left Section: Contact Information */
+  .contact-info-section {
+    padding: 1.5rem; /* p-6 */
+    background: linear-gradient(to bottom right, #34d399, #10b981); /* from-green-500 to-green-700 */
+    color: white; /* text-white */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  @media (min-width: 640px) { /* sm */
+    .contact-info-section {
+      padding: 2rem; /* sm:p-8 */
+    }
+  }
+
+  @media (min-width: 1024px) { /* lg */
+    .contact-info-section {
+      padding: 2.5rem; /* lg:p-10 */
+    }
+  }
+
+  .contact-info-section h2 {
+    font-size: 1.875rem; /* text-3xl */
+    font-weight: 700; /* font-bold */
+    margin-bottom: 1rem; /* mb-4 */
+  }
+
+  @media (min-width: 640px) { /* sm */
+    .contact-info-section h2 {
+      font-size: 2.25rem; /* sm:text-4xl */
+    }
+  }
+
+  .contact-info-section p {
+    font-size: 1.125rem; /* text-lg */
+    margin-bottom: 1.5rem; /* mb-6 */
+    opacity: 0.9; /* opacity-90 */
+  }
+
+  .contact-details-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem; /* space-y-4 */
+  }
+
+  .contact-detail-item {
+    display: flex;
+    align-items: center;
+  }
+
+  .contact-detail-item svg {
+    width: 1.5rem; /* w-6 */
+    height: 1.5rem; /* h-6 */
+    margin-right: 0.75rem; /* mr-3 */
+  }
+
+  .copyright-text {
+    margin-top: 2rem; /* mt-8 */
+    font-size: 0.875rem; /* text-sm */
+    opacity: 0.8; /* opacity-80 */
+  }
+
+  /* Right Section: Contact Form */
+  .contact-form-section {
+    padding: 1.5rem; /* p-6 */
+    background-color: white; /* bg-white */
+  }
+
+  @media (min-width: 640px) { /* sm */
+    .contact-form-section {
+      padding: 2rem; /* sm:p-8 */
+    }
+  }
+
+  @media (min-width: 1024px) { /* lg */
+    .contact-form-section {
+      padding: 2.5rem; /* lg:p-10 */
+    }
+  }
+
+  .contact-form-section h2 {
+    font-size: 1.5rem; /* text-2xl */
+    font-weight: 700; /* font-bold */
+    color: #374151; /* text-gray-800 */
+    margin-bottom: 1.5rem; /* mb-6 */
+  }
+
+  @media (min-width: 640px) { /* sm */
+    .contact-form-section h2 {
+      font-size: 1.875rem; /* sm:text-3xl */
+    }
+  }
+
+  .success-message {
+    background-color: #d1fae5; /* bg-green-100 */
+    border: 1px solid #34d399; /* border-green-400 */
+    color: #065f46; /* text-green-700 */
+    padding: 0.75rem 1rem; /* px-4 py-3 */
+    border-radius: 0.25rem; /* rounded */
+    position: relative;
+    margin-bottom: 1rem; /* mb-4 */
+  }
+
+  .success-message strong {
+    font-weight: 700; /* font-bold */
+  }
+
+  .success-message span {
+    display: block;
+  }
+
+  @media (min-width: 640px) { /* sm */
+    .success-message span {
+      display: inline; /* sm:inline */
+    }
+  }
+
+  .contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem; /* space-y-5 */
+  }
+
+  .form-group label {
+    display: block;
+    color: #4b5563; /* text-gray-700 */
+    font-size: 0.875rem; /* text-sm */
+    font-weight: 600; /* font-semibold */
+    margin-bottom: 0.5rem; /* mb-2 */
+  }
+
+  .form-group input,
+  .form-group textarea {
+    width: 100%;
+    padding: 0.5rem 1rem; /* px-4 py-2 */
+    border: 1px solid #d1d5db; /* border-gray-300 */
+    border-radius: 0.375rem; /* rounded-md */
+    outline: none;
+  }
+
+  .form-group input:focus,
+  .form-group textarea:focus {
+    outline: none;
+    border-color: #f97316; /* focus:ring-orange-500 */
+    box-shadow: 0 0 0 2px #f97316; /* focus:ring-2 focus:ring-orange-500 */
+  }
+
+  .form-group textarea {
+    resize: vertical; /* resize-y */
+  }
+
+  .submit-button {
+    width: 100%;
+    background-color: #27ae60; /* background color */
+    color: white; /* text-white */
+    font-weight: 700; /* font-bold */
+    padding: 0.75rem 1rem; /* py-3 px-4 */
+    border-radius: 0.375rem; /* rounded-md */
+    transition: all 0.3s ease-in-out; /* transition duration-300 ease-in-out */
+    transform: scale(1); /* initial transform */
+    border: none;
+    cursor: pointer;
+  }
+
+  .submit-button:hover {
+    background-color: #229954; /* btn-green-hover */
+    transform: scale(1.05); /* hover:scale-105 */
+  }
+
+  .submit-button:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px #22c55e, 0 0 0 4px rgba(255, 255, 255, 0.5); /* focus:ring-2 focus:ring-green-500 focus:ring-offset-2 */
+  }
+</style>
+
+<div class="contact-page-container">
+  <div class="contact-card">
+    <!-- Left Section: Contact Information -->
+    <div class="contact-info-section">
+      <div>
+        <h2>Get in Touch</h2>
+        <p>
+          We'd love to hear from you! Whether you have a question, feedback, or need assistance, feel free to reach out.
+        </p>
+        <div class="contact-details-list">
+          <div class="contact-detail-item">
+            <svg fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M14.243 5.757a6 6 0 10-.987 9.879l-1.932 1.932a.75.75 0 01-1.06 0l-1.932-1.932a6 6 0 10-.987-9.879zM10 12a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"></path></svg>
+            <span>123 Foodie Lane, Flavor Town, FT 98765</span>
+          </div>
+          <div class="contact-detail-item">
+            <svg fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"></path><path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"></path></svg>
+            <span>support@fooddelivery.com</span>
+          </div>
+          <div class="contact-detail-item">
+            <svg fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.774a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.06-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"></path></svg>
+            <span>+1 (555) 123-4567</span>
+          </div>
+        </div>
+      </div>
+      <div class="copyright-text">
+        <p>&copy; 2025 Food Delivery. All rights reserved.</p>
+      </div>
+    </div>
+
+    <!-- Right Section: Contact Form -->
+    <div class="contact-form-section">
+      <h2>Send us a Message</h2>
+
+      {% if success_message %}
+        <div class="success-message" role="alert">
+          <strong>Success!</strong>
+          <span>{{ success_message }}</span>
+        </div>
+      {% endif %}
+
+      <form method="POST" action="{% url 'contact_us' %}" class="contact-form">
+        {% csrf_token %}
+        <div class="form-group">
+          <label for="name">Your Name</label>
+          <input type="text" id="name" name="name" placeholder="John Doe" required>
+        </div>
+        <div class="form-group">
+          <label for="email">Your Email</label>
+          <input type="email" id="email" name="email" placeholder="john.doe@example.com" required>
+        </div>
+        <div class="form-group">
+          <label for="message">Your Message</label>
+          <textarea id="message" name="message" rows="5" placeholder="Type your message here..." required></textarea>
+        </div>
+        <button type="submit" class="submit-button">
+          Send Message
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

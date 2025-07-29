@@ -6,7 +6,7 @@
 
 <div class="cart-container">
   <div class="cart-left">
-    <h1>Shopping Cart <span>{{cartCount.textContent}}</span></h1>
+   <h1>Shopping Cart <span id="cart-count-page">0</span></h1>
     <p class="product-details-label">Product Details</p>
 
     <div class="cart-table">
@@ -50,6 +50,8 @@
     <button class="place-order-btn">Place Order</button>
   </div>
 </div>
+
+
 <script>
 document.addEventListener('DOMContentLoaded', function () {
   const cart = JSON.parse(localStorage.getItem('cart')) || {};
@@ -76,7 +78,7 @@ document.addEventListener('DOMContentLoaded', function () {
       </div>
       <div>${itemTotal.toFixed(2)} birr</div>
       <div>
-        <button  style = "color: red" class="remove-btn" onclick="removeFromCart('${id}')">Remove</button>
+       <button style = "color : red" onclick="removeFromCart('${id}')">Remove</button>
       </div>
     `;
     cartItemsContainer.appendChild(div);
@@ -89,6 +91,8 @@ document.addEventListener('DOMContentLoaded', function () {
   priceTotal.textContent = `${total.toFixed(2)} birr`;
   taxAmount.textContent = `${tax.toFixed(2)} birr`;
   totalAmount.textContent = `${grandTotal.toFixed(2)} birr`;
+  const cartCountPage = document.getElementById('cart-count-page');
+  if (cartCountPage) cartCountPage.textContent = itemCount;
 });
 
 function removeFromCart(id) {

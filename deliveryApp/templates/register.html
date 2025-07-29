@@ -68,7 +68,14 @@
             <input type="hidden" name="action" value="signup">
             <input type="text" name="new_username" placeholder="Username" class="input-field" required><br><br>
             <input type="email" name="email" placeholder="Email" class="input-field" required><br><br>
-            <input type="password" name="new_password" placeholder="Password" class="input-field" required><br><br>
+            <input type="password" name="password1" placeholder="Password" required>
+            <input type="password" name="password2" placeholder="Confirm Password" required>
+ <!-- Add below password input -->
+          <div>
+            <label><input type="radio" name="role" value="seller" required> Seller</label>
+            <label style="margin-left: 20px;"><input type="radio" name="role" value="customer" required> Customer</label>
+          </div><br>
+
             <button class="signup-button" style="cursor: pointer;" type="submit">Sign Up</button>
         </form>
 

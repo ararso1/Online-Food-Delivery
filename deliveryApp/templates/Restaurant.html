@@ -25,4 +25,15 @@
   </div>
 </section>
 
+<script>
+  document.querySelectorAll('.add-to-cart').forEach((btn, index) => {
+    btn.addEventListener('click', function (e) {
+      e.preventDefault();
+      const restaurantId = this.closest('.product-card').querySelector('button').getAttribute('onclick').match(/'(\d+)'/)[1];
+      // Add logic to handle adding to cart or redirecting
+      console.log(`Restaurant ID: ${restaurantId}`);
+    });
+  });
+</script>
+
 {% endblock %}

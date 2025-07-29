@@ -8,12 +8,12 @@
       <h1>Most Fastest Food Delivery Services</h1>
       <h2>Get the best quality food in Addis Ababa</h2>
       <div class="hero-buttons">
-        <button class="shop-now">Order Now</button>
-        <button class="explore-btn">Explore Details →</button>
+        <button class="shop-now"> <a href="{%url 'food'%}"> Order Now </a></button>
+        <button class="explore-btn">  <a href="{%url 'restaurant'%}">  Explore Resturants  </a> →</button>
       </div>
     </div>
     <div class="hero-img">
-      <img src="{% static 'images/.png' %}" alt="hero ">
+      <img src="{% static 'images/hero.png' %}" alt="hero ">
     </div> 
   </section>
 
@@ -71,8 +71,7 @@
       <div class="price-row">
           <span class="new-price">Open: {{ restaurant.open_time|time:"g:i A" }} - {{ restaurant.close_time|time:"g:i A" }}</span>
       </div>
-         <button class="add-to-cart" onclick="location.href='{% url 'rest_details' restaurant.pk %}'">
-        <i class="fa fa-map-marker-alt"></i> View</button>
+         <button class="add-to-cart" onclick="location.href='{% url 'rest_details' restaurant.pk %}';"><i class="fa fa-map-marker-alt"></i> View</button>
      </div>
     {% endfor %}
   </div>

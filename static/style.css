@@ -327,10 +327,12 @@ border-radius: 10px;
 
 .product-card {
   background: #fefefe;
+  width: 100%;
+  height: 100%;
   /* border: 1px solid #e0e0e0; */
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
   border-radius: 16px;
-  padding: 20px;
+  padding: 15px;
   /* min-width: 200px; */
   /* flex-shrink: 0; */
   /* scroll-snap-align: start; */
@@ -357,13 +359,14 @@ border-radius: 10px;
 }
 
 .product-card img {
-  width: 180px;
-  height: 180px;
-  object-fit: contain;
+  width: 100%;
+  height: 100%;
+  max-height: 180px;
+  object-fit: cover;
   margin: 0 auto 15px;
   display: block;
   background: none;
-  border: none;
+  border-radius: 12px;
   box-shadow: none;
 }
 
@@ -430,7 +433,7 @@ border-radius: 10px;
 }
 
 .footer {
-  text-align: center;
+  text-align: left;
   padding: 30px;
   background-color: #f2f2f2;
   margin-top: 40px;
@@ -1061,4 +1064,71 @@ border-radius: 10px;
 .ln:hover .product-card {
   box-shadow: 0 4px 16px rgba(40, 167, 69, 0.12);
   transform: translateY(-3px) scale(1.02);
+}
+
+
+
+user-type-selection {
+        margin-bottom: 20px;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        background-color: #e9ecef; /* Light background for the selection box */
+    }
+    .user-type-selection p {
+        margin-bottom: 10px;
+        font-weight: bold;
+        color: #343a40;
+    }
+    .user-type-selection div {
+        margin-bottom: 5px;
+    }
+    .user-type-selection input[type="radio"] {
+        margin-right: 8px;
+        vertical-align: middle; /* Align radio button with text */
+    }
+    .user-type-selection label {
+        vertical-align: middle;
+        cursor: pointer;
+    }
+.cart-count {
+  background-color: #27ae60;  
+  color: white;
+  font-size: 12px;
+  padding: 2px 4px;
+  border-radius: 50%;
+  position: relative;
+  top: -10px;
+  right: -8px;
+}
+.cart-count-page {
+  background-color: #27ae60;  
+  color: white;
+  font-size: 12px;
+  padding: 2px 4px;
+  border-radius: 50%;
+  position: relative;
+  top: -10px;
+  right: -8px;
+}
+
+.cart-count-header {
+  background-color: #27ae60;  
+  color: white;
+  font-size: 12px;
+  padding: 2px 4px;
+  border-radius: 50%;
+  position: relative;
+  top: -10px;
+  right: -8px;
+}
+.cart-count-header-page {
+  background-color: #27ae60;  
+  color: white;
+  font-size: 12px;
+  padding: 2px 4px;
+  border-radius: 50%;
+  position: relative;
+  top: -10px;
+  right: -8px;
 }

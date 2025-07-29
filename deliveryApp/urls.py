@@ -9,6 +9,9 @@ urlpatterns = [
     path('login/', login_view, name='login'),
     path('register/', signup_view, name='register'),
     path('add_Restaurant/',add_Restaurant, name='add_Restaurant'),
+    path('contact_us/',contact_us, name='contact_us'),
+    path('product_search/',product_search, name='product_search'),
+     
     path('add-product/', add_product, name='add_product'),
     path('product-list/', product_list, name='product_list'),
     path('orders/', orders, name='orders'),
@@ -19,6 +22,8 @@ urlpatterns = [
     path('cart/', cart, name='cart'),  
     path('update_in_stock/', update_in_stock, name='update_in_stock'),
     path('food/category/<int:category_id>/', food_by_category, name='food_by_category'),
+    
+    
     
     path('seller/restaurants/', seller_restaurants, name='seller_restaurants'),
     path('seller/restaurants/edit/<int:pk>/', edit_restaurant, name='edit_restaurant'),

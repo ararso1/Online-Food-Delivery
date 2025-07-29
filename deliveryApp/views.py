@@ -26,10 +26,12 @@ def login_view(request):
 
 def signup_view(request):
     if request.method == 'POST':
-        username = request.POST['username']
+        username = request.POST['new_username']  # ✅ matches input name
         email = request.POST['email']
         password1 = request.POST['password1']
         password2 = request.POST['password2']
+      # ✅ matches 'confirm_password'
+        role = request.POST.get('role')  # 'seller' or 'customer'
 
         if password1 != password2:
             messages.error(request, "Passwords do not match")
@@ -37,10 +39,19 @@ def signup_view(request):
             messages.error(request, "Username already exists")
         elif User.objects.filter(email=email).exists():
             messages.error(request, "Email already used")
+        elif role not in ['seller', 'customer']:
+            messages.error(request, "Please select a role")
         else:
-            User.objects.create_user(username=username, email=email, password=password1)
-            messages.success(request, "Account created successfully. Please login.")
-            return redirect('login')
+            user = User.objects.create_user(username=username, email=email, password=password1)
+            messages.success(request, "Account created successfully.")
+
+            # Redirect based on role
+            if role == 'seller':
+                return redirect('add_product')  # Your seller dashboard URL name
+            else:
+                return redirect('home')
+
+
     return render(request, 'register.html')
 
 # food deliveryApp/views.py
@@ -71,7 +82,7 @@ def add_product(request):
     context = {'form': form}
     return render(request, 'seller/add_product.html', context)
 
-@login_required(login_url='/accounts/login/')
+@login_required(login_url='/login/')
 def product_list(request):
     products = Product.objects.all()  # Fetch all products
     print(products[1].image1.url,)
@@ -104,6 +115,15 @@ def add_Restaurant(request):
 def orders(request):
     return render(request, 'seller/orders.html') 
 
+def product_search(request):
+    query = request.GET.get('q')
+    if query:
+        products = Product.objects.filter(name__icontains=query)
+    else:
+        products = Product.objects.all()
+    return render(request, 'product_search.html', {'products': products, 'query': query})
+
+
 
 def logout_view(request):
     logout(request)
@@ -126,6 +146,8 @@ def singlepage(request, pk):
 
 def cart(request):
     return render(request, 'cart.html')
+def contact_us(request):
+    return render(request, 'contact_us.html')
 
 # products/views.py
 

@@ -21,21 +21,24 @@
 
 <!-- Right: Product details -->
   <div class="product-details">
-    
-      <h1>Potato 500g</h1>
+    {% if food %}
+      <h1>{{food.category}}</h1>
       <div class="rating">★★★★☆ <span>(4.5)</span></div>
         <p class="price"><del>$40</del> <strong>$35</strong></p>
           <ul class="features">
-            <li>Fresh and organic</li>
-            <li>Rich in carbohydrates</li>
-            <li>Ideal for curries and fries</li>
+            <li>{{food.name}}</li>
+            <li>{{food.category}}</li>
+            <li>{{food.description}}</li>
           </ul>
-        <div class="actions">
-          <button class="add-to-cart"><i class="fa fa-shopping-cart"></i> Add</button>
-          <button class="buy-now">Buy Now</button>
-        </div>
-   
-  </div>
+          <div class="product-grid">
+            <button class="add-to-cart"><i class="fa fa-shopping-cart"></i> Add</button>
+            <button class="buy-now">Buy Now</button>
+          </div>
+          <p class="delivery-info">Free delivery on orders over $50</p>
+      </div>
+    {% else %}
+      <p>Product not found.</p>
+    {% endif %}
 </div>
 
 <!-- Related Products Section -->
@@ -72,6 +75,16 @@
     function changeImage(thumbnail) {
       document.getElementById("mainImage").src = thumbnail.src;
     }
+
+    document.querySelectorAll('.add-to-cart').forEach((btn, index) => {
+    btn.addEventListener('click', function (e) {
+        
+    });
+    });
+    
+
+
+
  </script>
 
 
