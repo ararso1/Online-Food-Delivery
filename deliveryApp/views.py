@@ -115,13 +115,11 @@ def add_Restaurant(request):
 def orders(request):
     return render(request, 'seller/orders.html') 
 
-def product_search(request):
-    query = request.GET.get('q')
-    if query:
-        products = Product.objects.filter(name__icontains=query)
-    else:
-        products = Product.objects.all()
-    return render(request, 'product_search.html', {'products': products, 'query': query})
+def contact_us(request):
+    return render(request, 'contact_us.html') 
+
+def seller_dashboard_home(request):
+    return render(request, 'seller/seller_dashboard_home.html') 
 
 
 
@@ -146,8 +144,6 @@ def singlepage(request, pk):
 
 def cart(request):
     return render(request, 'cart.html')
-def contact_us(request):
-    return render(request, 'contact_us.html')
 
 # products/views.py
 
@@ -226,3 +222,25 @@ def update_in_stock(request):
         product.save()
         return JsonResponse({'success': True})
     return JsonResponse({'success': False}, status=400)
+
+from django.http import JsonResponse
+from .models import Product  # or whatever your product model is
+
+def product_search(request):
+    query = request.GET.get('q', '')
+    products = Product.objects.all()
+    if query:
+        products = products.filter(name__icontains=query)
+    products = products.order_by('name')  # <-- This orders alphabetically by name
+
+    # If returning JSON for AJAX:
+    data = [
+        {
+            'id': p.id,
+            'name': p.name,
+            'price': p.price,
+            # add other fields as needed
+        }
+        for p in products
+    ]
+    return JsonResponse({'products': data})

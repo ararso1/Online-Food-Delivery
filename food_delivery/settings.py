@@ -124,6 +124,7 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR,'static')
 ]
 MEDIA_ROOT = os.path.join(BASE_DIR,'static/images')
+LOGIN_URL = 'login'
 
 # ... (rest of your settings) ...
 # Default primary key field type
