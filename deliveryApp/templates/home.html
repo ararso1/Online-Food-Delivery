@@ -18,61 +18,69 @@
   </section>
 
 <!-- Popular Restaurants Section -->
-<section class="restaurants">
+ <section class="restaurants">
   
-  <h2>Popular Category</h2>
-  <div class="restaurant-grid">
-    {% for category in categories %}
-    <a class="ln" href="{% url 'food_by_category' category.id %}">
-        <div class="restaurant-card">
-            <img src="{% static category.image.url %}" alt="{{ category.name }}">
-            <h4> {{category.name}} </h4>
-        </div>
+ <h2>Popular Category</h2> 
+ <div class="restaurant-grid"> 
+  {% for category in categories %}
+   <a class="ln" href="{% url 'food_by_category' category.id %}"> 
+    <div class="restaurant-card"> 
+      <img src="{% static category.image.url %}" alt="{{ category.name }}"> 
+      <h4> {{category.name}} </h4> </div> 
     </a>
-   {% endfor %}
+   {% endfor %} 
   </div>
-</section>
+ </section>
+
 
 
 
 <!-- Best Sellers Section -->
 <section class="best-sellers">
-  <h2>Most Ordered Foods </h2>
+  <h2>Most Ordered Foods</h2>
 
   <div class="product-grid">
     {% for food in foods %}
-    <a class="ln" href="{% url 'singlepage' food.pk %}">
       <div class="card">
-        <img src="{{food.image1.url}}" alt="food">
-        <small> {{food.category}} </small>
-        <h6>{{food.name}} </h6>
-        <div class="product-rating">★★★★☆ <span>(4)</span></div>
-        <div class="price-row">
-          <span class="new-price">{{ food.offer_price }} birr </span>
-          <span class="old-price"> {{ food.product_price }} birr</span>
-        </div>
+        <a class="ln" href="{% url 'singlepage' food.pk %}">
+          <img class="card-img" src="{{ food.image1.url }}" alt="{{ food.name }}">
+          <small>{{ food.category }}</small>
+          <h6>{{ food.name }}</h6>
+          <div class="product-rating">★★★★☆ <span>(4)</span></div>
+          <div class="price-row">
+            <span class="new-price">{{ food.offer_price }} birr</span>
+            <span class="old-price">{{ food.product_price }} birr</span>
+          </div>
+        </a>
         <button class="add-to-cart"><i class="fa fa-shopping-cart"></i> Add</button>
       </div>
-    </a>
     {% endfor %}
   </div>
 </section>
 
+
+<!-- Featured Restaurants Section -->
 <section class="best-sellers">
   <h2>Most Featured Restaurants</h2>
 
   <div class="product-grid">
     {% for restaurant in restaurants %}
-    <div class="product-card">
-      <img src="{{restaurant.image.url}}" alt="Yod Abyssinia Restaurant">
-      <small>{{restaurant.name}}</small>
-      <h6>{{restaurant.address}}</h6>
-      <div class="product-rating">★★★★★ <span>(4.9)</span></div>
-      <div class="price-row">
-          <span class="new-price">Open: {{ restaurant.open_time|time:"g:i A" }} - {{ restaurant.close_time|time:"g:i A" }}</span>
+      <div class="card">
+        <a class="ln" href="{% url 'rest_details' restaurant.pk %}">
+          <img class="card-img" src="{{ restaurant.image.url }}" alt="{{ restaurant.name }}">
+          <small>{{ restaurant.name }}</small>
+          <h6>{{ restaurant.address }}</h6>
+          <div class="product-rating">★★★★★ <span>(4.9)</span></div>
+          <div class="price-row">
+            <span class="new-price">
+              Open: {{ restaurant.open_time|time:"g:i A" }} – {{ restaurant.close_time|time:"g:i A" }}
+            </span>
+          </div>
+        </a>
+        <button class="view-btn" onclick="location.href='{% url 'rest_details' restaurant.pk %}'">
+          <i class="fa fa-map-marker-alt"></i> View
+        </button>
       </div>
-         <button class="add-to-cart" onclick="location.href='{% url 'rest_details' restaurant.pk %}';"><i class="fa fa-map-marker-alt"></i> View</button>
-     </div>
     {% endfor %}
   </div>
 </section>

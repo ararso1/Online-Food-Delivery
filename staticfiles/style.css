@@ -628,6 +628,7 @@ border-radius: 10px;
 }
 .signup-form-container
 {
+  margin-top: 50px;
   position: relative;
   top: 50%;
   left: 50%;
@@ -640,6 +641,7 @@ border-radius: 10px;
   color: black;
   font-size: 24px;
   padding: 20px;
+  margin-top: 50px;
 }
 .signup-button{
   box-sizing: border-box;

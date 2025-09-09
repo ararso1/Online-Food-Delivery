@@ -1,12 +1,254 @@
 {% extends 'base.html' %}
 
 {% block content %}
-
 {% load static %}
+<style>
+  body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f3f4f6;
+    margin: 0;
+    padding: 0;
+  }
+
+  .cart-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 2rem;
+    padding: 2rem;
+    background-color: #f3f4f6;
+  }
+
+  .cart-left {
+    flex: 2;
+    background-color: #ffffff;
+    padding: 2rem;
+    border-radius: 0.75rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  .cart-left h1 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #1f2937;
+    margin-bottom: 1rem;
+  }
+
+  .product-details-label {
+    font-weight: 500;
+    color: #4b5563;
+    border-bottom: 1px solid #e5e7eb;
+    padding-bottom: 0.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .cart-table {
+    width: 100%;
+  }
+
+  .table-header {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 1rem;
+    font-weight: 600;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #e5e7eb;
+    color: #1f2937;
+    text-align: left;
+  }
+  
+  .table-header div:nth-child(2),
+  .table-header div:nth-child(3) {
+      text-align: right;
+  }
+
+  .cart-items {
+    margin-top: 1rem;
+  }
+
+  .cart-item {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 1rem;
+    align-items: center;
+    padding: 1rem 0;
+    border-bottom: 1px solid #e5e7eb;
+  }
+
+  .item-details {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .item-details img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 0.5rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .item-details .item-info {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .item-details h4 {
+    margin: 0;
+    font-size: 1rem;
+    color: #1f2937;
+  }
+
+  .item-details p {
+    margin: 0;
+    font-size: 0.875rem;
+    color: #6b7280;
+  }
+
+  .subtotal {
+    font-weight: 600;
+    color: #1f2937;
+    text-align: right;
+  }
+
+  .action-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+  }
+
+  .action-buttons button, .action-buttons select {
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    border: 1px solid #d1d5db;
+    background-color: #f9fafb;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  .action-buttons button:hover {
+    background-color: #e5e7eb;
+  }
+
+  .remove-btn {
+    color: red;
+    border: 1px solid red;
+    background-color: #fff5f5;
+  }
+
+  .remove-btn:hover {
+    background-color: #fde2e2;
+  }
+
+  .continue-shopping {
+    display: inline-block;
+    margin-top: 1.5rem;
+    color: rgb(56, 189, 149);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+  }
+
+  .continue-shopping:hover {
+    color: rgb(34, 139, 99);
+  }
+
+  .cart-right {
+    flex: 1;
+    background-color: #ffffff;
+    padding: 2rem;
+    border-radius: 0.75rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  .cart-right h2 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #1f2937;
+    border-bottom: 1px solid #e5e7eb;
+    padding-bottom: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .order-section {
+    margin-bottom: 1.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid #e5e7eb;
+  }
+
+  .order-section p {
+    margin: 0.5rem 0;
+    color: #4b5563;
+  }
+
+  .order-section a {
+    color: rgb(56, 189, 149);
+    text-decoration: none;
+    font-weight: 500;
+  }
+
+  .order-section select {
+    width: 100%;
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+    border: 1px solid #d1d5db;
+    font-size: 1rem;
+  }
+
+  .price-summary h1 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #1f2937;
+    margin-bottom: 1.5rem;
+  }
+
+  .price-summary p {
+    display: flex;
+    justify-content: space-between;
+    margin: 0.75rem 0;
+    color: #4b5563;
+  }
+
+  .price-summary p strong {
+    font-size: 1.25rem;
+    color: #1f2937;
+  }
+
+  .green-text {
+    color: rgb(56, 189, 149);
+    font-weight: 600;
+  }
+
+  .place-order-btn {
+    width: 100%;
+    background-color: rgb(56, 189, 149);
+    color: #ffffff;
+    padding: 1rem;
+    border: none;
+    border-radius: 9999px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  .place-order-btn:hover {
+    background-color: rgb(34, 139, 99);
+  }
+
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .cart-container {
+      flex-direction: column;
+      padding: 1rem;
+    }
+  }
+</style>
 
 <div class="cart-container">
   <div class="cart-left">
-   <h1>Shopping Cart <span id="cart-count-page">0</span></h1>
+    <h1>Shopping Cart <span id="cart-count-page">0</span></h1>
     <p class="product-details-label">Product Details</p>
 
     <div class="cart-table">
@@ -15,11 +257,8 @@
         <div>Subtotal</div>
         <div>Action</div>
       </div>
-
       <div class="cart-items" id="cart-items"></div>
-      <!-- Empty cart, so no products listed -->
-
-      <a href="{%url 'food'%}" class="continue-shopping">← Continue Shopping</a>
+      <a href="{% url 'food' %}" class="continue-shopping">← Continue Shopping</a>
     </div>
   </div>
 
@@ -35,50 +274,86 @@
       <select>
         <option>Cash On Delivery</option>
         <option>Transfer</option>
-        <option>dept card</option>
+        <option>Debit Card</option>
       </select>
     </div>
 
     <div class="price-summary">
-      <h1>Shopping Cart <span id="item-count">0 Items</span></h1>
-        <p>Shipping Fee <span class="green-text">Free</span></p>
-        <p>Price <span id="price-total">$0</span></p>
-        <p>Tax (2%) <span id="tax-amount">$0</span></p>
-        <p><strong>Total Amount: <span id="total-amount">$0</span></strong></p>
-   </div>
+      <p>Items <span id="item-count">0 Items</span></p>
+      <p>Shipping Fee <span class="green-text">Free</span></p>
+      <p>Price <span id="price-total">$0.00</span></p>
+      <p>Tax (2%) <span id="tax-amount">$0.00</span></p>
+      <p><strong>Total Amount: <span id="total-amount">$0.00</span></strong></p>
+    </div>
 
     <button class="place-order-btn">Place Order</button>
   </div>
 </div>
 
-
 <script>
-document.addEventListener('DOMContentLoaded', function () {
-  const cart = JSON.parse(localStorage.getItem('cart')) || {};
+// ✅ Get and save cart from localStorage
+function getCart() {
+  return JSON.parse(localStorage.getItem('cart')) || {};
+}
+function saveCart(cart) {
+  localStorage.setItem('cart', JSON.stringify(cart));
+}
+
+// ✅ Update cart item count in header
+function updateCartCount() {
+  const cart = getCart();
+  const totalItems = Object.values(cart).reduce((sum, item) => sum + item.quantity, 0);
+  const cartCount = document.getElementById('cart-count');
+  const cartCountPage = document.getElementById('cart-count-page');
+  if (cartCount) cartCount.textContent = totalItems;
+  if (cartCountPage) cartCountPage.textContent = totalItems;
+}
+
+// ✅ Show notification
+function showNotification(message = "✅ Done", color = "#4CAF50") {
+  const notification = document.getElementById("notification");
+  if (!notification) return;
+  notification.textContent = message;
+  notification.style.backgroundColor = color;
+  notification.classList.add('show');
+
+  setTimeout(() => {
+    notification.classList.remove('show');
+  }, 2500);
+}
+
+// ✅ Re-render all cart items
+function renderCart() {
+  const cart = getCart();
   const cartItemsContainer = document.getElementById('cart-items');
   const itemCountDisplay = document.getElementById('item-count');
   const priceTotal = document.getElementById('price-total');
   const taxAmount = document.getElementById('tax-amount');
   const totalAmount = document.getElementById('total-amount');
 
+  cartItemsContainer.innerHTML = ''; // Clear existing cart items
+
   let total = 0;
   let itemCount = 0;
 
   Object.entries(cart).forEach(([id, item]) => {
-    const itemTotal = item.price * item.quantity;
-    total += itemTotal;
+    const itemSubtotal = item.price * item.quantity;
+    total += itemSubtotal;
     itemCount += item.quantity;
 
     const div = document.createElement('div');
     div.className = 'cart-item';
     div.innerHTML = `
-      <div>
-        <h4>${item.name}</h4>
-        <p>${item.price} birr x ${item.quantity}</p>
+      <div class="item-details">
+        <img src="${item.image}" alt="${item.name}">
+        <div class="item-info">
+          <h4>${item.name}</h4>
+          <p>${item.price.toFixed(2)} birr x ${item.quantity}</p>
+        </div>
       </div>
-      <div>${itemTotal.toFixed(2)} birr</div>
-      <div>
-       <button style = "color : red" onclick="removeFromCart('${id}')">Remove</button>
+      <div class="subtotal">${itemSubtotal.toFixed(2)} birr</div>
+      <div class="action-buttons">
+        <button class="remove-btn" onclick="removeFromCart('${id}')">Remove</button>
       </div>
     `;
     cartItemsContainer.appendChild(div);
@@ -88,22 +363,92 @@ document.addEventListener('DOMContentLoaded', function () {
   const grandTotal = total + tax;
 
   itemCountDisplay.textContent = `${itemCount} Items`;
-  priceTotal.textContent = `${total.toFixed(2)} birr`;
-  taxAmount.textContent = `${tax.toFixed(2)} birr`;
-  totalAmount.textContent = `${grandTotal.toFixed(2)} birr`;
-  const cartCountPage = document.getElementById('cart-count-page');
-  if (cartCountPage) cartCountPage.textContent = itemCount;
-});
+  priceTotal.textContent = `$${total.toFixed(2)}`;
+  taxAmount.textContent = `$${tax.toFixed(2)}`;
+  totalAmount.textContent = `$${grandTotal.toFixed(2)}`;
 
+  updateCartCount();
+}
+
+// ✅ Remove item from cart and re-render
 function removeFromCart(id) {
-  const cart = JSON.parse(localStorage.getItem('cart')) || {};
+  const cart = getCart();
   if (cart[id]) {
+    const removedName = cart[id].name;
     delete cart[id];
-    localStorage.setItem('cart', JSON.stringify(cart));
-    alert("❌ Item removed from cart");
-    location.reload();
+    saveCart(cart);
+    renderCart();
+    showNotification(`❌ ${removedName} removed from cart`, "red");
   }
 }
+
+// ✅ Run on page load
+document.addEventListener('DOMContentLoaded', function () {
+  renderCart();
+});
+
+
+document.querySelector('.place-order-btn').addEventListener('click', () => {
+  const cart = JSON.parse(localStorage.getItem('cart')) || {};
+
+  if (Object.keys(cart).length === 0) {
+    showNotification("Cart is empty!", "red");
+    return;
+  }
+
+  const items = Object.entries(cart).map(([id, item]) => ({
+    id: id.split('-')[0],  // assuming your keys are like name-0, name-1
+    name: item.name,
+    quantity: item.quantity,
+    price: item.price
+  }));
+
+  const delivery_address = "Default Address"; // ❗ Update this to real value if you collect it
+  const payment_method = document.querySelector('select').value;
+  const total = items.reduce((sum, i) => sum + (i.quantity * i.price), 0);
+
+  fetch('/place-order/', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': getCookie('csrftoken'),
+    },
+    body: JSON.stringify({
+      address: delivery_address,
+      payment_method: payment_method,
+      items: items,
+      total: total
+    })
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.success) {
+      localStorage.removeItem('cart');
+      renderCart();
+      showNotification("✅ Order placed successfully!");
+    } else {
+      showNotification("❌ Failed to place order", "red");
+    }
+  });
+});
+
+// CSRF token helper
+function getCookie(name) {
+  let cookieValue = null;
+  if (document.cookie && document.cookie !== '') {
+    const cookies = document.cookie.split(';');
+    for (let i = 0; i < cookies.length; i++) {
+      const cookie = cookies[i].trim();
+      if (cookie.substring(0, name.length + 1) === (name + '=')) {
+        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+        break;
+      }
+    }
+  }
+  return cookieValue;
+}
+
 </script>
+
 
 {% endblock %}

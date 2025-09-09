@@ -1,7 +1,7 @@
 from django.shortcuts import render
 
 from django.shortcuts import render, redirect,get_object_or_404
-from django.contrib.auth import authenticate, login as auth_login, logout
+from django.contrib.auth import authenticate, login, logout as auth_logout
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -10,49 +10,60 @@ from .models import *
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from django.core.files.storage import FileSystemStorage
+import json
+from django.contrib import messages
+from .models import Profile
+from django.contrib.auth import logout
+from django.shortcuts import redirect
 
+
+
+
+from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
+from .models import Order, OrderItem, Product
+
+# login and registration views
+
+def register(request):
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        role = request.POST.get('role')
+
+        if User.objects.filter(username=email).exists():
+            messages.error(request, "User already exists.")
+            return render(request, 'register.html')
+        user = User.objects.create_user(username=email, email=email, password=password, first_name=name)
+        Profile.objects.create(user=user, role=role)
+        messages.success(request, "Account created successfully! Please login.")
+        return redirect('login')
+    return render(request, 'register.html')
 
 def login_view(request):
     if request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password']
-        user = authenticate(request, username=username, password=password)
-        if user:
-            auth_login(request, user)
-            return redirect('add_product')  # Change as needed
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        user = None
+        try:
+            user_obj = User.objects.get(email=email)
+            user = authenticate(request, username=user_obj.username, password=password)
+        except User.DoesNotExist:
+            pass
+
+        if user is not None:
+            login(request, user)
+            messages.success(request, "Login successful!")
+            return redirect('home')
         else:
-            messages.error(request, 'Invalid credentials')
+            messages.error(request, "Invalid email or password.")
+            return render(request, 'login.html')
     return render(request, 'login.html')
 
-def signup_view(request):
-    if request.method == 'POST':
-        username = request.POST['new_username']  # ✅ matches input name
-        email = request.POST['email']
-        password1 = request.POST['password1']
-        password2 = request.POST['password2']
-      # ✅ matches 'confirm_password'
-        role = request.POST.get('role')  # 'seller' or 'customer'
-
-        if password1 != password2:
-            messages.error(request, "Passwords do not match")
-        elif User.objects.filter(username=username).exists():
-            messages.error(request, "Username already exists")
-        elif User.objects.filter(email=email).exists():
-            messages.error(request, "Email already used")
-        elif role not in ['seller', 'customer']:
-            messages.error(request, "Please select a role")
-        else:
-            user = User.objects.create_user(username=username, email=email, password=password1)
-            messages.success(request, "Account created successfully.")
-
-            # Redirect based on role
-            if role == 'seller':
-                return redirect('add_product')  # Your seller dashboard URL name
-            else:
-                return redirect('home')
-
-
-    return render(request, 'register.html')
+def logout_view(request):
+    auth_logout(request)
+    return redirect('home')
 
 # food deliveryApp/views.py
 
@@ -69,18 +80,18 @@ def home(request):
 
 # products/views.py
 
-@login_required(login_url='/accounts/login/')
+@login_required(login_url='/login/')
 def add_product(request):
     if request.method == 'POST':
         form = ProductForm(request.POST, request.FILES) # request.FILES is crucial for images
         if form.is_valid():
             form.save() # Saves the product and uploaded images
-            return redirect('product_list') # Redirect to product list after success
+            return redirect('seller_dashboard_home') # Redirect to product list after success
     else:
         form = ProductForm()
     
     context = {'form': form}
-    return render(request, 'seller/add_product.html', context)
+    return render(request, 'seller/seller_dashboard_home.html', context)
 
 @login_required(login_url='/login/')
 def product_list(request):
@@ -238,9 +249,51 @@ def product_search(request):
         {
             'id': p.id,
             'name': p.name,
-            'price': p.price,
+            # 'price': p.price,
             # add other fields as needed
         }
         for p in products
     ]
     return JsonResponse({'products': data})
+
+# orders/views.py
+
+
+@csrf_exempt
+@login_required
+def place_order(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+
+        delivery_address = data.get('address')
+        payment_method = data.get('payment_method')
+        cart_items = data.get('items')
+        total_amount = data.get('total')
+
+        if not cart_items:
+            return JsonResponse({'success': False, 'message': 'Cart is empty'}, status=400)
+
+        order = Order.objects.create(
+            user=request.user,
+            delivery_address=delivery_address,
+            payment_method=payment_method,
+            total_amount=total_amount
+        )
+
+        for item in cart_items:
+            product_id = item['id']
+            product = Product.objects.get(id=product_id)
+            quantity = item['quantity']
+            price = item['price']
+
+            OrderItem.objects.create(
+                order=order,
+                product=product,
+                quantity=quantity,
+                price=price
+            )
+
+        return JsonResponse({'success': True, 'message': 'Order placed successfully'})
+
+    # ✅ Respond if someone tries to GET this URL (e.g. via browser)
+    return JsonResponse({'error': 'Only POST method is allowed on this endpoint.'}, status=405)

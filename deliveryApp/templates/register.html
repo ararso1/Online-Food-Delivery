@@ -1,87 +1,121 @@
+{% extends 'base.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Food Delivery App</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="{% static 'style.css' %}">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+{% block content %}
+<style>
+  .modal-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 60px 20px;
+    background-color: #f5f5f5;
+    min-height: 80vh;
+  }
 
- 
-  <link rel="stylesheet" href="{% static 'register.css' %}">
-  <style>
-    body {
-      font-family: 'Inter', sans-serif;
+  .signup-card {
+    background-color: white;
+    border-radius: 12px;
+    padding: 2rem;
+    width: 100%;
+    max-width: 420px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  }
+
+  .signup-card h2 {
+    text-align: center;
+    color: #16a34a;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+  }
+
+  .signup-card form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .signup-card input[type="text"],
+  .signup-card input[type="email"],
+  .signup-card input[type="password"] {
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 1rem;
+  }
+
+  .role-options {
+    display: flex;
+    gap: 1rem;
+    font-size: 0.95rem;
+    align-items: center;
+  }
+
+  .signup-card button {
+    padding: 12px;
+    background-color: #16a34a;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  .signup-card button:hover {
+    background-color: #15803d;
+  }
+
+  .signup-card p {
+    text-align: center;
+    font-size: 0.9rem;
+  }
+
+  .signup-card a {
+    color: #16a34a;
+    text-decoration: none;
+    font-weight: 500;
+  }
+
+  .error-message {
+    background-color: #fee2e2;
+    color: #b91c1c;
+    padding: 10px;
+    border-radius: 6px;
+    font-size: 0.9rem;
+  }
+
+  @media (max-width: 480px) {
+    .signup-card {
+      padding: 1.5rem;
     }
-  </style>
-</head>
+  }
+</style>
 
-<body>
+<div class="modal-container">
+  <div class="signup-card">
+    <h2>User Sign Up</h2>
 
-  
-  <!-- Navbar -->
-  <nav class="navbar">
-    <div class="logo">Food Delivery</div>
-    <div class="nav-links">
-      <a href= "{% url 'home' %}">Home</a>
-      <a href="#">Restaurant</a>
-      <a href="{% url 'food'%}">Food</a>
-      <a href="#">Contact Us</a>
-      <div class="search-box">
-        <input type="text" placeholder="Search products"/>
-      </div>
-    </div>
-    <div class="cart-login">
-      <span>🛒<sup>0</sup></span>
-      <a href= "{% url 'login' %}"class="login-btn">Login</a>
-     
-    </div>
-  </nav>
+    {% if messages %}
+      {% for message in messages %}
+        <div class="error-message">{{ message }}</div>
+      {% endfor %}
+    {% endif %}
 
+    <form method="POST">
+      {% csrf_token %}
+      <input type="text" name="name" placeholder="Name" required>
+      <input type="email" name="email" placeholder="Email" required>
+      <input type="password" name="password" placeholder="Password" required>
 
-<body>
-    <div class="container">
-      <!--Data or Content-->
-      <div class="box-1">
-          <div class="content-holder">
-              <h2>Hello!</h2>
-             
-              <button class="button" onclick="signup()"><a href="{% url 'login' %}">Login</a></button> 
-          </div>  
-      </div>
-      <!--Forms-->
-      <div class="box-2">
-        {% if messages %}
-            <ul>
-                {% for message in messages %}
-                    <li style="color: red;">{{ message }}</li>
-                {% endfor %}
-            </ul>
-        {% endif %}
-        <!-- LOGIN FORM -->
-       <form class="signup-form-container" method="POST">
-            {% csrf_token %}
-            <h1>Sign Up Form</h1>
-            <input type="hidden" name="action" value="signup">
-            <input type="text" name="new_username" placeholder="Username" class="input-field" required><br><br>
-            <input type="email" name="email" placeholder="Email" class="input-field" required><br><br>
-            <input type="password" name="password1" placeholder="Password" required>
-            <input type="password" name="password2" placeholder="Confirm Password" required>
- <!-- Add below password input -->
-          <div>
-            <label><input type="radio" name="role" value="seller" required> Seller</label>
-            <label style="margin-left: 20px;"><input type="radio" name="role" value="customer" required> Customer</label>
-          </div><br>
-
-            <button class="signup-button" style="cursor: pointer;" type="submit">Sign Up</button>
-        </form>
-
+      <div class="role-options">
+        <label><input type="radio" name="role" value="customer" checked> Customer</label>
+        <label><input type="radio" name="role" value="seller"> Seller</label>
       </div>
 
-    </div>
-      
-</body>
-</html>
+      <button type="submit">Create Account</button>
+    </form>
+
+    <p>Already have an account? <a href="{% url 'login' %}">Click here</a></p>
+  </div>
+</div>
+{% endblock %}

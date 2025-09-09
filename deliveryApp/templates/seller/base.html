@@ -13,32 +13,32 @@
     <div class="container">
         <aside class="sidebar">
             <div class="logo">
-             <img src="{% static 'images/favicon.png' %}" alt="Food Delivery Logo" style="height: 40px;">
-              <span>Food Delivery Platform</span>
+              <img src="{% static 'images/favicon.png' %}" alt="Food Delivery Logo">
+                             <span>Food Delivery Platform</span>
             </div>
             <nav class="navigation">
                 <ul>
                     <li>
-                        <a href="{% url 'seller_dashboard_home' %}" id="add-product-link">
-                            <img src="{% static 'images/favicon.png' %}" alt="Add Product Icon">
-                            Dashboard
+                        <a href="{% url 'seller_dashboard_home' %}" id="dashboard-link">
+                            <i class="fa-solid fa-gauge-high"></i>
+                              Dashboard
                         </a>
                     </li>
                     <li>
                         <a href="{% url 'product_list' %}" id="add-product-link">
-                            <img src="{% static 'img/add_product_icon.png' %}" alt="Add Product Icon">
+                            <i class="fa-solid fa-utensils"></i>
                             Products
                         </a>
                     </li>
                     <li class="{% if request.resolver_match.url_name == 'orders' %}active{% endif %}">
-                        <a href="{% url 'orders' %}" id="orders-link">
-                            <img src="{% static 'img/orders_icon.png' %}" alt="Orders Icon">
+                         <a href="{% url 'place_order' %}" id="orders-link">
+                            <i class="fa-solid fa-list-check"></i>
                             Orders
                         </a>
                     </li>
                     <li class="{% if request.resolver_match.url_name == 'add_Restaurant' %}active{% endif %}">
                         <a href="{% url 'seller_restaurants' %}" id="add-restaurant-link">
-                            <img src="{% static 'img/add_restaurant_icon.png' %}" alt="Add Restaurant Icon">
+                            <i class="fa-solid fa-building"></i>
                             Restaurant
                         </a>
                     </li>

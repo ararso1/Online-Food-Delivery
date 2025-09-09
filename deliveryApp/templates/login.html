@@ -1,72 +1,18 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Food Delivery App</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="{% static 'style.css' %}">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
-
-</head>
-
-<body>
-
-  <!-- Navbar -->
-  <nav class="navbar">
-    <div class="logo">Food Delivery</div>
-    <div class="nav-links">
-      <a href= "{% url 'home' %}">Home</a>
-      <a href="#">Restaurant</a>
-      <a href="{% url 'food'%}">Food</a>
-      <a href="#">Contact Us</a>
-      <div class="search-box">
-        <input type="text" placeholder="Search products"/>
-      </div>
-    </div>
-    <div class="cart-login">
-      <span>🛒<sup>0</sup></span>
-      <a href= "{% url 'login' %}"class="login-btn">Login</a>
-     
-    </div>
-  </nav>
-
-
-<body>
-    <div class="container">
-      <!--Data or Content-->
-      <div class="box-1">
-          <div class="content-holder">
-              <h2>Hello!</h2>
-             
-              <button class="button" onclick="signup()"><a href="{% url 'register' %}">Register</a></button> 
-          </div>  
-      </div>
-      <!--Forms-->
-      <div class="box-2">
-        {% if messages %}
-            <ul>
-                {% for message in messages %}
-                    <li style="color: red;">{{ message }}</li>
-                {% endfor %}
-            </ul>
-        {% endif %}
-        <!-- LOGIN FORM -->
-        <form class="login-form-container" method="POST">
-            {% csrf_token %}
-            <h1>Login Form</h1>
-            <input type="hidden" name="action" value="login">
-            <input type="text" name="username" placeholder="Username" class="input-field" required><br><br>
-            <input type="password" name="password" placeholder="Password" class="input-field" required><br><br>
-            <button class="login-button" type="submit" style="cursor: pointer;">Login</button>
-        </form>
-
-      </div>
-
-    </div>
-      
-</body>
-</html>
+{% extends "base.html" %}
+{% block content %}
+<div class="modal-bg">
+  <form class="auth-form" method="POST">
+    {% csrf_token %}
+    <h2>User <span>Login</span></h2>
+    {% if messages %}
+      {% for message in messages %}
+        <div class="error-msg">{{ message }}</div>
+      {% endfor %}
+    {% endif %}
+    <input type="email" name="email" placeholder="Email" required>
+    <input type="password" name="password" placeholder="Password" required>
+    <p>Don't have an account? <a href="{% url 'register' %}">Click here</a></p>
+    <button type="submit">Login</button>
+  </form>
+</div>
+{% endblock %}
