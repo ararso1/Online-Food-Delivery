@@ -26,7 +26,7 @@ urlpatterns = [
     path('food/category/<int:category_id>/', food_by_category, name='food_by_category'),
     
     
-    path('seller_dashboard_home/', seller_dashboard_home, name='seller_dashboard_home'),
+    path('seller_dashboard/', seller_dashboard, name='seller_dashboard'),
     path('seller/restaurants/', seller_restaurants, name='seller_restaurants'),
     path('seller/restaurants/edit/<int:pk>/', edit_restaurant, name='edit_restaurant'),
     path('seller/restaurants/delete/<int:pk>/', delete_restaurant, name='delete_restaurant'),

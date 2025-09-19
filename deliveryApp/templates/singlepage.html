@@ -1,6 +1,4 @@
-
 {% extends "base.html" %}
-
 {% block content %}
 {% load static %}
 
@@ -9,36 +7,49 @@
   <!-- Left: Gallery -->
   <div class="product-gallery">
     <div class="thumbnail-column"> 
-      <img src="{{food.image1.url}}" class="thumb" alt="Thumb 1"  onclick="changeImage(this)">
-      <img src="{{food.image2.url}}" class="thumb" alt="Thumb 2"  onclick="changeImage(this)">
-      <img src="{{food.image3.url}}" class="thumb" alt="Thumb 3"  onclick="changeImage(this)">
-       <img src="{{food.image4.url}}" class="thumb" alt="Thumb 3" onclick="changeImage(this)">
-   </div>
+      <img src="{{food.image1.url}}" class="thumb" alt="Thumb 1" onclick="changeImage(this)">
+      <img src="{{food.image2.url}}" class="thumb" alt="Thumb 2" onclick="changeImage(this)">
+      <img src="{{food.image3.url}}" class="thumb" alt="Thumb 3" onclick="changeImage(this)">
+      <img src="{{food.image4.url}}" class="thumb" alt="Thumb 4" onclick="changeImage(this)">
+    </div>
     <div class="main-img-wrapper">
       <img src="{{food.image1.url}}" alt="Product Image" class="main-img" id="mainImage">
     </div>
   </div>
 
-<!-- Right: Product details -->
+  <!-- Right: Product details -->
   <div class="product-details">
     {% if food %}
       <h1>{{food.category}}</h1>
       <div class="rating">★★★★☆ <span>(4.5)</span></div>
-        <p class="price"><del>$40</del> <strong>$35</strong></p>
-          <ul class="features">
-            <li>{{food.name}}</li>
-            <li>{{food.category}}</li>
-            <li>{{food.description}}</li>
-          </ul>
-          <div class="product-grid">
-            <button class="add-to-cart"><i class="fa fa-shopping-cart"></i> Add</button>
-            <button class="buy-now">Buy Now</button>
-          </div>
-          <p class="delivery-info">Free delivery on orders over $50</p>
+      <p class="price">
+        <span class="new-price">{{ food.offer_price }} birr </span>
+        <span class="old-price"> {{ food.product_price }} birr</span>
+      <ul class="features">
+        <li>{{food.name}}</li>
+        <li>{{food.category}}</li>
+        <li>{{food.description}}</li>
+      </ul>
+      <!-- Action Buttons: Side-by-side -->
+      <div class="action-buttons">
+       <button 
+            class="add-to-cart"
+            data-id="{{ food.pk }}"
+            data-name="{{ food.name }}"
+            data-price="{{ food.offer_price }}"
+            data-image="{{ food.image1.url }}"
+          >
+            <i class="fa fa-shopping-cart"></i> Add
+        </button>
+
+
+        <button class="buy-now">Buy Now</button>
       </div>
+      <p class="delivery-info">Free delivery on orders over $50</p>
     {% else %}
       <p>Product not found.</p>
     {% endif %}
+  </div>
 </div>
 
 <!-- Related Products Section -->
@@ -56,7 +67,16 @@
           <span class="new-price">{{ related_food.offer_price }} birr </span>
           <span class="old-price"> {{ related_food.product_price }} birr</span>
         </div>
-        <button class="add-to-cart"><i class="fa fa-shopping-cart"></i> Add</button>
+        <button 
+            class="add-to-cart"
+            data-id="{{ related_food.pk }}"
+            data-name="{{ related_food.name }}"
+            data-price="{{ related_food.offer_price }}"
+            data-image="{{ related_food.image1.url }}"
+          >
+            <i class="fa fa-shopping-cart"></i> Add
+        </button>
+
       </div>
     </a>
     {% empty %}
@@ -69,26 +89,70 @@
   </div>
 </div>
 
-<!-- Thumbnail click functionality -->
+<!-- Scripts for Single Product Page -->
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  // Change image for thumbnails
+  window.changeImage = function(thumbnail) {
+    document.getElementById("mainImage").src = thumbnail.src;
+  };
 
- <script>
-    function changeImage(thumbnail) {
-      document.getElementById("mainImage").src = thumbnail.src;
-    }
+  // For main Add to Cart (single page)
+  var mainBtn = document.querySelector('.product-details .add-to-cart');
+  if (mainBtn) {
+    mainBtn.addEventListener('click', function (e) {
+      e.preventDefault();
+      const name = mainBtn.getAttribute('data-name');
+      const price = parseFloat(mainBtn.getAttribute('data-price'));
+      const image = mainBtn.getAttribute('data-image');
+      const productId = name.toLowerCase().replace(/\s+/g, '-') + '-single';
 
-    document.querySelectorAll('.add-to-cart').forEach((btn, index) => {
-    btn.addEventListener('click', function (e) {
-        
+      let cart = JSON.parse(localStorage.getItem('cart')) || {};
+      if (cart[productId]) {
+        cart[productId].quantity += 1;
+      } else {
+        cart[productId] = {
+          name: name,
+          price: price,
+          quantity: 1,
+          image: image
+        };
+      }
+      localStorage.setItem('cart', JSON.stringify(cart));
+
+      // Update cart count in navbar
+      if (window.updateCartCount) updateCartCount();
+
+      // Show notification
+      if (window.showNotification) {
+        showNotification(`✅ ${name} added to cart!`);
+      } else {
+        // Fallback notification if global doesn't exist
+        let el = document.getElementById('singlePageNotification');
+        if (!el) {
+          el = document.createElement('div');
+          el.id = 'singlePageNotification';
+          el.style.position = 'fixed';
+          el.style.top = '22px';
+          el.style.right = '26px';
+          el.style.background = '#27ae60';
+          el.style.color = '#fff';
+          el.style.padding = '13px 18px';
+          el.style.borderRadius = '8px';
+          el.style.zIndex = 9999;
+          el.style.boxShadow = '0 4px 8px rgba(0,0,0,0.16)';
+          el.style.fontFamily = "'Inter',sans-serif";
+          el.style.fontSize = '1rem';
+          el.style.display = 'none';
+          document.body.appendChild(el);
+        }
+        el.textContent = `✅ ${name} added to cart!`;
+        el.style.display = 'block';
+        setTimeout(function() { el.style.display = 'none'; }, 2000);
+      }
     });
-    });
-    
-
-
-
- </script>
-
-
-</body>
-</html>
+  }
+});
+</script>
 
 {% endblock %}

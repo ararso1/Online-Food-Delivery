@@ -147,62 +147,64 @@
  
  
 
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-  const cartCount = document.getElementById('cart-count');
-  const notification = document.getElementById('notification');
-  let cart = JSON.parse(localStorage.getItem('cart')) || {};
+...
+<!-- All your content above -->
+<footer class="footer"> ... </footer>
 
+<!-- Place it here, BEFORE </body> -->
+<script>
+  // --- Make updateCartCount() Global ---
   function updateCartCount() {
+    // Always read from localStorage for up-to-date cart!
+    let cart = JSON.parse(localStorage.getItem('cart')) || {};
     const totalItems = Object.values(cart).reduce((sum, item) => sum + item.quantity, 0);
+    const cartCount = document.getElementById('cart-count');
     if (cartCount) cartCount.textContent = totalItems;
   }
 
+  // --- Make showNotification() Global ---
   function showNotification(message = "✅ Product added to cart!") {
+    const notification = document.getElementById('notification');
     if (!notification) return;
     notification.textContent = message;
     notification.classList.add('show');
-
-    // Hide after 2.5 seconds
     setTimeout(() => {
       notification.classList.remove('show');
     }, 2500);
   }
 
-  // Attach to all buttons with class "add-to-cart"
-  document.querySelectorAll('.add-to-cart').forEach((btn, index) => {
-    btn.addEventListener('click', function (e) {
-      e.preventDefault();
-      const card = btn.closest('.card');
+  // --- Cart Add Button Logic for Card/Listing Pages ---
+  document.addEventListener('DOMContentLoaded', function () {
+    // Always update on page load
+    updateCartCount();
 
-      const name = card.querySelector('h6')?.textContent?.trim();
-      const priceText = card.querySelector('.new-price')?.textContent || "0";
-      const image = card.querySelector('img')?.src || '';
+    // For all "add-to-cart" buttons (like in cards/grid, not single page)
+    document.querySelectorAll('.card .add-to-cart').forEach((btn, index) => {
+      btn.addEventListener('click', function (e) {
+        e.preventDefault();
+        const card = btn.closest('.card');
+        const name = card.querySelector('h6')?.textContent?.trim() || '';
+        const priceText = card.querySelector('.new-price')?.textContent || "0";
+        const image = card.querySelector('img')?.src || '';
+        const price = parseFloat(priceText.replace(/[^\d.]/g, '')) || 0;
+        const productId = name.toLowerCase().replace(/\s+/g, '-') + '-' + index;
 
-      const price = parseFloat(priceText.replace(/[^\d.]/g, ''));
-      const productId = name.toLowerCase().replace(/\s+/g, '-') + '-' + index;
+        // Get fresh cart, add/update
+        let cart = JSON.parse(localStorage.getItem('cart')) || {};
+        if (cart[productId]) {
+          cart[productId].quantity += 1;
+        } else {
+          cart[productId] = { name, price, quantity: 1, image };
+        }
+        localStorage.setItem('cart', JSON.stringify(cart));
 
-      if (cart[productId]) {
-        cart[productId].quantity += 1;
-      } else {
-        cart[productId] = {
-          name,
-          price,
-          quantity: 1,
-          image, // ✅ Save product image
-        };
-      }
-
-      localStorage.setItem('cart', JSON.stringify(cart));
-      updateCartCount();
-      showNotification(`✅ ${name} added to cart!`);
+        updateCartCount();
+        showNotification(`✅ ${name} added to cart!`);
+      });
     });
   });
 
-  updateCartCount();
-});
-
-
+  // --- Dropdown Avatar Profile (no change) ---
   function toggleProfileDropdown() {
     document.getElementById("profileDropdown").classList.toggle("show");
   }
@@ -214,9 +216,9 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     }
   }
-
-
 </script>
+</body>
+</html>
 
 
 

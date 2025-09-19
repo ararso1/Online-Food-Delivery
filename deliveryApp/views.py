@@ -1,5 +1,4 @@
 from django.shortcuts import render
-
 from django.shortcuts import render, redirect,get_object_or_404
 from django.contrib.auth import authenticate, login, logout as auth_logout
 from django.contrib.auth.models import User
@@ -14,17 +13,10 @@ import json
 from django.contrib import messages
 from .models import Profile
 from django.contrib.auth import logout
-from django.shortcuts import redirect
-
-
-
-
 from django.views.decorators.csrf import csrf_exempt
-from django.http import JsonResponse
-from .models import Order, OrderItem, Product
+
 
 # login and registration views
-
 def register(request):
     if request.method == 'POST':
         name = request.POST.get('name')
@@ -35,10 +27,22 @@ def register(request):
         if User.objects.filter(username=email).exists():
             messages.error(request, "User already exists.")
             return render(request, 'register.html')
+
         user = User.objects.create_user(username=email, email=email, password=password, first_name=name)
         Profile.objects.create(user=user, role=role)
-        messages.success(request, "Account created successfully! Please login.")
-        return redirect('login')
+
+        messages.success(request, "Account created successfully!")
+        
+        # --- Corrected Redirection Logic ---
+        if role == 'seller':
+            return redirect('seller_dashboard')  # Redirect to the seller's dashboard
+        elif role == 'customer':
+            return redirect('home')  # Redirect to the customer's home page
+        else:
+            # Handle unexpected role values, perhaps by showing an error
+            messages.error(request, 'Invalid user role selected.')
+            return redirect('register')
+
     return render(request, 'register.html')
 
 def login_view(request):
@@ -65,6 +69,8 @@ def logout_view(request):
     auth_logout(request)
     return redirect('home')
 
+
+
 # food deliveryApp/views.py
 
 def food(request):
@@ -74,6 +80,7 @@ def food(request):
 
 def home(request):
     restaurants = Restaurant.objects.all()[:4]
+    
     foods = Product.objects.all()[:4]  # Fetch first 4 products
     category = Category.objects.all()[:6]  # Fetch all categories if needed
     return render(request, 'home.html', {'restaurants': restaurants, 'foods': foods , 'categories': category })
@@ -129,8 +136,8 @@ def orders(request):
 def contact_us(request):
     return render(request, 'contact_us.html') 
 
-def seller_dashboard_home(request):
-    return render(request, 'seller/seller_dashboard_home.html') 
+def seller_dashboard(request):
+    return render(request, 'seller/seller_dashboard.html') 
 
 
 
@@ -168,10 +175,6 @@ def update_in_stock(request):
     return JsonResponse({'status': 'success'})
 
 
-""" def fetch_restaurant_data(request):
-    restaurant = Restaurant.objects.all()
-    print(restaurant)
-    return render(request, 'restaurant.html', {'restaurant': restaurant}) """
     
 def food_by_category(request, category_id):
     category = get_object_or_404(Category, id=category_id)
