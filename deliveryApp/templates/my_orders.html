@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}My Orders{% endblock %}
+
+{% block extra_css %}
+<style>
+  :root{
+    --ink:#0f172a; --muted:#64748b; --line:#e2e8f0;
+    --bg:#fff; --accent:#10b981; --accent-ink:#064e3b;
+  }
+  .orders-wrap{max-width:1100px;margin:32px auto;padding:0 16px;}
+  .page-header{display:flex;align-items:center;gap:12px;margin-bottom:16px;}
+  .page-header h1{margin:0;font-size:clamp(1.4rem,2vw,1.8rem);font-weight:800;color:var(--ink);}
+  .page-header .bar{height:6px;width:46px;background:linear-gradient(90deg,var(--accent),#34d399);border-radius:999px;}
+
+  .order-card{background:var(--bg);border:1px solid var(--line);border-radius:16px;padding:16px 18px;
+              box-shadow:0 10px 24px rgba(2,6,23,.04);margin-bottom:14px;}
+
+  .order-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap;color:var(--muted);font-weight:600;}
+  .order-head .spacer{flex:1 1 auto}
+  .pill{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:999px;background:#ecfeff;color:#0369a1;font-weight:700;font-size:.85rem;}
+  .pill.total{background:#ecfdf5;color:var(--accent-ink);}
+
+  /* MAIN ROW */
+  .order-body{
+    display:grid;
+    grid-template-columns: 88px minmax(0,1fr) auto;  /* image | text | meta */
+    gap:16px; align-items:center; margin-top:12px;
+  }
+  .thumb{width:88px;height:88px;border-radius:12px;overflow:hidden;background:#f8fafc;border:1px solid var(--line);
+         display:flex;align-items:center;justify-content:center;}
+  .thumb img{width:100%;height:100%;object-fit:cover;display:block;}
+
+  .main{min-width:0;}                 /* allow text wrapping */
+  .main h3{margin:2px 0 6px;font-size:1.1rem;color:var(--ink);font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .main .muted{color:var(--muted);margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+
+  .meta{text-align:right;white-space:nowrap;}
+  .meta p{margin:4px 0;color:var(--muted);font-weight:600;}
+  .amount{color:var(--accent-ink);font-weight:800;}
+
+  /* status */
+  .status{display:inline-block;padding:.2rem .55rem;border-radius:999px;font-weight:800;font-size:.8rem;border:1px solid transparent;}
+  .status-pending{background:#eef2ff;color:#3730a3;border-color:#c7d2fe;}
+  .status-confirmed{background:#ecfeff;color:#0369a1;border-color:#bae6fd;}
+  .status-preparing{background:#fffbeb;color:#92400e;border-color:#fde68a;}
+  .status-out_for_delivery{background:#fff7ed;color:#9a3412;border-color:#fed7aa;}
+  .status-delivered{background:#ecfdf5;color:#065f46;border-color:#bbf7d0;}
+  .status-cancelled{background:#fef2f2;color:#991b1b;border-color:#fecaca;}
+
+  /* responsive */
+  @media (max-width:760px){
+    .order-body{grid-template-columns:64px 1fr;}
+    .meta{grid-column:1/-1;text-align:left;}
+    .main h3,.main .muted{white-space:normal;}
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="orders-wrap">
+  <div class="page-header">
+    <div class="bar"></div><h1>My Orders</h1>
+  </div>
+
+  {% if orders %}
+    {% for row in orders %}
+      {% with o=row.order fi=row.first_item items_count=o.items.count %}
+      <div class="order-card">
+        <div class="order-head">
+          <div>Order ID: <strong>#{{ o.id|stringformat:"06d" }}</strong></div>
+          <div class="spacer"></div>
+          <div class="pill">Payment: {{ o.get_payment_method_display }}</div>
+          <div class="pill total">Total: {{ o.total }} birr</div>
+        </div>
+
+        <div class="order-body">
+          <div class="thumb">
+            {% if fi and fi.product and fi.product.image1 %}
+              <img src="{{ fi.product.image1.url }}" alt="{{ fi.product_name }}">
+            {% else %}
+              <img src="{% static 'images/placeholder.png' %}" alt="">
+            {% endif %}
+          </div>
+
+          <div class="main">
+            <h3>{{ fi.product_name|default:"Order" }}</h3>
+            <p class="muted">
+              Category: {{ fi.product.category.name|default:"—" }}
+              {% if items_count|add:'-1' > 0 %} • +{{ items_count|add:'-1' }} more{% endif %}
+            </p>
+          </div>
+
+          <div class="meta">
+            <p>Quantity: {{ row.qty_sum }}</p>
+            <p>
+              Status:
+              {% if o.status == 'pending' %}
+                <span class="status status-pending">Order Placed</span>
+              {% elif o.status == 'confirmed' %}
+                <span class="status status-confirmed">Confirmed</span>
+              {% elif o.status == 'preparing' %}
+                <span class="status status-preparing">Preparing</span>
+              {% elif o.status == 'out_for_delivery' %}
+                <span class="status status-out_for_delivery">Out for Delivery</span>
+              {% elif o.status == 'delivered' %}
+                <span class="status status-delivered">Delivered</span>
+              {% elif o.status == 'cancelled' %}
+                <span class="status status-cancelled">Cancelled</span>
+              {% else %}
+                <span class="status">{{ o.status|title }}</span>
+              {% endif %}
+            </p>
+            <p>Date: {{ o.created_at|date:"M j, Y" }}</p>
+            <p class="amount">Amount: {{ o.total }} birr</p>
+          </div>
+        </div>
+      </div>
+      {% endwith %}
+    {% endfor %}
+  {% else %}
+    <div class="order-card" style="text-align:center;color:var(--muted);">
+      No orders yet. <a href="{% url 'food' %}" style="color:var(--accent-ink);text-decoration:underline;">Browse the menu</a>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

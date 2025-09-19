@@ -1,0 +1,153 @@
+{% extends "./base.html" %}
+{% load static %}
+
+{% block title %}Seller • My Orders{% endblock %}
+
+{% block extra_css %}
+<style>
+  .orders-container{padding:18px;}
+  .orders-container h2{margin:0 0 12px;font-weight:800;}
+  .order-table-wrapper{background:#fff;border-radius:14px;box-shadow:0 10px 24px rgba(0,0,0,.05);overflow:hidden;border:1px solid #eef2f7;}
+  table{width:100%;border-collapse:collapse;}
+  thead th{
+    text-align:left;padding:12px 14px;background:#f8fafc;border-bottom:1px solid #eef2f7;font-weight:700;color:#334155;
+    font-size:.95rem; white-space:nowrap;
+  }
+  tbody td{padding:12px 14px;border-bottom:1px solid #f1f5f9;vertical-align:middle;}
+  .product-cell{display:flex;align-items:center;gap:10px;min-width:240px;}
+  .thumb{width:52px;height:52px;border-radius:10px;overflow:hidden;background:#f1f5f9;border:1px solid #eef2f7;flex:0 0 52px;}
+  .thumb img{width:100%;height:100%;object-fit:cover;display:block;}
+  .pname{font-weight:700;color:#0f172a;margin:0;}
+  .muted{color:#64748b;font-size:.9rem;}
+  .badge{display:inline-block;padding:.15rem .5rem;border-radius:999px;background:#ecfeff;color:#0369a1;font-weight:700;font-size:.8rem;}
+  .amount{font-weight:800;color:#065f46;}
+  .status-select{
+    border:1px solid #e2e8f0;border-radius:10px;padding:.4rem .55rem;background:#fff;min-width:170px;font-weight:700;color:#0f172a;
+  }
+  .row-ok{background:linear-gradient(180deg,rgba(16,185,129,.06),transparent);}
+  .actions{display:flex;gap:8px;flex-wrap:wrap;}
+  .btn{display:inline-flex;align-items:center;gap:8px;border:1px solid #e2e8f0;padding:.45rem .7rem;border-radius:10px;background:#fff;color:#0f172a;font-weight:700}
+  .btn:hover{box-shadow:0 6px 18px rgba(2,6,23,.06);transform:translateY(-1px)}
+  .note{margin:10px 0 0;color:#64748b;font-size:.92rem;}
+  @media (max-width:900px){
+    .hide-md{display:none;}
+    .status-select{min-width:140px;}
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="orders-container">
+  <h2>My Orders</h2>
+  <p class="note">Orders that include your products. Update each item’s status below.</p>
+
+  <div class="order-table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>Order</th>
+          <th class="hide-md">Customer</th>
+          <th>Product</th>
+          <th>Qty</th>
+          <th class="hide-md">Unit</th>
+          <th>Subtotal</th>
+          <th class="hide-md">Payment</th>
+          <th>Placed</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for it in items %}
+        <tr id="row-{{ it.id }}">
+          <td>
+            <span class="badge">#{{ it.order.id|stringformat:"06d" }}</span>
+          </td>
+          <td class="hide-md">
+            <div class="muted">
+              {{ it.order.customer.first_name|default:it.order.customer.username }}
+              <br><small>{{ it.order.customer.email }}</small>
+            </div>
+          </td>
+          <td>
+            <div class="product-cell">
+              <div class="thumb">
+                {% if it.product and it.product.image1 %}
+                  <img src="{{ it.product.image1.url }}" alt="{{ it.product_name }}">
+                {% else %}
+                  <img src="{% static 'images/placeholder.png' %}" alt="">
+                {% endif %}
+              </div>
+              <div>
+                <p class="pname">{{ it.product_name }}</p>
+                <p class="muted">{{ it.product.category.name|default:"—" }}</p>
+              </div>
+            </div>
+          </td>
+          <td>{{ it.quantity }}</td>
+          <td class="hide-md">{{ it.product_price }} birr</td>
+          <td class="amount">{{ it.subtotal }} birr</td>
+          <td class="hide-md">
+            <span class="muted">{{ it.order.get_payment_method_display }}</span>
+          </td>
+          <td>{{ it.order.created_at|date:"M j, Y" }}</td>
+          <td>
+            <select class="status-select"
+                    data-item-id="{{ it.id }}"
+                    data-current="{{ it.status }}">
+              {% for val,label in status_choices %}
+                <option value="{{ val }}" {% if it.status == val %}selected{% endif %}>{{ label }}</option>
+              {% endfor %}
+            </select>
+          </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="10" class="muted" style="text-align:center;padding:20px;">No order items yet.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+(function(){
+  function getCookie(name){
+    let v=null; if(document.cookie){ for(const c of document.cookie.split(';')){
+      const t=c.trim(); if(t.startsWith(name+'=')){ v=decodeURIComponent(t.slice(name.length+1)); break; }
+    }} return v;
+  }
+
+  document.querySelectorAll('.status-select').forEach(sel => {
+    sel.addEventListener('change', async (e) => {
+      const el = e.currentTarget;
+      const itemId = el.dataset.itemId;
+      const status = el.value;
+
+      // optimistic UI
+      const row = document.getElementById('row-'+itemId);
+      row && row.classList.add('row-ok');
+
+      try{
+        const res = await fetch("{% url 'seller_update_order_item_status' %}", {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'X-CSRFToken': getCookie('csrftoken') },
+          body: new URLSearchParams({ item_id: itemId, status })
+        });
+        if(!res.ok){
+          throw new Error('Failed to update status');
+        }
+        // Optionally read order rollup status:
+        // const data = await res.json();
+      }catch(err){
+        alert('Could not update status. Please try again.');
+        // revert
+        el.value = el.dataset.current;
+      }finally{
+        // settle
+        setTimeout(()=>{ row && row.classList.remove('row-ok'); }, 600);
+        el.dataset.current = el.value;
+      }
+    });
+  });
+})();
+</script>
+{% endblock %}

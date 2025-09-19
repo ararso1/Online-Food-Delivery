@@ -4,7 +4,7 @@ from .models import Product, Category
 class ProductForm(forms.ModelForm):
     class Meta:
         model = Product
-        fields = ['name', 'description', 'category', 'product_price', 'offer_price', 'image1', 'image2', 'image3', 'image4', 'in_stock']
+        fields = ['name', 'description', 'category', 'product_price', 'offer_price', 'image1', 'image2', 'image3', 'image4', 'in_stock', 'added_by']
         widgets = {
             'name': forms.TextInput(attrs={'placeholder': 'Type here'}),
             'description': forms.Textarea(attrs={'placeholder': 'Type here'}),

@@ -31,7 +31,7 @@
                         </a>
                     </li>
                     <li class="{% if request.resolver_match.url_name == 'orders' %}active{% endif %}">
-                         <a href="{% url 'place_order' %}" id="orders-link">
+                         <a href="{% url 'seller_orders' %}" id="orders-link">
                             <i class="fa-solid fa-list-check"></i>
                             Orders
                         </a>

@@ -264,14 +264,16 @@
 
   <div class="cart-right">
     <h2>Order Summary</h2>
+
     <div class="order-section">
       <p><strong>DELIVERY ADDRESS</strong></p>
-      <p>No address found <a href="#">Change</a></p>
+      <!-- Simple address input (feel free to replace with your address picker) -->
+      <input id="delivery-address" required type="text" placeholder="Enter your delivery address" style="width:100%;padding:.5rem;border:1px solid #ddd;border-radius:8px;">
     </div>
 
     <div class="order-section">
       <p><strong>PAYMENT METHOD</strong></p>
-      <select>
+      <select id="payment-method" style="width:100%;padding:.5rem;border:1px solid #ddd;border-radius:8px;">
         <option>Cash On Delivery</option>
         <option>Transfer</option>
         <option>Debit Card</option>
@@ -281,173 +283,162 @@
     <div class="price-summary">
       <p>Items <span id="item-count">0 Items</span></p>
       <p>Shipping Fee <span class="green-text">Free</span></p>
-      <p>Price <span id="price-total">$0.00</span></p>
-      <p>Tax (2%) <span id="tax-amount">$0.00</span></p>
-      <p><strong>Total Amount: <span id="total-amount">$0.00</span></strong></p>
+      <p>Price <span id="price-total">0.00 birr</span></p>
+      <p>Tax (2%) <span id="tax-amount">0.00 birr</span></p>
+      <p><strong>Total Amount: <span id="total-amount">0.00 birr</span></strong></p>
     </div>
 
     <button class="place-order-btn">Place Order</button>
   </div>
 </div>
 
+<!-- Optional: a simple notification element -->
+<div id="notification" style="position:fixed;right:16px;bottom:16px;background:#4CAF50;color:#fff;padding:.6rem .9rem;border-radius:8px;opacity:0;transition:opacity .25s;pointer-events:none;"></div>
+
 <script>
-// ✅ Get and save cart from localStorage
-function getCart() {
-  return JSON.parse(localStorage.getItem('cart')) || {};
-}
-function saveCart(cart) {
-  localStorage.setItem('cart', JSON.stringify(cart));
-}
+(function () {
+  const IS_AUTHENTICATED = {{ user.is_authenticated|yesno:"true,false" }};
+  const LOGIN_URL = "{% url 'login' %}?next={{ request.path|urlencode }}";
+  const PLACE_ORDER_URL = "{% url 'place_order' %}"; // or 'deliveryApp:place_order' if namespaced
 
-// ✅ Update cart item count in header
-function updateCartCount() {
-  const cart = getCart();
-  const totalItems = Object.values(cart).reduce((sum, item) => sum + item.quantity, 0);
-  const cartCount = document.getElementById('cart-count');
-  const cartCountPage = document.getElementById('cart-count-page');
-  if (cartCount) cartCount.textContent = totalItems;
-  if (cartCountPage) cartCountPage.textContent = totalItems;
-}
+  function getCart(){ try { return JSON.parse(localStorage.getItem('cart')) || {}; } catch { return {}; } }
+  function saveCart(c){ localStorage.setItem('cart', JSON.stringify(c)); }
+  function formatBirr(n){ return `${Number(n||0).toFixed(2)} birr`; }
+  function showNotification(msg="✅ Done", color="#4CAF50"){
+    const el=document.getElementById("notification"); if(!el) return;
+    el.textContent=msg; el.style.backgroundColor=color; el.style.opacity="1";
+    setTimeout(()=>{el.style.opacity="0";}, 2500);
+  }
+  function getCookie(name){ let v=null; if(document.cookie){ for(const c of document.cookie.split(';')){ const t=c.trim(); if(t.startsWith(name+'=')){ v=decodeURIComponent(t.slice(name.length+1)); break; }}} return v; }
 
-// ✅ Show notification
-function showNotification(message = "✅ Done", color = "#4CAF50") {
-  const notification = document.getElementById("notification");
-  if (!notification) return;
-  notification.textContent = message;
-  notification.style.backgroundColor = color;
-  notification.classList.add('show');
+  function updateCartCount() {
+    const cart = getCart();
+    const total = Object.values(cart).reduce((s, it) => s + (Number(it.quantity) || 0), 0);
+    const h = document.getElementById('cart-count');
+    const p = document.getElementById('cart-count-page');
+    if (h) h.textContent = total;
+    if (p) p.textContent = total;
+  }
 
-  setTimeout(() => {
-    notification.classList.remove('show');
-  }, 2500);
-}
+  function renderCart() {
+    const cart = getCart();
+    const list = document.getElementById('cart-items');
+    const itemCountDisplay = document.getElementById('item-count');
+    const priceTotal = document.getElementById('price-total');
+    const taxAmount = document.getElementById('tax-amount');
+    const totalAmount = document.getElementById('total-amount');
+    if (!list) return;
 
-// ✅ Re-render all cart items
-function renderCart() {
-  const cart = getCart();
-  const cartItemsContainer = document.getElementById('cart-items');
-  const itemCountDisplay = document.getElementById('item-count');
-  const priceTotal = document.getElementById('price-total');
-  const taxAmount = document.getElementById('tax-amount');
-  const totalAmount = document.getElementById('total-amount');
+    list.innerHTML = '';
+    let total = 0, count = 0;
 
-  cartItemsContainer.innerHTML = ''; // Clear existing cart items
+    for (const [key, item] of Object.entries(cart)) {
+      const qty = Number(item.quantity || 0);
+      const price = Number(item.price || 0);
+      const sub = qty * price;
+      total += sub; count += qty;
 
-  let total = 0;
-  let itemCount = 0;
-
-  Object.entries(cart).forEach(([id, item]) => {
-    const itemSubtotal = item.price * item.quantity;
-    total += itemSubtotal;
-    itemCount += item.quantity;
-
-    const div = document.createElement('div');
-    div.className = 'cart-item';
-    div.innerHTML = `
-      <div class="item-details">
-        <img src="${item.image}" alt="${item.name}">
-        <div class="item-info">
-          <h4>${item.name}</h4>
-          <p>${item.price.toFixed(2)} birr x ${item.quantity}</p>
+      const div = document.createElement('div');
+      div.className = 'cart-item';
+      div.innerHTML = `
+        <div class="item-details">
+          <img src="${item.image || ''}" alt="${item.name || ''}">
+          <div class="item-info">
+            <h4>${item.name || ''}</h4>
+            <p>${formatBirr(price)} x ${qty}</p>
+          </div>
         </div>
-      </div>
-      <div class="subtotal">${itemSubtotal.toFixed(2)} birr</div>
-      <div class="action-buttons">
-        <button class="remove-btn" onclick="removeFromCart('${id}')">Remove</button>
-      </div>
-    `;
-    cartItemsContainer.appendChild(div);
-  });
-
-  const tax = total * 0.02;
-  const grandTotal = total + tax;
-
-  itemCountDisplay.textContent = `${itemCount} Items`;
-  priceTotal.textContent = `${total.toFixed(2)}`;
-  taxAmount.textContent = `${tax.toFixed(2)}`;
-  totalAmount.textContent = `${grandTotal.toFixed(2)} birr`;
-
-  updateCartCount();
-}
-
-// ✅ Remove item from cart and re-render
-function removeFromCart(id) {
-  const cart = getCart();
-  if (cart[id]) {
-    const removedName = cart[id].name;
-    delete cart[id];
-    saveCart(cart);
-    renderCart();
-    showNotification(`❌ ${removedName} removed from cart`, "red");
-  }
-}
-
-// ✅ Run on page load
-document.addEventListener('DOMContentLoaded', function () {
-  renderCart();
-});
-
-
-document.querySelector('.place-order-btn').addEventListener('click', () => {
-  const cart = JSON.parse(localStorage.getItem('cart')) || {};
-
-  if (Object.keys(cart).length === 0) {
-    showNotification("Cart is empty!", "red");
-    return;
-  }
-
-  const items = Object.entries(cart).map(([id, item]) => ({
-    id: id.split('-')[0],  // assuming your keys are like name-0, name-1
-    name: item.name,
-    quantity: item.quantity,
-    price: item.price
-  }));
-
-  const delivery_address = "Default Address"; // ❗ Update this to real value if you collect it
-  const payment_method = document.querySelector('select').value;
-  const total = items.reduce((sum, i) => sum + (i.quantity * i.price), 0);
-
-  fetch('/place-order/', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'X-CSRFToken': getCookie('csrftoken'),
-    },
-    body: JSON.stringify({
-      address: delivery_address,
-      payment_method: payment_method,
-      items: items,
-      total: total
-    })
-  })
-  .then(res => res.json())
-  .then(data => {
-    if (data.success) {
-      localStorage.removeItem('cart');
-      renderCart();
-      showNotification("✅ Order placed successfully!");
-    } else {
-      showNotification("❌ Failed to place order", "red");
+        <div class="subtotal">${formatBirr(sub)}</div>
+        <div class="action-buttons">
+          <button class="remove-btn" data-id="${key}">Remove</button>
+        </div>
+      `;
+      list.appendChild(div);
     }
-  });
-});
 
-// CSRF token helper
-function getCookie(name) {
-  let cookieValue = null;
-  if (document.cookie && document.cookie !== '') {
-    const cookies = document.cookie.split(';');
-    for (let i = 0; i < cookies.length; i++) {
-      const cookie = cookies[i].trim();
-      if (cookie.substring(0, name.length + 1) === (name + '=')) {
-        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-        break;
+    const tax = total * 0.02, grand = total + tax;
+    if (itemCountDisplay) itemCountDisplay.textContent = `${count} Items`;
+    if (priceTotal) priceTotal.textContent = formatBirr(total);
+    if (taxAmount) taxAmount.textContent = formatBirr(tax);
+    if (totalAmount) totalAmount.textContent = formatBirr(grand);
+
+    updateCartCount();
+
+    list.querySelectorAll('.remove-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const id = e.currentTarget.getAttribute('data-id');
+        const cart = getCart();
+        const name = cart[id]?.name || 'Item';
+        delete cart[id];
+        saveCart(cart);
+        renderCart();
+        showNotification(`❌ ${name} removed from cart`, "red");
+      });
+    });
+  }
+
+  async function placeOrder() {
+    if (!IS_AUTHENTICATED) { window.location.href = LOGIN_URL; return; }
+    const cart = getCart();
+    if (!Object.keys(cart).length) { showNotification("Cart is empty!", "red"); return; }
+
+    // Build payload using numeric ids we stored
+    const items = [];
+    for (const item of Object.values(cart)) {
+      const id = Number(item.id);
+      if (!Number.isInteger(id)) continue;  // skip bad items
+      items.push({
+        id,
+        name: item.name,
+        quantity: Number(item.quantity || 1),
+        price: Number(item.price || 0)
+      });
+    }
+    if (!items.length) { showNotification("No valid items in cart.", "red"); return; }
+
+    const address = (document.getElementById('delivery-address')?.value || "Default Address").trim();
+    const payment = document.getElementById('payment-method')?.value || "Cash On Delivery";
+    const total = items.reduce((s,i)=>s+(i.quantity*i.price),0);
+
+    const btn = document.querySelector('.place-order-btn');
+    if (btn) { btn.disabled = true; btn.textContent = "Placing..."; }
+
+    try {
+      const res = await fetch(PLACE_ORDER_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCookie('csrftoken') },
+        body: JSON.stringify({ address, payment_method: payment, items, total })
+      });
+
+      if (res.status === 401) {
+        const d = await res.json().catch(()=>({}));
+        window.location.href = d.login_url || "{{ request.build_absolute_uri|default:'' }}";
+        return;
       }
+
+      const data = await res.json().catch(()=>({}));
+      if (data.success) {
+        localStorage.removeItem('cart');
+        renderCart();
+        showNotification("✅ Order placed successfully!");
+        window.location.href = data.redirect_url || "{% url 'my_orders' %}";
+        return;
+      } else {
+        showNotification(`❌ ${data.error || 'Failed to place order'}`, "red");
+      }
+    } catch (e) {
+      showNotification("❌ Network error while placing order", "red");
+    } finally {
+      if (btn) { btn.disabled = false; btn.textContent = "Place Order"; }
     }
   }
-  return cookieValue;
-}
 
+  document.addEventListener('DOMContentLoaded', function () {
+    renderCart();
+    const placeBtn = document.querySelector('.place-order-btn');
+    if (placeBtn) placeBtn.addEventListener('click', placeOrder);
+  });
+})();
 </script>
 
 

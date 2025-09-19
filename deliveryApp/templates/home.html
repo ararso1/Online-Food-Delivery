@@ -52,7 +52,15 @@
             <span class="old-price">{{ food.product_price }} birr</span>
           </div>
         </a>
-        <button class="add-to-cart"><i class="fa fa-shopping-cart"></i> Add</button>
+        <button
+            class="add-to-cart"
+            data-id="{{ food.id }}"
+            data-name="{{ food.name|escapejs }}"
+            data-price="{{ food.offer_price|default:food.product_price }}"
+            data-image="{{ food.image1.url }}"
+          >
+            <i class="fa fa-shopping-cart"></i> Add
+          </button>
       </div>
     {% endfor %}
   </div>

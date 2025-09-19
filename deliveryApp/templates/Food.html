@@ -11,18 +11,33 @@
     {% for food in foods %}
       <a class="ln" href="{% url 'singlepage' food.pk %}">
         <div class="card">
-          <img src="{{food.image1.url}}" alt="food">
-          <small> {{food.category}} </small>
-          <h6>{{food.name}} </h6>
+          <img src="{{ food.image1.url }}" alt="food">
+          <small>{{ food.category }}</small>
+          <h6>{{ food.name }}</h6>
           <div class="product-rating">★★★★☆ <span>(4)</span></div>
+
           <div class="price-row">
-            <span class="new-price">{{ food.offer_price }} birr </span>
-            <span class="old-price"> {{ food.product_price }} birr</span>
+            <span class="new-price">
+              {{ food.offer_price|default:food.product_price }} birr
+            </span>
+            {% if food.offer_price %}
+              <span class="old-price">{{ food.product_price }} birr</span>
+            {% endif %}
           </div>
-          <button class="add-to-cart"><i class="fa fa-shopping-cart"></i> Add</button>
+
+          <!-- Put the REAL product id & data on the button -->
+          <button
+            class="add-to-cart"
+            data-id="{{ food.id }}"
+            data-name="{{ food.name|escapejs }}"
+            data-price="{{ food.offer_price|default:food.product_price }}"
+            data-image="{{ food.image1.url }}"
+          >
+            <i class="fa fa-shopping-cart"></i> Add
+          </button>
         </div>
       </a>
-    {% endfor %}  
+    {% endfor %}
   </div>
 </section>
 

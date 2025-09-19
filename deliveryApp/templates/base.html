@@ -32,6 +32,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{% static 'style.css' %}">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  {% block extra_css %}{% endblock %}
 </head>
 
 <body>
@@ -64,9 +65,9 @@
       <div class="profile-dropdown">
         <img src="{% static 'images/avatar.jpg' %}" alt="avatar" class="avatar" onclick="toggleProfileDropdown()" />
         <div id="profileDropdown" class="dropdown-content">
-          <a href="#">My Orders</a>
+          <a href="{% url 'my_orders' %}">My Orders</a>
           {% if user.profile.role == 'seller' %}
-            <a href="{% url 'seller_dashboard_home' %}">Seller Dashboard</a>
+            <a href="{% url 'seller_dashboard' %}">Seller Dashboard</a>
           {% endif %}
           <a href="{% url 'logout' %}">Logout</a>
         </div>
@@ -76,8 +77,6 @@
     {% endif %}
   </div>
 </nav>
-
-
 
 
   <!-- Main Content -->
@@ -101,12 +100,6 @@
           <li><i class="fas fa-envelope"></i>
           </ul>
       </div>
-      
-
-            
-
-
-
 
       <div class="footer-column links">
         <h4>Quick Links</h4>
@@ -144,67 +137,101 @@
     </div>
   </footer>
 
- 
- 
-
 ...
 <!-- All your content above -->
 <footer class="footer"> ... </footer>
 
 <!-- Place it here, BEFORE </body> -->
 <script>
-  // --- Make updateCartCount() Global ---
+  // --- Always use numeric id as the cart key ---
+  function getCart() {
+    try { return JSON.parse(localStorage.getItem('cart')) || {}; } catch { return {}; }
+  }
+  function saveCart(cart) { localStorage.setItem('cart', JSON.stringify(cart)); }
+
+  // Normalize any legacy keys like "burger-0" -> "12"
+  function normalizeCartKeys() {
+    const cart = getCart();
+    let changed = false;
+    for (const [key, item] of Object.entries(cart)) {
+      // if item already has numeric id and key matches it, skip
+      if (item && Number.isInteger(Number(item.id)) && String(item.id) === key) continue;
+
+      // prefer item.id if numeric
+      let newKey = null;
+      if (item && Number.isInteger(Number(item.id))) {
+        newKey = String(Number(item.id));
+      } else {
+        // fallback: extract digits from old key
+        const m = String(key).match(/\d+/);
+        if (m) {
+          newKey = String(Number(m[0]));
+          item.id = Number(newKey);
+        }
+      }
+      if (newKey && newKey !== key) {
+        cart[newKey] = item;
+        delete cart[key];
+        changed = true;
+      } else if (!item.id) {
+        // mark invalid item to avoid future errors
+        item.id = null;
+      }
+    }
+    if (changed) saveCart(cart);
+  }
+
   function updateCartCount() {
-    // Always read from localStorage for up-to-date cart!
-    let cart = JSON.parse(localStorage.getItem('cart')) || {};
-    const totalItems = Object.values(cart).reduce((sum, item) => sum + item.quantity, 0);
-    const cartCount = document.getElementById('cart-count');
-    if (cartCount) cartCount.textContent = totalItems;
+    const cart = getCart();
+    const total = Object.values(cart).reduce((s, it) => s + (Number(it.quantity) || 0), 0);
+    const el = document.getElementById('cart-count');
+    if (el) el.textContent = total;
   }
 
-  // --- Make showNotification() Global ---
   function showNotification(message = "✅ Product added to cart!") {
-    const notification = document.getElementById('notification');
-    if (!notification) return;
-    notification.textContent = message;
-    notification.classList.add('show');
-    setTimeout(() => {
-      notification.classList.remove('show');
-    }, 2500);
+    const el = document.getElementById('notification');
+    if (!el) return;
+    el.textContent = message;
+    el.classList.add('show');
+    setTimeout(() => el.classList.remove('show'), 2500);
   }
 
-  // --- Cart Add Button Logic for Card/Listing Pages ---
   document.addEventListener('DOMContentLoaded', function () {
-    // Always update on page load
+    normalizeCartKeys();           // <--- run once
     updateCartCount();
 
-    // For all "add-to-cart" buttons (like in cards/grid, not single page)
-    document.querySelectorAll('.card .add-to-cart').forEach((btn, index) => {
+    document.querySelectorAll('.card .add-to-cart').forEach((btn) => {
       btn.addEventListener('click', function (e) {
+        // prevent navigating to the <a> around the card
         e.preventDefault();
-        const card = btn.closest('.card');
-        const name = card.querySelector('h6')?.textContent?.trim() || '';
-        const priceText = card.querySelector('.new-price')?.textContent || "0";
-        const image = card.querySelector('img')?.src || '';
-        const price = parseFloat(priceText.replace(/[^\d.]/g, '')) || 0;
-        const productId = name.toLowerCase().replace(/\s+/g, '-') + '-' + index;
+        e.stopPropagation();
 
-        // Get fresh cart, add/update
-        let cart = JSON.parse(localStorage.getItem('cart')) || {};
-        if (cart[productId]) {
-          cart[productId].quantity += 1;
-        } else {
-          cart[productId] = { name, price, quantity: 1, image };
+        const id = Number(btn.dataset.id);
+        const name = btn.dataset.name || '';
+        const price = Number(btn.dataset.price || 0);
+        const image = btn.dataset.image || '';
+
+        if (!Number.isInteger(id)) {
+          console.warn('Invalid product id on button:', btn.dataset.id);
+          showNotification('❌ Unable to add item (invalid id)');
+          return;
         }
-        localStorage.setItem('cart', JSON.stringify(cart));
 
+        const cart = getCart();
+        const key = String(id); // key = REAL numeric id
+
+        if (!cart[key]) {
+          cart[key] = { id, name, price, image, quantity: 0 };
+        }
+        cart[key].quantity += 1;
+
+        saveCart(cart);
         updateCartCount();
         showNotification(`✅ ${name} added to cart!`);
       });
     });
   });
-
-  // --- Dropdown Avatar Profile (no change) ---
+    // --- Dropdown Avatar Profile (no change) ---
   function toggleProfileDropdown() {
     document.getElementById("profileDropdown").classList.toggle("show");
   }
@@ -216,13 +243,11 @@
       }
     }
   }
+
+  // (unchanged dropdown code if you had it)
 </script>
-</body>
-</html>
-
-
-
- 
 
 </body>
 </html>
+
+

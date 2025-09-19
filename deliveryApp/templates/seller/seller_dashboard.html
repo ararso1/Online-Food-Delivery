@@ -1,0 +1,198 @@
+{% extends "seller/base.html" %}
+{% load static %}
+
+{% block title %}Seller Dashboard{% endblock %}
+
+{% block extra_css %}
+<style>
+  .cards { display:grid; grid-template-columns: repeat(auto-fit,minmax(220px,1fr)); gap:1rem; margin-bottom: 1.25rem; }
+
+  /* Green translucent cards + gentle border + hover */
+  .card {
+    background: linear-gradient(180deg, rgba(16,185,129,0.10), rgba(16,185,129,0.06));
+    border: 1px solid rgba(16,185,129,0.25);
+    border-radius:14px; padding:1rem 1.25rem;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+    display:flex; align-items:center; justify-content:space-between; gap: .75rem;
+    transition: transform .12s ease, box-shadow .12s ease;
+  }
+  .card:hover { transform: translateY(-2px); box-shadow: 0 10px 26px rgba(0,0,0,0.08); }
+  .card h4 { margin:0; font-size: .95rem; color:#065f46; opacity:.9; }
+  .card .value { margin:0; font-size:1.6rem; font-weight:800; color:#064e3b; }
+  .card .icon { font-size:1.4rem; color:#065f46; opacity:.9; }
+
+  .panel {
+    background:#fff; border-radius:14px; padding:1rem 1.25rem;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.06); border:1px solid #eef2f7;
+  }
+  .split { display:grid; grid-template-columns: 1.4fr .9fr; gap:1rem; }
+  @media (max-width: 1000px) { .split { grid-template-columns: 1fr; } }
+
+  table { width:100%; border-collapse: collapse; }
+  th, td { padding:.6rem .5rem; border-bottom:1px solid #eee; font-size:.95rem; }
+  th { text-align:left; font-weight:600; background:#fafafa; }
+  .badge { display:inline-block; padding:.15rem .5rem; border-radius:999px; font-size:.8rem; background:#f4f6ff; }
+  .ok { background:#e8fff3; color:#065f46; border:1px solid rgba(16,185,129,0.25); }
+  .warn { background:#fff1f0; color:#7f1d1d; border:1px solid rgba(244,63,94,0.25); }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!-- KPI Cards -->
+<div class="cards">
+  <div class="card">
+    <div>
+      <h4>Total Products</h4>
+      <p class="value">{{ total_products }}</p>
+    </div>
+    <i class="fa-solid fa-box icon"></i>
+  </div>
+
+  <div class="card">
+    <div>
+      <h4>In Stock</h4>
+      <p class="value">{{ in_stock }}</p>
+    </div>
+    <i class="fa-solid fa-circle-check icon"></i>
+  </div>
+
+  <div class="card">
+    <div>
+      <h4>Out of Stock</h4>
+      <p class="value">{{ out_stock }}</p>
+    </div>
+    <i class="fa-solid fa-triangle-exclamation icon"></i>
+  </div>
+
+  <div class="card">
+    <div>
+      <h4>Your Restaurants</h4>
+      <p class="value">{{ total_restaurants }}</p>
+    </div>
+    <i class="fa-solid fa-store icon"></i>
+  </div>
+
+  <div class="card">
+    <div>
+      <h4>Total Orders</h4>
+      <p class="value">{{ total_orders }}</p>
+    </div>
+    <i class="fa-solid fa-list-check icon"></i>
+  </div>
+
+  <div class="card">
+    <div>
+      <h4>Total Revenue</h4>
+      <p class="value">
+        {{ total_revenue|default:"0.00" }} <span style="font-size:.9rem; opacity:.6;">ETB</span>
+      </p>
+    </div>
+    <i class="fa-solid fa-sack-dollar icon"></i>
+  </div>
+</div>
+
+<!-- Chart + Recent Products -->
+<div class="split">
+  <div class="panel">
+    <h3 style="margin:.25rem 0 1rem;">Products Added (Last 6 Months)</h3>
+    <div style="height:260px;"> <!-- give canvas a fixed height container -->
+      <canvas id="productsChart"></canvas>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h3 style="margin:.25rem 0 1rem;">Recent Products</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Restaurant</th>
+          <th>Price</th>
+          <th>Stock</th>
+          <th>Added</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for p in recent_products %}
+        <tr>
+          <td>{{ p.name }}</td>
+          <td>{{ p.restaurant.name|default:"—" }}</td>
+          <td>{{ p.product_price }} ETB</td>
+          <td>
+            {% if p.in_stock %}
+              <span class="badge ok">In stock</span>
+            {% else %}
+              <span class="badge warn">Out</span>
+            {% endif %}
+          </td>
+          <td>{{ p.created_at|date:"M d, Y" }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="5">No products yet.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  (function(){
+    // Guard: canvas might not be present or Chart may not be loaded yet
+    const canvas = document.getElementById('productsChart');
+    if (!canvas || typeof Chart === 'undefined') return;
+
+    const ctx = canvas.getContext('2d');
+
+    // Ensure labels/values are arrays (they’re JSON-dumped strings from the view)
+    let labels = {{ chart_labels|safe }};
+    let values = {{ chart_values|safe }};
+    if (typeof labels === 'string') { try { labels = JSON.parse(labels); } catch(e) {} }
+    if (typeof values === 'string') { try { values = JSON.parse(values); } catch(e) {} }
+    if (!Array.isArray(labels)) labels = [];
+    if (!Array.isArray(values)) values = [];
+
+    // Match lengths to prevent Chart warnings
+    if (values.length > labels.length) values = values.slice(0, labels.length);
+
+    new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels,
+        datasets: [{
+          label: 'Products Added',
+          data: values,
+          tension: 0.35,
+          fill: true,
+          borderWidth: 2,
+          borderColor: 'rgba(16,185,129,0.9)',
+          backgroundColor: 'rgba(16,185,129,0.18)',
+          pointRadius: 3,
+          pointHoverRadius: 4
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          x: {
+            grid: { display: false }
+          },
+          y: {
+            beginAtZero: true,
+            ticks: { precision: 0 },
+            grid: { color: 'rgba(0,0,0,0.05)' }
+          }
+        },
+        plugins: {
+          legend: { display: false },
+          tooltip: { mode: 'index', intersect: false }
+        }
+      }
+    });
+  })();
+</script>
+
+{% endblock %}
