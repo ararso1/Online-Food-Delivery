@@ -49,7 +49,7 @@ class Product(models.Model):
     image1 = models.ImageField(upload_to='products/', blank=True, null=True)
     image2 = models.ImageField(upload_to='products/', blank=True, null=True)
     image3 = models.ImageField(upload_to='products/', blank=True, null=True)
-    image4 = models.ImageField(upload_to='products/', blank=True, null=True)
+    
     in_stock = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -76,13 +76,15 @@ class Order(models.Model):
     address = models.CharField(max_length=255)
     payment_method = models.CharField(max_length=20, choices=PAYMENT_CHOICES, default="COD")
     total = models.DecimalField(max_digits=10, decimal_places=2)
-    status = models.CharField(max_length=20, default="pending")  # simple status
+    # UPDATE THIS LINE - add choices=ORDER_STATUS_CHOICES
+    status = models.CharField(max_length=20, choices=ORDER_STATUS_CHOICES, default="pending")
     created_at = models.DateTimeField(auto_now_add=True)
+    # ADD THIS FIELD for tracking updates
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return f"Order #{self.pk} by {self.customer.username}"
-
-
+    
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name="items", null=True)
     product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True, blank=True)

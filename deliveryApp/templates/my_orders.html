@@ -22,23 +22,77 @@
   .pill{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:999px;background:#ecfeff;color:#0369a1;font-weight:700;font-size:.85rem;}
   .pill.total{background:#ecfdf5;color:var(--accent-ink);}
 
-  /* MAIN ROW */
-  .order-body{
-    display:grid;
-    grid-template-columns: 88px minmax(0,1fr) auto;  /* image | text | meta */
-    gap:16px; align-items:center; margin-top:12px;
-  }
-  .thumb{width:88px;height:88px;border-radius:12px;overflow:hidden;background:#f8fafc;border:1px solid var(--line);
-         display:flex;align-items:center;justify-content:center;}
-  .thumb img{width:100%;height:100%;object-fit:cover;display:block;}
+  /* === PER-ITEM ROWS LAYOUT === */
+.items{ display:flex; flex-direction:column; gap:12px; margin-top:12px; }
+.order-item{
+  display:grid; grid-template-columns:64px 1fr; gap:12px; align-items:center;
+  background:#fff; border:1px solid var(--line); border-radius:12px; padding:10px 12px;
+  transition: all 0.3s ease;
+}
+.order-item:hover {
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  transform: translateY(-2px);
+}
+.thumb{
+  width:64px; height:64px; border-radius:10px; overflow:hidden;
+  background:#f8fafc; border:1px solid var(--line); display:flex; align-items:center; justify-content:center;
+  cursor: pointer; transition: all 0.3s ease;
+}
+.thumb:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+.thumb img{ width:100%; height:100%; object-fit:cover; display:block; }
+.details .title{ margin:0 0 4px; font-size:1.05rem; color:var(--ink); font-weight:800; cursor: pointer; transition: color 0.3s ease; }
+.details .title:hover { color: var(--accent); }
+.details .muted{ color:var(--muted); margin:2px 0; font-size:.9rem; }
+.amount{ color:var(--accent-ink); font-weight:800; }
 
-  .main{min-width:0;}                 /* allow text wrapping */
-  .main h3{margin:2px 0 6px;font-size:1.1rem;color:var(--ink);font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-  .main .muted{color:var(--muted);margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+/* Delete button */
+.btn-danger{
+  background:#fee2e2; color:#991b1b; border:1px solid #fecaca;
+  border-radius:10px; padding:8px 12px; font-weight:700; cursor:pointer;
+  transition: all 0.3s ease;
+  border: none;
+  font-size: 0.9rem;
+}
+.btn-danger:hover{ 
+  background:#fecaca; 
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(153, 27, 27, 0.2);
+}
 
-  .meta{text-align:right;white-space:nowrap;}
-  .meta p{margin:4px 0;color:var(--muted);font-weight:600;}
-  .amount{color:var(--accent-ink);font-weight:800;}
+/* Action buttons container */
+.order-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+}
+
+/* Reorder button */
+.btn-reorder {
+  background: var(--accent); 
+  color: white; 
+  border: none;
+  border-radius:10px; 
+  padding:8px 12px; 
+  font-weight:700; 
+  cursor:pointer;
+  transition: all 0.3s ease;
+  font-size: 0.9rem;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.btn-reorder:hover{ 
+  background: #0da271; 
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+  color: white;
+  text-decoration: none;
+}
 
   /* status */
   .status{display:inline-block;padding:.2rem .55rem;border-radius:999px;font-weight:800;font-size:.8rem;border:1px solid transparent;}
@@ -49,11 +103,111 @@
   .status-delivered{background:#ecfdf5;color:#065f46;border-color:#bbf7d0;}
   .status-cancelled{background:#fef2f2;color:#991b1b;border-color:#fecaca;}
 
-  /* responsive */
-  @media (max-width:760px){
-    .order-body{grid-template-columns:64px 1fr;}
-    .meta{grid-column:1/-1;text-align:left;}
-    .main h3,.main .muted{white-space:normal;}
+  /* Mobile Responsive */
+  @media (max-width: 768px) {
+    .orders-wrap {
+      padding: 0 12px;
+      margin: 24px auto;
+    }
+    
+    .order-card {
+      padding: 14px 16px;
+      border-radius: 12px;
+    }
+    
+    .order-head {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+    }
+    
+    .order-head .spacer {
+      display: none;
+    }
+    
+    .order-item {
+      grid-template-columns: 48px 1fr;
+      gap: 10px;
+      padding: 8px 10px;
+    }
+    
+    .thumb {
+      width: 48px;
+      height: 48px;
+      border-radius: 8px;
+    }
+    
+    .details .title {
+      font-size: 1rem;
+      line-height: 1.3;
+    }
+    
+    .details .muted {
+      font-size: 0.85rem;
+      line-height: 1.4;
+    }
+    
+    .pill {
+      font-size: 0.8rem;
+      padding: 4px 8px;
+    }
+    
+    .order-actions {
+      flex-direction: column;
+      gap: 8px;
+    }
+    
+    .btn-danger, .btn-reorder {
+      width: 100%;
+      justify-content: center;
+      padding: 10px 12px;
+    }
+    
+    .meta {
+      text-align: center;
+      width: 100%;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .order-item {
+      grid-template-columns: 40px 1fr;
+      gap: 8px;
+    }
+    
+    .thumb {
+      width: 40px;
+      height: 40px;
+    }
+    
+    .details .title {
+      font-size: 0.95rem;
+    }
+    
+    .details .muted {
+      font-size: 0.8rem;
+    }
+    
+    .order-card {
+      padding: 12px 14px;
+    }
+  }
+
+  /* Loading animation for delete */
+  .btn-danger.deleting {
+    background: #fca5a5;
+    cursor: not-allowed;
+  }
+
+  /* Success message */
+  .delete-success {
+    background: #ecfdf5;
+    color: #065f46;
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid #bbf7d0;
+    margin-top: 8px;
+    font-weight: 600;
   }
 </style>
 {% endblock %}
@@ -67,62 +221,148 @@
   {% if orders %}
     {% for row in orders %}
       {% with o=row.order fi=row.first_item items_count=o.items.count %}
-      <div class="order-card">
+      <div class="order-card" id="order-{{ o.id }}">
         <div class="order-head">
           <div>Order ID: <strong>#{{ o.id|stringformat:"06d" }}</strong></div>
           <div class="spacer"></div>
           <div class="pill">Payment: {{ o.get_payment_method_display }}</div>
           <div class="pill total">Total: {{ o.total }} birr</div>
         </div>
+       
+        {# === PER-ITEM ROWS INSIDE THE ORDER CARD === #}
+        <div class="items">
+          {% for it in row.items %}
+            <div class="order-item">
+              <div class="thumb" onclick="redirectToProduct('{{ it.product.id }}')">
+                {% if it.product and it.product.image1 %}
+                  <img src="{{ it.product.image1.url }}" alt="{{ it.product_name }}" loading="lazy">
+                {% else %}
+                  <img src="{% static 'images/placeholder.png' %}" alt="" loading="lazy">
+                {% endif %}
+              </div>
 
-        <div class="order-body">
-          <div class="thumb">
-            {% if fi and fi.product and fi.product.image1 %}
-              <img src="{{ fi.product.image1.url }}" alt="{{ fi.product_name }}">
-            {% else %}
-              <img src="{% static 'images/placeholder.png' %}" alt="">
-            {% endif %}
-          </div>
+              <div class="details">
+                <h3 class="title" onclick="redirectToProduct('{{ it.product.id }}')">
+                  {{ it.product_name }}
+                </h3>
+                <p class="muted">
+                  Category: {{ it.product.category.name|default:"—" }}
+                </p>
+                <p class="muted">
+                  {{ it.product_price }} birr × {{ it.quantity }}
+                  = <strong class="amount">{{ it.subtotal }} birr</strong>
+                </p>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
 
-          <div class="main">
-            <h3>{{ fi.product_name|default:"Order" }}</h3>
-            <p class="muted">
-              Category: {{ fi.product.category.name|default:"—" }}
-              {% if items_count|add:'-1' > 0 %} • +{{ items_count|add:'-1' }} more{% endif %}
-            </p>
-          </div>
+        {# === ORDER ACTIONS === #}
+        <div class="order-actions">
+          {# Show "Reorder" button for delivered orders #}
+          {% if row.order.status == "delivered" %}
+            <a href="{% url 'reorder' row.order.id %}" class="btn-reorder">
+              <i class="fas fa-redo-alt"></i> Reorder All Items
+            </a>
+          {% endif %}
+          
+          {# Show "Delete" ONLY when delivered #}
+          {% if row.order.status == "delivered" %}
+            <form action="{% url 'delete_order' row.order.id %}" method="post" class="delete-form" data-order-id="{{ row.order.id }}">
+              {% csrf_token %}
+              <button type="submit" class="btn-danger" 
+                      onclick="return confirmDelete(this, '{{ row.order.id }}');">
+                <i class="fas fa-trash"></i> Delete from history
+              </button>
+            </form>
+          {% endif %}
+        </div>
+        {# === END OF ORDER ACTIONS === #}
 
+        <div class="order-head" style="margin-top:12px;">
           <div class="meta">
-            <p>Quantity: {{ row.qty_sum }}</p>
-            <p>
-              Status:
-              {% if o.status == 'pending' %}
-                <span class="status status-pending">Order Placed</span>
-              {% elif o.status == 'confirmed' %}
-                <span class="status status-confirmed">Confirmed</span>
-              {% elif o.status == 'preparing' %}
-                <span class="status status-preparing">Preparing</span>
-              {% elif o.status == 'out_for_delivery' %}
-                <span class="status status-out_for_delivery">Out for Delivery</span>
-              {% elif o.status == 'delivered' %}
-                <span class="status status-delivered">Delivered</span>
-              {% elif o.status == 'cancelled' %}
-                <span class="status status-cancelled">Cancelled</span>
-              {% else %}
-                <span class="status">{{ o.status|title }}</span>
-              {% endif %}
-            </p>
-            <p>Date: {{ o.created_at|date:"M j, Y" }}</p>
-            <p class="amount">Amount: {{ o.total }} birr</p>
+            Placed on {{ o.created_at|date:"M d, Y H:i" }} &middot;
+            <span class="status status-{{ row.status_class }}">{{ o.get_status_display }}</span>
           </div>
         </div>
+
       </div>
       {% endwith %}
     {% endfor %}
   {% else %}
     <div class="order-card" style="text-align:center;color:var(--muted);">
-      No orders yet. <a href="{% url 'food' %}" style="color:var(--accent-ink);text-decoration:underline;">Browse the menu</a>
+      <div style="font-size: 3rem; margin-bottom: 16px; color: var(--line);">🛒</div>
+      <h3 style="color: var(--muted); margin-bottom: 8px;">No orders yet</h3>
+      <p style="margin-bottom: 16px;">Start exploring our delicious menu!</p>
+      <a href="{% url 'food' %}" class="btn-reorder" style="text-decoration: none;">
+        <i class="fas fa-utensils"></i> Browse the Menu
+      </a>
     </div>
   {% endif %}
 </div>
+
+<script>
+// Redirect to product page when image or title is clicked
+function redirectToProduct(productId) {
+    if (productId && productId !== 'None') {
+        window.location.href = "{% url 'product_detail' 0 %}".replace('0', productId);
+    }
+}
+
+// Enhanced delete confirmation with loading state
+function confirmDelete(button, orderId) {
+    if (confirm('Are you sure you want to remove this delivered order from your history? This action cannot be undone.')) {
+        // Show loading state
+        button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Deleting...';
+        button.classList.add('deleting');
+        button.disabled = true;
+        
+        // Submit the form after a short delay for better UX
+        setTimeout(() => {
+            button.closest('form').submit();
+        }, 500);
+        
+        return true;
+    }
+    return false;
+}
+
+// Add click event listeners to all product titles and images
+document.addEventListener('DOMContentLoaded', function() {
+    // Make product titles clickable
+    const productTitles = document.querySelectorAll('.details .title');
+    productTitles.forEach(title => {
+        title.style.cursor = 'pointer';
+    });
+    
+    // Add smooth animations
+    const orderCards = document.querySelectorAll('.order-card');
+    orderCards.forEach((card, index) => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(20px)';
+        
+        setTimeout(() => {
+            card.style.transition = 'all 0.5s ease';
+            card.style.opacity = '1';
+            card.style.transform = 'translateY(0)';
+        }, index * 100);
+    });
+    
+    // Handle successful deletion from URL parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('deleted') === 'true') {
+        showDeleteSuccess();
+    }
+});
+
+function showDeleteSuccess() {
+    // You can add a toast notification here if needed
+    console.log('Order deleted successfully');
+}
+
+// Handle window resize for better responsive behavior
+window.addEventListener('resize', function() {
+    // Any additional responsive adjustments can go here
+});
+</script>
 {% endblock %}

@@ -4,54 +4,137 @@
 {% block title %}Food Delivery - Add Product{% endblock %}
 
 {% block content %}
-<div class="add-product-section">
-    <h2>Product Image</h2>
-    <form method="post" enctype="multipart/form-data"> {% csrf_token %}
-        <div class="image-upload-area">
-            <div class="upload-box">
-                <label for="{{ form.image1.id_for_label }}">
-                    <img src="{% static 'img/upload_icon.png' %}" alt="Upload Icon">
-                    <span>Upload</span>
-                </label>
-                {{ form.image1 }}
-            </div>
-            <div class="upload-box">
-                <label for="{{ form.image2.id_for_label }}">
-                    <img src="{% static 'img/upload_icon.png' %}" alt="Upload Icon">
-                    <span>Upload</span>
-                </label>
-                {{ form.image2 }}
-            </div>
-            <div class="upload-box">
-                <label for="{{ form.image3.id_for_label }}">
-                    <img src="{% static 'img/upload_icon.png' %}" alt="Upload Icon">
-                    <span>Upload</span>
-                </label>
-                {{ form.image3 }}
-            </div>
-            <div class="upload-box">
-                <label for="{{ form.image4.id_for_label }}">
-                    <img src="{% static 'img/upload_icon.png' %}" alt="Upload Icon">
-                    <span>Upload</span>
-                </label>
-                {{ form.image4 }}
-            </div>
-        </div>
-        
-        {% for field in form %}
-            {% if field.name != 'image1' and field.name != 'image2' and field.name != 'image3' and field.name != 'image4' and field.name != 'in_stock' %}
-                <div class="form-group {% if field.name == 'product_price' or field.name == 'offer_price' %}price-group-item{% endif %}">
-                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-                    {{ field }}
-                    {% for error in field.errors %}
-                        <p class="errorlist">{{ error }}</p>
-                    {% endfor %}
+<div class="unified-container">
+    <div class="unified-header">
+        <h2>Add New Product</h2>
+    </div>
+    
+    <div class="add-product-section">
+        <form method="post" enctype="multipart/form-data" id="product-form">
+            {% csrf_token %}
+            
+            <!-- Product Images -->
+            <h3 style="margin-bottom: 20px; color: var(--dark-gray-text);">Product Images</h3>
+            <div class="image-upload-area">
+                <div class="upload-box" id="upload-box-1">
+                    <label for="{{ form.image1.id_for_label }}">
+                        <img src="{% static 'img/upload_icon.png' %}" alt="Upload Icon" class="upload-icon">
+                        <span>Upload Image 1</span>
+                        <img src="" alt="Preview" class="image-preview">
+                    </label>
+                    {{ form.image1 }}
                 </div>
-            {% endif %}
-        {% endfor %}
+                <div class="upload-box" id="upload-box-2">
+                    <label for="{{ form.image2.id_for_label }}">
+                        <img src="{% static 'img/upload_icon.png' %}" alt="Upload Icon" class="upload-icon">
+                        <span>Upload Image 2</span>
+                        <img src="" alt="Preview" class="image-preview">
+                    </label>
+                    {{ form.image2 }}
+                </div>
+                <div class="upload-box" id="upload-box-3">
+                    <label for="{{ form.image3.id_for_label }}">
+                        <img src="{% static 'img/upload_icon.png' %}" alt="Upload Icon" class="upload-icon">
+                        <span>Upload Image 3</span>
+                        <img src="" alt="Preview" class="image-preview">
+                    </label>
+                    {{ form.image3 }}
+                </div>
+               
+            </div>
 
-        
-        <button class="add-btn" type="submit">ADD</button>
-    </form>
+            <!-- Product Details -->
+            <div style="margin-top: 30px;">
+                {% for field in form %}
+                    {% if field.name != 'image1' and field.name != 'image2' and field.name != 'image3' and field.name != 'image4' %}
+                    <div class="form-group {% if field.errors %}has-error{% endif %} 
+                                {% if field.name == 'product_price' or field.name == 'offer_price' %}price-group-item{% endif %}">
+                        <label for="{{ field.id_for_label }}">
+                            {{ field.label }}
+                            {% if field.field.required %}<span style="color: #f44336;">*</span>{% endif %}
+                        </label>
+                        {{ field }}
+                        {% if field.help_text %}
+                            <small style="color: #666; font-size: 12px; display: block; margin-top: 5px;">
+                                {{ field.help_text }}
+                            </small>
+                        {% endif %}
+                        {% for error in field.errors %}
+                            <p class="errorlist">{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+
+            <!-- Price Group -->
+            <div class="price-group">
+                <div class="form-group">
+                    <label for="{{ form.product_price.id_for_label }}">Product Price ($)</label>
+                    {{ form.product_price }}
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.offer_price.id_for_label }}">Offer Price ($) <small style="color: #666;">(Optional)</small></label>
+                    {{ form.offer_price }}
+                </div>
+            </div>
+
+            <button class="add-btn" type="submit">
+                <i class="fas fa-plus"></i> ADD PRODUCT
+            </button>
+        </form>
+    </div>
 </div>
+
+<script>
+// Image preview functionality
+document.addEventListener('DOMContentLoaded', function() {
+    // Add event listeners to all file inputs
+    const fileInputs = document.querySelectorAll('input[type="file"]');
+    
+    fileInputs.forEach((input, index) => {
+        input.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            const uploadBox = this.closest('.upload-box');
+            const preview = uploadBox.querySelector('.image-preview');
+            const uploadIcon = uploadBox.querySelector('.upload-icon');
+            const uploadText = uploadBox.querySelector('span');
+            
+            if (file) {
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                    uploadBox.classList.add('has-image');
+                }
+                
+                reader.readAsDataURL(file);
+            } else {
+                uploadBox.classList.remove('has-image');
+            }
+        });
+    });
+    
+    // Form validation
+    const form = document.getElementById('product-form');
+    form.addEventListener('submit', function(e) {
+        let valid = true;
+        const requiredFields = form.querySelectorAll('input[required], select[required], textarea[required]');
+        
+        requiredFields.forEach(field => {
+            if (!field.value.trim()) {
+                valid = false;
+                field.style.borderColor = '#f44336';
+            } else {
+                field.style.borderColor = '';
+            }
+        });
+        
+        if (!valid) {
+            e.preventDefault();
+            alert('Please fill in all required fields.');
+        }
+    });
+});
+</script>
 {% endblock %}

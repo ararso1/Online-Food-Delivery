@@ -51,7 +51,7 @@
 
   <div class="navbar-actions">
     <div class="search-box">
-      <form action="{% url 'product_search' %}" method="get">
+     
         <input type="text" name="q" placeholder="Search products..." />
         <button type="submit"><i class="fas fa-search"></i></button>
       </form>
@@ -188,13 +188,48 @@
     if (el) el.textContent = total;
   }
 
-  function showNotification(message = "✅ Product added to cart!") {
-    const el = document.getElementById('notification');
-    if (!el) return;
-    el.textContent = message;
-    el.classList.add('show');
-    setTimeout(() => el.classList.remove('show'), 2500);
-  }
+  // SIMPLE NOTIFICATION THAT WILL WORK
+function showNotification(message = "Added to cart!") {
+    // Create simple alert-style notification
+    const notification = document.createElement('div');
+    notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: #27ae60;
+        color: white;
+        padding: 15px 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        z-index: 10000;
+        font-weight: 600;
+        animation: slideIn 0.3s ease;
+    `;
+    
+    notification.textContent = `🎉 ${message}`;
+    
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        notification.remove();
+    }, 3000);
+}
+
+// Add the animation
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes slideIn {
+        from {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+`;
+document.head.appendChild(style);
 
   document.addEventListener('DOMContentLoaded', function () {
     normalizeCartKeys();           // <--- run once
@@ -243,6 +278,8 @@
       }
     }
   }
+
+  
 
   // (unchanged dropdown code if you had it)
 </script>

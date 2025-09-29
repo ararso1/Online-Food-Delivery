@@ -1,45 +1,56 @@
-from django.shortcuts import render
-from django.shortcuts import render, redirect,get_object_or_404
-from django.contrib.auth import authenticate, login, logout as auth_logout
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from .forms import ProductForm
-from .models import *
-from django.http import JsonResponse
-from django.views.decorators.http import require_POST
-from django.core.files.storage import FileSystemStorage
-import json
-from django.contrib import messages
-from .models import Profile
-from django.contrib.auth import logout
-from django.views.decorators.csrf import csrf_exempt
-from decimal import Decimal
-import json
-from django.db.models import Sum
 from django.http import JsonResponse, HttpResponseBadRequest
+from django.views.decorators.http import require_POST
+from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie
+from django.core.files.storage import FileSystemStorage
 from django.utils import timezone
 from django.db import transaction
-from django.views.decorators.csrf import ensure_csrf_cookie
-from django.urls import reverse
+from django.db.models import Sum, Q
+from decimal import Decimal
+import json
 
-def user_is_seller(user) -> bool:
+from .forms import ProductForm
+from .models import *
+
+
+# ===== HELPER FUNCTIONS =====
+def user_is_seller(user):
     return Profile.objects.filter(user=user, role="seller").exists()
 
 def require_seller(request):
     if not user_is_seller(request.user):
         messages.error(request, "Seller access required.")
-        return redirect("home")  # or your login/landing page
+        return redirect("home")
     return None
 
-# login and registration views
+def _ensure_seller(user):
+    try:
+        return Profile.objects.filter(user=user, role="seller").exists()
+    except Profile.DoesNotExist:
+        return False
+
+def _is_customer(user):
+    try:
+        return user.profile.role == "customer"
+    except Profile.DoesNotExist:
+        return True
+
+def _server_price(product: Product) -> Decimal:
+    return product.offer_price or product.product_price
+
+
+# ===== AUTHENTICATION VIEWS =====
 def register(request):
     if request.method == 'POST':
         name = request.POST.get('name')
         email = request.POST.get('email')
         password = request.POST.get('password')
         role = request.POST.get('role')
-        print(name, email, password, role)
+
         if User.objects.filter(username=email).exists():
             messages.error(request, "User already exists.")
             return render(request, 'register.html')
@@ -49,13 +60,11 @@ def register(request):
 
         messages.success(request, "Account created successfully!")
         
-        # --- Corrected Redirection Logic ---
         if role == 'seller':
-            return redirect('seller_dashboard')  # Redirect to the seller's dashboard
+            return redirect('seller_dashboard')
         elif role == 'customer':
-            return redirect('home')  # Redirect to the customer's home page
+            return redirect('home')
         else:
-            # Handle unexpected role values, perhaps by showing an error
             messages.error(request, 'Invalid user role selected.')
             return redirect('register')
 
@@ -67,7 +76,6 @@ def login_view(request):
         password = request.POST.get('password') or ''
         user = None
 
-        # Find the user by email (case-insensitive), then authenticate with username+password
         try:
             user_obj = User.objects.get(email__iexact=email)
             user = authenticate(request, username=user_obj.username, password=password)
@@ -82,72 +90,125 @@ def login_view(request):
             login(request, user)
             messages.success(request, "Login successful!")
 
-            # Respect ?next= if present
             next_url = request.GET.get('next') or request.POST.get('next')
             if next_url:
                 return redirect(next_url)
 
-            # Role-based redirect
-            role = None
             try:
-                role = user.profile.role  # OneToOne: User -> Profile
+                role = user.profile.role
             except Profile.DoesNotExist:
-                role = None  # No profile yet
+                role = None
 
             if role == 'seller':
                 return redirect('seller_dashboard')
             elif role == 'customer':
-                return redirect('home')  # or 'customer_dashboard'
+                return redirect('home')
             else:
-                # Fallback if no profile/role set
                 return redirect('home')
 
-        # Invalid credentials
         messages.error(request, "Invalid email or password.")
         return render(request, 'login.html', {'email': email})
 
-    # GET
     return render(request, 'login.html')
 
 def logout_view(request):
-    auth_logout(request)
+    logout(request)
     return redirect('home')
 
-# food deliveryApp/views.py
 
-def food(request):
-    foods = Product.objects.filter(in_stock=True)  # Fetch all products
-    catergory = Category.objects.filter()  # Fetch all categories
-    return render(request, 'food.html', {'foods': foods,'categories': catergory })
-
+# ===== PUBLIC PAGES =====
 def home(request):
     restaurants = Restaurant.objects.all()[:4]
-    foods = Product.objects.all()[:4]  # Fetch first 4 products
-    category = Category.objects.all()[:6]  # Fetch all categories if needed
-    return render(request, 'home.html', {'restaurants': restaurants, 'foods': foods , 'categories': category })
+    foods = Product.objects.all()[:4]
+    categories = Category.objects.all()[:6]
+    return render(request, 'home.html', {
+        'restaurants': restaurants, 
+        'foods': foods, 
+        'categories': categories
+    })
 
+def food(request):
+    foods = Product.objects.filter(in_stock=True)
+    categories = Category.objects.all()
+    return render(request, 'food.html', {
+        'foods': foods,
+        'categories': categories
+    })
 
-def orders(request):
-    return render(request, 'seller/orders.html') 
+def restaurants(request):
+    restaurants = Restaurant.objects.all()
+    return render(request, 'Restaurant.html', {'restaurants': restaurants})
 
 def contact_us(request):
-    return render(request, 'contact_us.html') 
+    return render(request, 'contact_us.html')
 
-def _ensure_seller(user):
-    # Guard: allow only logged-in users with role 'seller'
-    try:
-        return Profile.objects.filter(user=user, role="seller").exists()
-    except Profile.DoesNotExist:
-        return False
-    
+def rest_details(request, pk):
+    restaurant = get_object_or_404(Restaurant, pk=pk)
+    foods = Product.objects.filter(restaurant=restaurant)
+    return render(request, 'rest_details.html', {
+        'restaurant': restaurant, 
+        'foods': foods
+    })
+
+def singlepage(request, pk):
+    food = get_object_or_404(Product, pk=pk)
+    category = food.category
+    related_foods = Product.objects.filter(category=category).exclude(pk=pk)[:4]
+    return render(request, 'singlepage.html', {
+        'food': food, 
+        'related_foods': related_foods
+    })
+
+def food_by_category(request, category_id):
+    category = get_object_or_404(Category, id=category_id)
+    foods = Product.objects.filter(category=category)
+    return render(request, 'food_by_category.html', {
+        'foods': foods, 
+        'category': category
+    })
+
+def cart(request):
+    return render(request, 'cart.html')
+
+
+# ===== CUSTOMER ORDER VIEWS =====
+@login_required(login_url="/login/")
+def my_orders(request):
+    orders_qs = (
+        Order.objects.filter(customer=request.user)
+        .prefetch_related("items__product__category")
+        .order_by("-created_at")
+    )
+
+    orders = []
+    for o in orders_qs:
+        items = list(o.items.all())
+        orders.append({
+            "order": o,
+            "qty_sum": sum(i.quantity for i in items),
+            "first_item": items[0] if items else None,
+            "items": items,
+            "status_class": o.status,
+        })
+
+    return render(request, "my_orders.html", {"orders": orders})
+
+@login_required
+def delete_order(request, order_id):
+    order = get_object_or_404(Order, id=order_id, customer=request.user)
+    if order.status == 'delivered':
+        order.delete()
+        messages.success(request, 'Order deleted from history.')
+    return redirect('my_orders')
+
+
+# ===== SELLER DASHBOARD VIEWS =====
 @login_required
 def seller_dashboard(request):
     if not _ensure_seller(request.user):
-        # Optionally redirect non-sellers to home (or show 403)
         return redirect("home")
 
     user = request.user
-    
     products_qs = Product.objects.filter(added_by=user)
     restaurants_qs = Restaurant.objects.filter(added_by=user)
 
@@ -156,24 +217,19 @@ def seller_dashboard(request):
     out_stock = total_products - in_stock
     total_restaurants = restaurants_qs.count()
 
-    # Optional: if you have Order / OrderItem models, compute them;
-    # otherwise safely default to 0.
     total_orders = 0
     total_revenue = Decimal("0.00")
     try:
-        from .models import Order  # if exists
         seller_orders = Order.objects.filter(restaurant__added_by=user)
         total_orders = seller_orders.count()
         total_revenue = seller_orders.aggregate(total=Sum("total_amount"))["total"] or Decimal("0.00")
     except Exception:
         pass
 
-    # Chart: products added per month (last 6 months)
+    # Chart data
     labels, product_counts = [], []
-    # anchor on the first day of the current month
     month_anchor = timezone.now().date().replace(day=1)
 
-    # helper to step months backward without extra deps
     def add_months(d, m):
         y, mo = d.year + (d.month + m - 1) // 12, (d.month + m - 1) % 12 + 1
         day = 1
@@ -183,7 +239,7 @@ def seller_dashboard(request):
         month_start = add_months(month_anchor, -i)
         next_month = add_months(month_start, 1)
         count = products_qs.filter(created_at__date__gte=month_start,
-                                   created_at__date__lt=next_month).count()
+                                 created_at__date__lt=next_month).count()
         labels.append(month_start.strftime("%b %Y"))
         product_counts.append(count)
 
@@ -197,55 +253,113 @@ def seller_dashboard(request):
         "total_orders": total_orders,
         "total_revenue": total_revenue,
         "recent_products": recent_products,
-        # JSON for Chart.js
         "chart_labels": json.dumps(labels),
         "chart_values": json.dumps(product_counts),
     }
     return render(request, "seller/seller_dashboard.html", context)
 
-# def seller_dashboard(request):
-#     return render(request, 'seller/seller_dashboard.html') 
 
-def logout_view(request):
-    logout(request)
-    return redirect('home')
+# ===== SELLER PRODUCT MANAGEMENT =====
+@login_required
+def add_product(request):
+    if (resp := require_seller(request)) is not None:
+        return resp
 
-def rest_details(request, pk):
-    restaurant = get_object_or_404(Restaurant, pk=pk)
-    foods = Product.objects.filter(restaurant=restaurant)
-    return render(request, 'rest_details.html', {'restaurant': restaurant, 'foods': foods})
+    if request.method == "POST":
+        form = ProductForm(request.POST, request.FILES)
+        if form.is_valid():
+            product = form.save(commit=False)
+            product.added_by = request.user
+            product.save()
+            messages.success(request, "Product created.")
+            return redirect("product_list")
+    else:
+        form = ProductForm()
 
-def singlepage(request, pk):
-    food = get_object_or_404(Product, pk=pk)
-    category = food.category
-    related_foods = Product.objects.filter(category=category).exclude(pk=pk)[:4]  # Fetch related products
-    return render(request, 'singlepage.html', {'food': food, 'related_foods': related_foods})
+    return render(request, "seller/add_product.html", {"form": form})
 
-def cart(request):
-    return render(request, 'cart.html')
+@login_required
+def product_list(request):
+    if (resp := require_seller(request)) is not None:
+        return resp
 
-# products/views.py
+    products = (
+        Product.objects.filter(added_by=request.user)
+        .select_related("restaurant", "category")
+        .order_by("-created_at")
+    )
+    return render(request, "seller/product_list.html", {"products": products})
+
+@login_required
+def edit_product(request, pk):
+    product = get_object_or_404(Product, pk=pk)
+    if request.method == 'POST':
+        product.name = request.POST.get('name')
+        product.product_price = request.POST.get('product_price')
+        product.category_id = request.POST.get('category')
+        if request.FILES.get('image1'):
+            product.image1 = request.FILES.get('image1')
+        product.save()
+        return redirect('product_list')
+    categories = Category.objects.all()
+    return render(request, 'seller/edit_product.html', {
+        'product': product, 
+        'categories': categories
+    })
+
+@login_required
+def delete_product(request, pk):
+    product = get_object_or_404(Product, pk=pk)
+    product.delete()
+    return redirect('product_list')
 
 @require_POST
+@csrf_exempt
 def update_in_stock(request):
     product_id = request.POST.get('product_id')
-    in_stock = request.POST.get('in_stock') == 'true' # Convert string to boolean
-    product = get_object_or_404(Product, pk=product_id)
+    in_stock = request.POST.get('in_stock') == 'true'
+    product = get_object_or_404(Product, id=product_id)
     product.in_stock = in_stock
     product.save()
-    return JsonResponse({'status': 'success'})
+    return JsonResponse({'success': True})
 
 
-    
-def food_by_category(request, category_id):
-    category = get_object_or_404(Category, id=category_id)
-    foods = Product.objects.filter(category=category)
-    return render(request, 'food_by_category.html', {'foods': foods, 'category': category})
+# ===== SELLER RESTAURANT MANAGEMENT =====
+@login_required
+def add_Restaurant(request):
+    if (resp := require_seller(request)) is not None:
+        return resp
 
-def restaurants(request):
-    restaurants = Restaurant.objects.all()  # Optionally, filter by logged-in user if needed
-    return render(request, 'Restaurant.html', {'restaurants': restaurants})
+    if request.method == "POST":
+        name = request.POST.get("name")
+        address = request.POST.get("address")
+        discription = request.POST.get("discription")
+        phone_number = request.POST.get("phone_number")
+        open_time = request.POST.get("open_time")
+        close_time = request.POST.get("close_time")
+        image = request.FILES.get("image")
 
+        Restaurant.objects.create(
+            name=name,
+            address=address,
+            discription=discription,
+            phone_number=phone_number,
+            open_time=open_time,
+            close_time=close_time,
+            image=image,
+            added_by=request.user,
+        )
+        messages.success(request, "Restaurant created.")
+        return redirect("seller_restaurants")
+
+    return render(request, "seller/add_Restaurant.html")
+
+@login_required
+def restaurant_list(request):
+    restaurants = Restaurant.objects.filter(added_by=request.user).order_by("-created_at")
+    return render(request, "seller/restaurant_list.html", {"restaurants": restaurants})
+
+@login_required
 def edit_restaurant(request, pk):
     restaurant = get_object_or_404(Restaurant, pk=pk)
 
@@ -263,86 +377,92 @@ def edit_restaurant(request, pk):
 
     return render(request, 'seller/edit_restaurant.html', {'restaurant': restaurant})
 
+@login_required
 def delete_restaurant(request, pk):
     restaurant = get_object_or_404(Restaurant, pk=pk)
     restaurant.delete()
     return redirect('seller_restaurants')
 
-def edit_product(request, pk):
-    product = get_object_or_404(Product, pk=pk)
-    if request.method == 'POST':
-        product.name = request.POST.get('name')
-        product.product_price = request.POST.get('product_price')
-        product.category_id = request.POST.get('category')
-        if request.FILES.get('image1'):
-            product.image1 = request.FILES.get('image1')
-        product.save()
-        return redirect('product_list')
-    categories = Category.objects.all()
-    return render(request, 'seller/edit_product.html', {'product': product, 'categories': categories})
 
-def delete_product(request, pk):
-    product = get_object_or_404(Product, pk=pk)
-    product.delete()
-    return redirect('product_list')
+# ===== SELLER ORDER MANAGEMENT =====
+@login_required
+def seller_orders(request):
+    if not user_is_seller(request.user):
+        return render(request, "seller/not_allowed.html", status=403)
 
-from django.views.decorators.csrf import csrf_exempt
-@csrf_exempt
-def update_in_stock(request):
-    if request.method == 'POST':
-        product_id = request.POST.get('product_id')
-        in_stock = request.POST.get('in_stock') == 'true'
-        product = get_object_or_404(Product, id=product_id)
-        product.in_stock = in_stock
-        product.save()
-        return JsonResponse({'success': True})
-    return JsonResponse({'success': False}, status=400)
+    items = (
+        OrderItem.objects
+        .filter(seller=request.user)
+        .select_related("order", "product", "product__category", "order__customer")
+        .order_by("-order__created_at", "-id")
+    )
+    
+    orders_dict = {}
+    for item in items:
+        order = item.order
+        if order.id not in orders_dict:
+            orders_dict[order.id] = {
+                'order': order,
+                'items': [],
+                'customer': order.customer,
+                'created_at': order.created_at
+            }
+        orders_dict[order.id]['items'].append(item)
+    
+    orders_list = list(orders_dict.values())
+    orders_list.sort(key=lambda x: x['created_at'], reverse=True)
+    
+    return render(request, "seller/seller_orders.html", {
+        "orders": orders_list,
+        "items": items,
+        "status_choices": ORDER_STATUS_CHOICES,
+    })
 
-def product_search(request):
-    query = request.GET.get('q', '')
-    products = Product.objects.all()
-    if query:
-        products = products.filter(name__icontains=query)
-    products = products.order_by('name')  # <-- This orders alphabetically by name
+@require_POST
+@login_required
+def seller_update_order_item_status(request):
+    if not user_is_seller(request.user):
+        return JsonResponse({"ok": False, "error": "Forbidden"}, status=403)
 
-    # If returning JSON for AJAX:
-    data = [
-        {
-            'id': p.id,
-            'name': p.name,
-            # 'price': p.price,
-            # add other fields as needed
-        }
-        for p in products
-    ]
-    return JsonResponse({'products': data})
+    item_id = request.POST.get("item_id")
+    new_status = request.POST.get("status", "").strip()
 
-# orders/views.py
+    valid_keys = {k for k, _ in ORDER_STATUS_CHOICES}
+    if not item_id or new_status not in valid_keys:
+        return HttpResponseBadRequest("Invalid parameters")
 
-PAYMENT_MAP = {
-    "Cash On Delivery": "COD",
-    "Transfer": "TRANSFER",
-    "Debit Card": "CARD",
-}
+    item = get_object_or_404(OrderItem, id=item_id, seller=request.user)
+    item.status = new_status
+    item.save(update_fields=["status"])
 
+    order = item.order
+    statuses = list(order.items.values_list("status", flat=True))
+
+    if all(s == "delivered" for s in statuses):
+        order.status = "delivered"
+    elif all(s == "cancelled" for s in statuses):
+        order.status = "cancelled"
+    elif any(s == "out_for_delivery" for s in statuses):
+        order.status = "out_for_delivery"
+    elif any(s == "preparing" for s in statuses):
+        order.status = "preparing"
+    elif any(s == "confirmed" for s in statuses):
+        order.status = "confirmed"
+    else:
+        order.status = "pending"
+    order.save(update_fields=["status"])
+
+    return JsonResponse({"ok": True, "order_status": order.status})
+
+
+# ===== ORDER PROCESSING =====
 @ensure_csrf_cookie
 def cart_page(request):
-    # Render your cart template (the one with the JS below)
     return render(request, "cart.html")
-
-def _is_customer(user):
-    try:
-        return user.profile.role == "customer"
-    except Profile.DoesNotExist:
-        return True
-
-def _server_price(product: Product) -> Decimal:
-    return product.offer_price or product.product_price
 
 @require_POST
 @transaction.atomic
 def place_order(request):
-    # Return 401 JSON if not logged in (so fetch can redirect)
     if not request.user.is_authenticated:
         login_url = f"{reverse('login')}?next={reverse('deliveryApp:cart')}"
         return JsonResponse({"success": False, "not_authenticated": True, "login_url": login_url}, status=401)
@@ -376,9 +496,8 @@ def place_order(request):
 
     for raw in items:
         raw_id = raw.get("id", None)
-
-        # Prefer a straight int() cast; then fallback to digit extraction
         product_id = None
+        
         try:
             product_id = int(raw_id)
         except (TypeError, ValueError):
@@ -425,156 +544,3 @@ def place_order(request):
         "total": str(order.total),
         "items_count": order.items.count(),
     })
-
-@login_required(login_url="/login/")
-def add_product(request):
-    # Require seller role
-    if (resp := require_seller(request)) is not None:
-        return resp
-
-    if request.method == "POST":
-        form = ProductForm(request.POST, request.FILES)  # keep FILES for images
-        if form.is_valid():
-            product = form.save(commit=False)
-            product.added_by = request.user  # <-- enforce ownership
-            product.save()
-            messages.success(request, "Product created.")
-            return redirect("product_list")
-    else:
-        form = ProductForm()
-
-    return render(request, "seller/add_product.html", {"form": form})
-
-
-@login_required(login_url="/login/")
-def product_list(request):
-    # Require seller role
-    if (resp := require_seller(request)) is not None:
-        return resp
-
-    # Only show current seller's products
-    products = (
-        Product.objects.filter(added_by=request.user)
-        .select_related("restaurant", "category")
-        .order_by("-created_at")
-    )
-
-    # (Avoid indexing like products[1] – it crashes when < 2 items)
-    return render(request, "seller/product_list.html", {"products": products})
-
-
-@login_required(login_url="/login/")
-def add_Restaurant(request):
-    # Require seller role
-    if (resp := require_seller(request)) is not None:
-        return resp
-
-    if request.method == "POST":
-        name = request.POST.get("name")
-        address = request.POST.get("address")
-        discription = request.POST.get("discription")
-        phone_number = request.POST.get("phone_number")
-        open_time = request.POST.get("open_time")
-        close_time = request.POST.get("close_time")
-        image = request.FILES.get("image")
-
-        Restaurant.objects.create(
-            name=name,
-            address=address,
-            discription=discription,
-            phone_number=phone_number,
-            open_time=open_time,
-            close_time=close_time,
-            image=image,
-            added_by=request.user,  # <-- enforce ownership
-        )
-        messages.success(request, "Restaurant created.")
-        return redirect("seller_restaurants")  # keep consistent with your sidebar
-
-    return render(request, "seller/add_Restaurant.html")
-
-
-@login_required(login_url="/login/")
-def restaurant_list(request):
-    # Only show current seller's restaurants
-    restaurants = Restaurant.objects.filter(added_by=request.user).order_by("-created_at")
-    return render(request, "seller/restaurant_list.html", {"restaurants": restaurants})
-
-@login_required(login_url="/login/")
-def my_orders(request):
-    """
-    Current user's orders, newest first. We also compute:
-      - qty_sum: total quantity across items
-      - first_item: to show a thumbnail/name/category like your mock
-    """
-    orders = (
-        Order.objects.filter(customer=request.user)
-        .prefetch_related("items__product__category")
-        .order_by("-created_at")
-    )
-
-    enriched = []
-    for o in orders:
-        items = list(o.items.all())
-        qty_sum = sum(i.quantity for i in items)
-        first_item = items[0] if items else None
-        enriched.append({
-            "order": o,
-            "qty_sum": qty_sum,
-            "first_item": first_item,
-        })
-
-    return render(request, "my_orders.html", {"orders": enriched})
-
-@login_required(login_url="/login/")
-def seller_orders(request):
-    if not user_is_seller(request.user):
-        return render(request, "seller/not_allowed.html", status=403)
-
-    items = (
-        OrderItem.objects
-        .filter(seller=request.user)
-        .select_related("order", "product", "product__category", "order__customer")
-        .order_by("-order__created_at", "-id")
-    )
-    return render(request, "seller/seller_orders.html", {
-        "items": items,
-        "status_choices": ORDER_STATUS_CHOICES,
-    })
-
-@require_POST
-@login_required(login_url="/login/")
-def seller_update_order_item_status(request):
-    if not user_is_seller(request.user):
-        return JsonResponse({"ok": False, "error": "Forbidden"}, status=403)
-
-    item_id = request.POST.get("item_id")
-    new_status = request.POST.get("status", "").strip()
-
-    valid_keys = {k for k, _ in ORDER_STATUS_CHOICES}
-    if not item_id or new_status not in valid_keys:
-        return HttpResponseBadRequest("Invalid parameters")
-
-    item = get_object_or_404(OrderItem, id=item_id, seller=request.user)
-    item.status = new_status
-    item.save(update_fields=["status"])
-
-    # Roll up parent order.status based on all items
-    order = item.order
-    statuses = list(order.items.values_list("status", flat=True))
-
-    if all(s == "delivered" for s in statuses):
-        order.status = "delivered"
-    elif all(s == "cancelled" for s in statuses):
-        order.status = "cancelled"
-    elif any(s == "out_for_delivery" for s in statuses):
-        order.status = "out_for_delivery"
-    elif any(s == "preparing" for s in statuses):
-        order.status = "preparing"
-    elif any(s == "confirmed" for s in statuses):
-        order.status = "confirmed"
-    else:
-        order.status = "pending"
-    order.save(update_fields=["status"])
-
-    return JsonResponse({"ok": True, "order_status": order.status})

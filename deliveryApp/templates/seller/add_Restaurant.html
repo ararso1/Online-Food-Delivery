@@ -2,58 +2,178 @@
 {% load static %}
 
 {% block title %}Food Delivery - Add New Restaurant{% endblock %}
+
 {% block content %}
-<h2>Add New Restaurant</h2>
+<div class="unified-container">
+    <div class="unified-header">
+        <h2>Add New Restaurant</h2>
+        <a href="{% url 'seller_restaurants' %}" class="btn-back">
+            <i class="fas fa-arrow-left"></i> Back to Restaurants
+        </a>
+    </div>
+    
+    <div class="restaurant-form-container">
+        <form method="post" enctype="multipart/form-data" class="restaurant-form" id="restaurant-form">
+            {% csrf_token %}
+            
+            <!-- Restaurant Image Upload -->
+            <div class="restaurant-image-upload">
+                <div class="restaurant-image-box" id="restaurant-image-box">
+                    <label for="image">
+                        <img src="{% static 'img/upload_icon.png' %}" alt="Upload Icon" class="upload-icon">
+                        <span>Upload Restaurant Image</span>
+                        <img src="" alt="Preview" class="restaurant-image-preview">
+                    </label>
+                    <input type="file" name="image" id="image" accept="image/*">
+                </div>
+            </div>
 
-<form action="" method="post" enctype="multipart/form-data" class="restaurant-form">
-  {% csrf_token %}
-  
-  <label for="name">Restaurant Name:</label>
-  <input type="text" name="name" id="name" required>
+            <!-- Restaurant Details -->
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="name">
+                        Restaurant Name *
+                        {% if form.name.errors %}
+                            <span class="error-text"> - {{ form.name.errors.0 }}</span>
+                        {% endif %}
+                    </label>
+                    <input type="text" name="name" id="name" required 
+                           placeholder="Enter restaurant name" value="{{ form.name.value|default:'' }}">
+                </div>
 
-  <label for="address">Address:</label>
-  <input type="text" name="address" id="address" required>
+                <div class="form-group">
+                    <label for="phone_number">
+                        Phone Number
+                        {% if form.phone_number.errors %}
+                            <span class="error-text"> - {{ form.phone_number.errors.0 }}</span>
+                        {% endif %}
+                    </label>
+                    <input type="text" name="phone_number" id="phone_number" 
+                           placeholder="Enter phone number" value="{{ form.phone_number.value|default:'' }}">
+                </div>
 
-  <label for="discription">Description:</label>
-  <textarea name="discription" id="discription" rows="4" required></textarea>
+                <div class="form-group form-group-full">
+                    <label for="address">
+                        Address *
+                        {% if form.address.errors %}
+                            <span class="error-text"> - {{ form.address.errors.0 }}</span>
+                        {% endif %}
+                    </label>
+                    <input type="text" name="address" id="address" required 
+                           placeholder="Enter restaurant address" value="{{ form.address.value|default:'' }}">
+                </div>
 
-  <label for="phone_number">Phone Number:</label>
-  <input type="text" name="phone_number" id="phone_number">
+                <div class="form-group form-group-full">
+                    <label for="discription">
+                        Description *
+                        {% if form.discription.errors %}
+                            <span class="error-text"> - {{ form.discription.errors.0 }}</span>
+                        {% endif %}
+                    </label>
+                    <textarea name="discription" id="discription" rows="4" required 
+                              placeholder="Describe your restaurant...">{{ form.discription.value|default:'' }}</textarea>
+                </div>
 
-  <label for="open_time">Open Time:</label>
-  <input type="time" name="open_time" id="open_time" required>
+                <!-- Operating Hours -->
+                <div class="form-group-full">
+                    <label style="display: block; margin-bottom: 10px; font-weight: 600; color: var(--dark-gray-text);">
+                        Operating Hours *
+                    </label>
+                    <div class="time-input-group">
+                        <div class="form-group">
+                            <label for="open_time">Open Time</label>
+                            <input type="time" name="open_time" id="open_time" required 
+                                   value="{{ form.open_time.value|default:'09:00' }}">
+                        </div>
+                        <div class="form-group">
+                            <label for="close_time">Close Time</label>
+                            <input type="time" name="close_time" id="close_time" required 
+                                   value="{{ form.close_time.value|default:'22:00' }}">
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-  <label for="close_time">Close Time:</label>
-  <input type="time" name="close_time" id="close_time" required>
+            <!-- Form Buttons -->
+            <div class="form-buttons">
+                <button type="submit" class="submit-btn">
+                    <i class="fas fa-plus"></i> ADD RESTAURANT
+                </button>
+                <a href="{% url 'seller_restaurants' %}" class="cancel-btn">
+                    <i class="fas fa-times"></i> CANCEL
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
 
-  <label for="image">Upload Image:</label>
-  <input type="file" name="image" id="image" accept="image/*">
+<script>
+// Image preview functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const imageInput = document.getElementById('image');
+    const imageBox = document.getElementById('restaurant-image-box');
+    const preview = imageBox.querySelector('.restaurant-image-preview');
+    
+    imageInput.addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        
+        if (file) {
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+                preview.src = e.target.result;
+                imageBox.classList.add('has-image');
+            }
+            
+            reader.readAsDataURL(file);
+        } else {
+            imageBox.classList.remove('has-image');
+        }
+    });
+    
+    // Form validation
+    const form = document.getElementById('restaurant-form');
+    form.addEventListener('submit', function(e) {
+        let valid = true;
+        const requiredFields = form.querySelectorAll('[required]');
+        
+        requiredFields.forEach(field => {
+            if (!field.value.trim()) {
+                valid = false;
+                field.style.borderColor = '#f44336';
+                
+                // Add shake animation
+                field.style.animation = 'shake 0.5s';
+                setTimeout(() => {
+                    field.style.animation = '';
+                }, 500);
+            } else {
+                field.style.borderColor = '';
+            }
+        });
+        
+        if (!valid) {
+            e.preventDefault();
+            alert('Please fill in all required fields.');
+        }
+    });
+});
 
-  <button type="submit">Add Restaurant</button>
-</form>
-
-<style>
-.restaurant-form {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  max-width: 500px;
-  padding: 20px;
-  background: #f8f8f8;
-  border-radius: 10px;
-}
-.restaurant-form input,
-.restaurant-form textarea {
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-}
-.restaurant-form button {
-  padding: 10px;
-  background: #4CAF50;
-  color: white;
-  border: none;
-  border-radius: 5px;
-}
-</style>
+// Shake animation for errors
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-5px); }
+        75% { transform: translateX(5px); }
+    }
+    
+    .error-text {
+        color: #f44336;
+        font-size: 12px;
+        font-weight: normal;
+    }
+`;
+document.head.appendChild(style);
+</script>
 {% endblock %}

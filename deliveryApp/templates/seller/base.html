@@ -13,8 +13,8 @@
     <div class="container">
         <aside class="sidebar">
             <div class="logo">
-              <img src="{% static 'images/favicon.png' %}" alt="Food Delivery Logo">
-                             <span>Food Delivery Platform</span>
+              
+                <span>Food Delivery</span>
             </div>
             <nav class="navigation">
                 <ul>
@@ -22,6 +22,12 @@
                         <a href="{% url 'seller_dashboard' %}" id="dashboard-link">
                             <i class="fa-solid fa-gauge-high"></i>
                               Dashboard
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'home' %}" id="home-link">
+                            <i class="fa-solid fa-house"></i>
+                             Home
                         </a>
                     </li>
                     <li>
@@ -48,10 +54,14 @@
 
         <main class="main-content">
             <header class="top-bar">
-               <p> Hi, {% if user.is_authenticated %}{{ user.username }}{% else %}Guest{% endif %}! </p>
+               <p> Hi, {% if user.is_authenticated %}{{ user.frist_name|default:"user.username" }}{% else %}Guest{% endif %}! </p>
                 <button class="logout-btn"><a href="{% url 'logout' %}">Logout</a> </button>
             </header>
-
+            <div class="page-actions">
+                <button class="btn-back" type="button"
+                  onclick="if(history.length>1){history.back()}else{window.location.href='{% url "seller_dashboard" %}'}">← Back
+                </button>
+            </div>
             <section class="main-section">
                 {% block content %}
                 {% endblock %}
@@ -60,3 +70,52 @@
     </div>
 </body>
 </html>
+
+<script>
+// Smooth navigation and page transitions
+document.addEventListener('DOMContentLoaded', function() {
+    // Add loading class to main content
+    const mainContent = document.querySelector('.main-content');
+    if (mainContent) {
+        mainContent.classList.add('page-loading');
+        setTimeout(() => {
+            mainContent.classList.remove('page-loading');
+            mainContent.classList.add('page-loaded');
+        }, 100);
+    }
+
+    // Smooth navigation clicks
+    document.querySelectorAll('.sidebar .navigation a').forEach(link => {
+        link.addEventListener('click', function(e) {
+            // Add click feedback
+            this.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                this.style.transform = '';
+            }, 150);
+        });
+    });
+
+    // Update active navigation based on current URL
+    function updateActiveNav() {
+        const currentPath = window.location.pathname;
+        const navLinks = document.querySelectorAll('.sidebar .navigation a');
+        
+        navLinks.forEach(link => {
+            link.parentElement.classList.remove('active');
+            if (link.getAttribute('href') === currentPath) {
+                link.parentElement.classList.add('active');
+            }
+        });
+    }
+
+    updateActiveNav();
+});
+
+// Add smooth scrolling for better UX
+function smoothScrollTo(element) {
+    element.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+    });
+}
+</script>

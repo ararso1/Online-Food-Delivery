@@ -1,46 +1,161 @@
-
-
 {% extends './base.html' %}
 {% load static %}
 
-{% block title %}Food Delivery - Add New Restaurant{% endblock %}
+{% block title %}Food Delivery - Edit Restaurant{% endblock %}
+
 {% block content %}
-<h2>Add New Restaurant</h2>
+<div class="unified-container">
+    <div class="unified-header">
+        <h2>Edit Restaurant</h2>
+        <a href="{% url 'seller_restaurants' %}" class="btn-back">
+            <i class="fas fa-arrow-left"></i> Back to Restaurants
+        </a>
+    </div>
+    
+    <div class="restaurant-form-container">
+        <form method="post" enctype="multipart/form-data" class="restaurant-form" id="edit-restaurant-form">
+            {% csrf_token %}
+            
+            <!-- Current Image Display -->
+            {% if restaurant.image %}
+            <div class="current-image-section">
+                <h4>Current Image</h4>
+                <img src="{{ restaurant.image.url }}" alt="{{ restaurant.name }}" class="current-image">
+            </div>
+            {% endif %}
+            
+            <!-- Restaurant Image Upload -->
+            <div class="restaurant-image-upload">
+                <div class="restaurant-image-box {% if restaurant.image %}has-image{% endif %}" id="restaurant-image-box">
+                    <label for="image">
+                        <img src="{% static 'img/upload_icon.png' %}" alt="Upload Icon" class="upload-icon">
+                        <span>Change Restaurant Image</span>
+                        {% if restaurant.image %}
+                        <img src="{{ restaurant.image.url }}" alt="Current Image" class="restaurant-image-preview">
+                        {% else %}
+                        <img src="" alt="Preview" class="restaurant-image-preview">
+                        {% endif %}
+                    </label>
+                    <input type="file" name="image" id="image" accept="image/*">
+                </div>
+            </div>
 
-<form action="" method="post" enctype="multipart/form-data" class="restaurant-form">
-  {% csrf_token %}
-  <input type="text" name="name" value="{{ restaurant.name }}" required>
-  <input type="text" name="address" value="{{ restaurant.address }}" required>
-  <textarea name="discription">{{ restaurant.discription }}</textarea>
-  <input type="text" name="phone_number" value="{{ restaurant.phone_number }}">
-  <input type="time" name="open_time" value="{{ restaurant.open_time|time:'H:i' }}">
-  <input type="time" name="close_time" value="{{ restaurant.close_time|time:'H:i' }}">
-  <input type="file" name="image">
-  <button type="submit">Update</button>
-</form>
+            <!-- Restaurant Details -->
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="name">Restaurant Name *</label>
+                    <input type="text" name="name" id="name" required 
+                           placeholder="Enter restaurant name" value="{{ restaurant.name }}">
+                </div>
 
-<style>
-.restaurant-form {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  max-width: 500px;
-  padding: 20px;
-  background: #f8f8f8;
-  border-radius: 10px;
-}
-.restaurant-form input,
-.restaurant-form textarea {
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-}
-.restaurant-form button {
-  padding: 10px;
-  background: #4CAF50;
-  color: white;
-  border: none;
-  border-radius: 5px;
-}
-</style>
+                <div class="form-group">
+                    <label for="phone_number">Phone Number</label>
+                    <input type="text" name="phone_number" id="phone_number" 
+                           placeholder="Enter phone number" value="{{ restaurant.phone_number }}">
+                </div>
+
+                <div class="form-group form-group-full">
+                    <label for="address">Address *</label>
+                    <input type="text" name="address" id="address" required 
+                           placeholder="Enter restaurant address" value="{{ restaurant.address }}">
+                </div>
+
+                <div class="form-group form-group-full">
+                    <label for="discription">Description *</label>
+                    <textarea name="discription" id="discription" rows="4" required 
+                              placeholder="Describe your restaurant...">{{ restaurant.discription }}</textarea>
+                </div>
+
+                <!-- Operating Hours -->
+                <div class="form-group-full">
+                    <label style="display: block; margin-bottom: 10px; font-weight: 600; color: var(--dark-gray-text);">
+                        Operating Hours *
+                    </label>
+                    <div class="time-input-group">
+                        <div class="form-group">
+                            <label for="open_time">Open Time</label>
+                            <input type="time" name="open_time" id="open_time" required 
+                                   value="{{ restaurant.open_time|time:'H:i' }}">
+                        </div>
+                        <div class="form-group">
+                            <label for="close_time">Close Time</label>
+                            <input type="time" name="close_time" id="close_time" required 
+                                   value="{{ restaurant.close_time|time:'H:i' }}">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Form Buttons -->
+            <div class="form-buttons">
+                <button type="submit" class="submit-btn">
+                    <i class="fas fa-save"></i> UPDATE RESTAURANT
+                </button>
+                <a href="{% url 'seller_restaurants' %}" class="cancel-btn">
+                    <i class="fas fa-times"></i> CANCEL
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+// Image preview functionality for edit form
+document.addEventListener('DOMContentLoaded', function() {
+    const imageInput = document.getElementById('image');
+    const imageBox = document.getElementById('restaurant-image-box');
+    const preview = imageBox.querySelector('.restaurant-image-preview');
+    
+    imageInput.addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        
+        if (file) {
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+                preview.src = e.target.result;
+                imageBox.classList.add('has-image');
+            }
+            
+            reader.readAsDataURL(file);
+        }
+    });
+    
+    // Form validation
+    const form = document.getElementById('edit-restaurant-form');
+    form.addEventListener('submit', function(e) {
+        let valid = true;
+        const requiredFields = form.querySelectorAll('[required]');
+        
+        requiredFields.forEach(field => {
+            if (!field.value.trim()) {
+                valid = false;
+                field.style.borderColor = '#f44336';
+                field.style.animation = 'shake 0.5s';
+                setTimeout(() => {
+                    field.style.animation = '';
+                }, 500);
+            } else {
+                field.style.borderColor = '';
+            }
+        });
+        
+        if (!valid) {
+            e.preventDefault();
+            alert('Please fill in all required fields.');
+        }
+    });
+});
+
+// Add shake animation
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-5px); }
+        75% { transform: translateX(5px); }
+    }
+`;
+document.head.appendChild(style);
+</script>
 {% endblock %}

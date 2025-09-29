@@ -1,38 +1,133 @@
 {% extends './base.html' %}
 {% load static %}
 
-{% block title %}Food Delivery - Add New Restaurant{% endblock %}
+{% block title %}Food Delivery - Edit Product{% endblock %}
+
 {% block content %}
-<h2>Edit Product</h2>
-<form method="post" enctype="multipart/form-data">
-  {% csrf_token %}
-  <input type="text" name="name" value="{{ product.name }}" required>
-  <input type="number" name="product_price" value="{{ product.product_price }}" step="0.01" required>
-  <select name="category">
-    {% for category in categories %}
-    <option value="{{ category.id }}" {% if product.category.id == category.id %}selected{% endif %}>{{ category.name }}</option>
-    {% endfor %}
-  </select>
-  <input type="file" name="image1">
-  <button type="submit">Update</button>
-</form>
+<div class="unified-container">
+    <div class="unified-header">
+        <h2>Edit Product</h2>
+        <a href="{% url 'product_list' %}" class="btn-back">
+            <i class="fas fa-arrow-left"></i> Back to Products
+        </a>
+    </div>
+    
+    <div class="edit-form-container">
+        <form method="post" enctype="multipart/form-data" id="edit-product-form">
+            {% csrf_token %}
+            
+            <!-- Current Images -->
+            <h3 style="margin-bottom: 20px; color: var(--dark-gray-text);">Product Images</h3>
+            <div class="image-upload-area">
+                {% for i in "123" %}
+                <div class="upload-box {% if product.image1 and forloop.first %}has-image{% endif %}" id="upload-box-{{ forloop.counter }}">
+                    <label for="image{{ forloop.counter }}">
+                        <img src="{% static 'img/upload_icon.png' %}" alt="Upload Icon" class="upload-icon">
+                        <span>Image {{ forloop.counter }}</span>
+                        {% if forloop.first and product.image1 %}
+                        <img src="{{ product.image1.url }}" alt="Current Image" class="image-preview">
+                        {% elif forloop.counter == 2 and product.image2 %}
+                        <img src="{{ product.image2.url }}" alt="Current Image" class="image-preview">
+                        {% elif forloop.counter == 3 and product.image3 %}
+                        <img src="{{ product.image3.url }}" alt="Current Image" class="image-preview">
+                       {% else %}
+                        <img src="" alt="Preview" class="image-preview">
+                        {% endif %}
+                    </label>
+                    <input type="file" name="image{{ forloop.counter }}" id="image{{ forloop.counter }}" accept="image/*">
+                </div>
+                {% endfor %}
+            </div>
 
+            <!-- Product Details -->
+            <div style="margin-top: 30px;">
+                <div class="form-group">
+                    <label for="name">Product Name *</label>
+                    <input type="text" name="name" id="name" value="{{ product.name }}" required 
+                           placeholder="Enter product name">
+                </div>
+                
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <textarea name="description" id="description" rows="4" 
+                              placeholder="Enter product description">{{ product.description }}</textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="category">Category *</label>
+                    <select name="category" id="category" required>
+                        <option value="">Select Category</option>
+                        {% for category in categories %}
+                        <option value="{{ category.id }}" 
+                                {% if product.category.id == category.id %}selected{% endif %}>
+                            {{ category.name }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
 
-<style>
-.edit-btn {
-  background: #4CAF50;
-  color: white;
-  padding: 4px 8px;
-  border-radius: 4px;
-  text-decoration: none;
-}
-.delete-btn {
-  background: #f44336;
-  color: white;
-  padding: 4px 8px;
-  border-radius: 4px;
-  text-decoration: none;
-}
-</style>
+            <!-- Price Group -->
+            <div class="price-group">
+                <div class="form-group">
+                    <label for="product_price">Product Price ($) *</label>
+                    <input type="number" name="product_price" id="product_price" 
+                           value="{{ product.product_price }}" step="0.01" min="0" required
+                           placeholder="0.00">
+                </div>
+                
+                <div class="form-group">
+                    <label for="offer_price">Offer Price ($) <small style="color: #666;">(Optional)</small></label>
+                    <input type="number" name="offer_price" id="offer_price" 
+                           value="{{ product.offer_price|default:'' }}" step="0.01" min="0"
+                           placeholder="0.00">
+                </div>
+            </div>
 
+            <!-- In Stock Toggle -->
+            <div class="form-group" style="display: flex; align-items: center; gap: 10px;">
+                <label for="in_stock" style="margin-bottom: 0;">In Stock:</label>
+                <label class="toggle-switch">
+                    <input type="checkbox" name="in_stock" id="in_stock" {% if product.in_stock %}checked{% endif %}>
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+
+            <div style="display: flex; gap: 15px; margin-top: 30px;">
+                <button class="add-btn" type="submit">
+                    <i class="fas fa-save"></i> UPDATE PRODUCT
+                </button>
+                <a href="{% url 'product_list' %}" class="btn-back" style="text-decoration: none;">
+                    <i class="fas fa-times"></i> CANCEL
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+// Image preview functionality for edit form
+document.addEventListener('DOMContentLoaded', function() {
+    const fileInputs = document.querySelectorAll('input[type="file"]');
+    
+    fileInputs.forEach((input, index) => {
+        input.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            const uploadBox = this.closest('.upload-box');
+            const preview = uploadBox.querySelector('.image-preview');
+            
+            if (file) {
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                    uploadBox.classList.add('has-image');
+                }
+                
+                reader.readAsDataURL(file);
+            }
+        });
+    });
+});
+</script>
 {% endblock %}
